@@ -80,6 +80,30 @@ export default {
       console.log('Formulaire soumis !', this.pseudo, this.genre, this.email, this.birthdate, this.books);
       event.preventDefault();
 
+      var datas = {
+        pseudo: this.pseudo,
+        genre: this.genre,
+        email: this.email,
+        birthdate: this.birthdate,
+        books: this.books
+      };
+
+      fetch("api/userData.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(datas)
+      })
+          .then(response => response.text())
+          .then(data => {
+            // Traiter la réponse du serveur
+            console.log("now on serveur", data);
+          })  .catch(error => {
+        // Gérer les erreurs
+        console.error("Erreur lors de l'envoi du formulaire :", error);
+      });
+
     }
   }
 };
