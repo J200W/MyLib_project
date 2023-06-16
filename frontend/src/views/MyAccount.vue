@@ -88,11 +88,11 @@ export default {
         books: this.books
       };
 
-      fetch("/test_recup.php", {
+      fetch("http://localhost:80/test_recup.php", {
         method: "POST",
         headers: {
-          //"Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
-          "Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+          "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+          //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
         },
         body: JSON.stringify(datas)
       })

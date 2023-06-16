@@ -17,13 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['REQUEST_URI'] === '/test_
 
     // Décode les données JSON reçues
     $requestData = json_decode($postData, true);
-
     // Traitez les données comme souhaité
     // Par exemple, vous pouvez enregistrer les données dans une base de données ou effectuer d'autres opérations
 
+    // Inclure le fichier test_recup.php
+    include 'test_recup.php';
     // Retourne une réponse JSON
-    header('Content-Type: application/json');
-    echo json_encode(['message' => 'Données reçues avec succès']);
+    //header('Content-Type: application/json');
+    //echo json_encode(['message' => 'Données reçues avec succès from test_serveur.php !']);
     exit();
 }
 
