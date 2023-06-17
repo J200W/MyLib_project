@@ -20,7 +20,7 @@
       <div class="form-group">
         <label for="genre">Genre:</label>
         <select id="genre" v-model="genre">
-          <option value="homme">Homme</option>
+          <option value="homme">homme</option>
           <option value="femme">Femme</option>
           <option value="autre">Autre</option>
         </select>
@@ -55,16 +55,16 @@ export default {
       books: 0
     };
   },
-  /*
   mounted() {
     this.fetchUserData();
-  },*/
+  },
   methods: {
     fetchUserData() {
       // Effectuer une requête HTTP vers la page PHP pour récupérer les données utilisateur
-      fetch('api/userData.php')
+      fetch('http://localhost:80/elements_to_send.php')
           .then(response => response.json())
           .then(data => {
+            console.log('Données utilisateur reçues:', data);
             this.pseudo = data.pseudo;
             this.genre = data.genre;
             this.email = data.email;
