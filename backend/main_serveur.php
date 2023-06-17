@@ -11,33 +11,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Vérifie si la requête est une requête POST vers la route '/test_recup.php'
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['REQUEST_URI'] === '/test_recup.php') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupère les données envoyées dans le corps de la requête
     //$postData = file_get_contents('php://input');
-
     // Décode les données JSON reçues
     //$requestData = json_decode($postData, true);
+    $data = json_decode(file_get_contents('php://input'), true);
+
     // Traitez les données comme souhaité
     // Par exemple, vous pouvez enregistrer les données dans une base de données ou effectuer d'autres opérations
-
-    // Inclure le fichier test_recup.php
-    include 'test_recup.php';
-    // Retourne une réponse JSON
-    //header('Content-Type: application/json');
-    //echo json_encode(['message' => 'Données reçues avec succès from test_serveur.php !']);
+    switch($_SERVER['REQUEST_URI']){
+        case '/test_recup.php':
+            // Inclure le fichier test_recup.php
+            include 'test_recup.php';
+            // Retourne une réponse JSON
+            //header('Content-Type: application/json');
+            //echo json_encode(['message' => 'Données reçues avec succès from test_serveur.php !']);
+            break;
+        case '/send_login':
+            // Retourne une réponse JSON
+            header('Content-Type: application/json');
+            echo json_encode([['message' => 'Données reçues avec succès from test_serveur.php !'], ['donnees' => $data]]);
+            break;
+        default:
+            echo json_encode(['message' => "Erreur d'url pour methode POST"]);
+            break;
+    }
     exit();
 }
 
 // Vérifie si la requête est une requête GET vers la route '/test_recup.php'
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && $_SERVER['REQUEST_URI'] === '/elements_to_send.php') {
-    // Inclure le fichier contenant les éléments à renvoyer
-    include 'elements_to_send.php';
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    // Utilisez les éléments importés ici selon vos besoins
+    switch($_SERVER['REQUEST_URI']){
+        case '/elements_to_send.php':
+            // Inclure le fichier contenant les éléments à renvoyer
+            include '/elements_to_send.php';
+            // Renvoie les éléments en tant que réponse JSON
+            // Utilisez les éléments importés ici selon vos besoins
+            header('Content-Type: application/json');
+            echo json_encode($elements);
+            break;
+        default:
+            echo json_encode(['message' => "Erreur d'url pour methode POST"]);
+            break;
+    }
 
-    // Renvoie les éléments en tant que réponse JSON
-    header('Content-Type: application/json');
-    echo json_encode($elements);
     exit();
 }
 
