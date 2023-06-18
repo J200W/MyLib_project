@@ -10,75 +10,75 @@
     </div>
 
 
-    <div class="form-container">
-        <h2>Enregistrement utilisateur</h2>
-        <form @submit="submitForm">
-            <div class="form-group">
-                <label for="pseudo">Pseudo:</label>
-                <input type="text" id="pseudo" v-model="pseudo" placeholder="Entrez votre pseudo" />
-            </div>
-            <div class="form-group">
-                <label for="genre">Genre:</label>
-                <select id="genre" v-model="genre">
-                    <option value="homme">Homme</option>
-                    <option value="femme">Femme</option>
-                    <option value="autre">Autre</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" v-model="email" placeholder="Entrez votre adresse email" />
-            </div>
-            <div class="form-group">
-                <label for="birthdate">Date de naissance:</label>
-                <input type="date" id="birthdate" v-model="birthdate" />
-            </div>
-            <div class="form-group">
-                <label>Nombre de livres empruntés:</label>
-                <span class="books-label">{{ books }}</span>
-            </div>
-            <button type="submit">Enregistrer</button>
-        </form>
-    </div>
+  <div class="form-container">
+    <h2>Enregistrement utilisateur</h2>
+    <form @submit="submitForm">
+      <div class="form-group">
+        <label for="pseudo">Pseudo:</label>
+        <input type="text" id="pseudo" v-model="pseudo" placeholder="Entrez votre pseudo" />
+      </div>
+      <div class="form-group">
+        <label for="genre">Genre:</label>
+        <select id="genre" v-model="genre">
+          <option value="homme">homme</option>
+          <option value="femme">Femme</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" v-model="email" placeholder="Entrez votre adresse email" />
+      </div>
+      <div class="form-group">
+        <label for="birthdate">Date de naissance:</label>
+        <input type="date" id="birthdate" v-model="birthdate" />
+      </div>
+      <div class="form-group">
+        <label>Nombre de livres empruntés:</label>
+        <span class="books-label">{{ books }}</span>
+      </div>
+      <button type="submit">Enregistrer</button>
+    </form>
+  </div>
 </template>
 
 <!--<script>
 
 export default {
-    name: 'MyAccount',
-    data() {
-        return {
-            pseudo: 'JohnDoe',
-            genre: 'homme',
-            email: 'john@example.com',
-            birthdate: '',
-            books: 0
-        };
+  name:'MyAccount',
+  data() {
+    return {
+      pseudo: 'JohnDoe',
+      genre: 'homme',
+      email: 'john@example.com',
+      birthdate: '',
+      books: 0
+    };
+  },
+  mounted() {
+    this.fetchUserData();
+  },
+  methods: {
+    fetchUserData() {
+      // Effectuer une requête HTTP vers la page PHP pour récupérer les données utilisateur
+      fetch('http://localhost:80/elements_to_send.php')
+          .then(response => response.json())
+          .then(data => {
+            console.log('Données utilisateur reçues:', data);
+            this.pseudo = data.pseudo;
+            this.genre = data.genre;
+            this.email = data.email;
+            this.birthdate = data.birthdate;
+            this.books = data.books;
+          })
+          .catch(error => {
+            console.error('Erreur lors de la récupération des données utilisateur:', error);
+          });
     },
-    /*
-    mounted() {
-      this.fetchUserData();
-    },*/
-    methods: {
-        fetchUserData() {
-            // Effectuer une requête HTTP vers la page PHP pour récupérer les données utilisateur
-            fetch('api/userData.php')
-                .then(response => response.json())
-                .then(data => {
-                    this.pseudo = data.pseudo;
-                    this.genre = data.genre;
-                    this.email = data.email;
-                    this.birthdate = data.birthdate;
-                    this.books = data.books;
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des données utilisateur:', error);
-                });
-        },
-        submitForm(event) {
-            // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
-            console.log('Formulaire soumis !', this.pseudo, this.genre, this.email, this.birthdate, this.books);
-            event.preventDefault();
+    submitForm(event) {
+      // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+      console.log('Formulaire soumis !', this.pseudo, this.genre, this.email, this.birthdate, this.books);
+      event.preventDefault();
 
             var datas = {
                 pseudo: this.pseudo,

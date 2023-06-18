@@ -14,9 +14,9 @@ import NavbarSimple from "@/components/NavbarSimple.vue";
 
         <form id="form-login" action="" method="post">
             <label class="form-label" for="username">Email Address</label>
-            <input class="form-input" type="email" id="username" name="username" required>
+            <input class="form-input" type="email" id="username" name="username" v-model="email" required>
             <label class="form-label" for="password">Password</label>
-            <input class="form-input" type="password" id="password" name="password" required><br><br>
+            <input class="form-input" type="password" id="password" name="password" v-model="password" required><br><br>
             <input class="form-submit" type="submit" value="Submit">
             <p id="pwdforgotten">Password forgotten ? <span><router-link to="/ForgottenPassword">Reset
                         password</router-link></span></p>
@@ -131,19 +131,54 @@ body {
 }
 </style>
 
-<script>
-export default {
-    name: 'LogIn',
-    data() { return {} },
-    methods: {
-        link_HomePage: function (event) {
-            this.$router.push({ path: '/' })
+  <script>
+
+
+    export default
+    {
+      name:'LogIn',
+      data() {
+        return {
+          email: 'john@example.com',
+          password: ''
+        };
+      },
+      mounted() {
+        this.fetchUserData();
+      },
+      methods: {
+        fetchUserData() {
         },
-        link_LogIn: function (event) {
-            this.$router.push({ path: '/LogIn' })
+        submitForm(event) {
+          // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+          console.log('Formulaire soumis !', this.email, this.password);
+          event.preventDefault();
+
+          var datas = {
+            email: this.email,
+            password: this.password
+          };
+
+          fetch("http://localhost:80/send_login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+              //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+            },
+            body: JSON.stringify(datas)
+          })
+              .then(response => response.text())
+              .then(data => {
+                // Traiter la réponse du serveur
+                console.log("Connexion on serveur", data);
+              })  .catch(error => {
+            // Gérer les erreurs
+            console.error("Erreur lors de l'envoi du formulaire :", error);
+          });
+
         },
-        link_SignUp: function (event) {
-            this.$router.push({ path: '/SignUp' })
+        link_HomePage: function(event){
+          this.$router.push({path: '/'})
         },
         link_ForgottenPassword: function (event) {
             this.$router.push({ path: '/ForgottenPassword' })
@@ -178,6 +213,9 @@ export default {
         link_MainPage: function (event) {
             this.$router.push({ path: '/MainPage' })
         },
+        link_ShareBook: function(event){
+          this.$router.push({path: '/ShareBook'})
+        }
+      }
     }
-}
-</script>
+  </script>
