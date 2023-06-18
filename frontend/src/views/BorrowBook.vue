@@ -52,7 +52,10 @@
         },
         link_ShareBook: function(event){
           this.$router.push({path: '/ShareBook'})
-        }
+        },
+        link_MainPage: function(event){
+          this.$router.push({path: '/MainPage'})
+        },
       }
     }
   </script>

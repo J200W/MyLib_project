@@ -12,6 +12,7 @@ import BorrowBook from '../views/BorrowBook.vue'
 import ReadBook from '../views/ReadBook.vue'
 import SearchBook from '../views/SearchBook.vue'
 import ShareBook from '../views/ShareBook.vue'
+import MainPage from '../views/MainPage.vue'
 
 
 const routes = [
@@ -79,6 +80,11 @@ const routes = [
     path: '/ShareBook',
     name: 'ShareBook',
     component: ShareBook
+  },
+  {
+    path: '/MainPage',
+    name: 'MainPage',
+    component: MainPage
   }
 ]
 
