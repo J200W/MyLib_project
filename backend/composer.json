@@ -1,0 +1,15 @@
+{
+  "name": "vendor_name/backend",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "ethan",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "kreait/firebase-php": "^5.23.0"
+  }
+}

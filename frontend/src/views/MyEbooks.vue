@@ -1,10 +1,14 @@
+<script setup>
+import function_nav from "@/router/functions_nav";
+</script>
+
 <template>
   <div class="nav_bar">
-    <p v-on:click=link_MyEbooks() >My Ebooks</p>
-    <p v-on:click=link_MyFavorites() >My Favorites</p> 
-    <p v-on:click=link_MyHistory() >My History</p> 
-    <p v-on:click=link_SearchBook() >Research</p> 
-    <p v-on:click=link_MyAccount() class="profile"><img src="../assets/profil.png" alt="profile"></p>
+    <p v-on:click=function_nav.link_MyEbooks(this) >My Ebooks</p>
+    <p v-on:click=function_nav.link_MyFavorites.call(this) >My Favorites</p>
+    <p v-on:click=function_nav.link_MyHistory.call(this) >My History</p>
+    <p v-on:click=function_nav.link_SearchBook.call(this) >Research</p>
+    <p @click=function_nav.link_MyAccount.call(this) class="profile"><img src="../assets/profil.png" alt="profile"></p>
 </div>
 </template>
   
