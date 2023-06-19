@@ -3,6 +3,7 @@
     import MyEbooksSort from "@/components/MyEbooksSort.vue";
     import MyEbooksContent from "@/components/MyEbooksContent.vue";
     import TheFooter from "@/components/TheFooter.vue";
+    import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
 
     const books = [
         {

@@ -1,12 +1,16 @@
+<script setup>
+  import function_nav from "@/router/functions_nav";
+</script>
+
 <template>
     <div id="navbar">
         <div id="navbar-left">
             <router-link to="/MainPage">
                 <img id="logo" src="@/assets/logo.png" alt="logo">
             </router-link>
-            <form id="search-bar" action="" method="post">
-                <input placeholder="I am looking for..." type="text" name="search-bar" id="search-input">
-                <input type="submit" value="Search" id="search-submit">
+            <form id="search-bar" @submit="submitForm">
+                <input placeholder="I am looking for..." type="text" name="search-bar" id="search-input" v-model="researched_name">
+                <input type="submit" value="Search" id="search-submit" onsubmit="submitForm()">
             </form>
         </div>
         <div id="navbar-right">
@@ -172,3 +176,59 @@
         }
     }
 </style>
+
+
+<script>
+
+import functions_nav from "@/router/functions_nav";
+
+export default
+{
+  name:'NavBar',
+  data() {
+    return {
+      researched_name: ''
+    };
+  },
+  mounted() {
+    this.fetchUserData();
+  },
+  methods: {
+    fetchUserData() {
+    },
+    submitForm(event) {
+      // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+
+      if (this.researched_name !== ''){
+        console.log('Formulaire soumis !', this.researched_name);
+        event.preventDefault();
+
+        let datas = {
+          researched_name : this.researched_name
+        };
+
+        fetch("http://localhost:80/send_research_fromNavBar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+            //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+          },
+          body: JSON.stringify(datas)
+        })
+            .then(response => response.text())
+            .then(data => {
+              // Traiter la réponse du serveur
+              console.log("Recherche envoyée", data);
+              functions_nav.link_SearchBook.call(this);
+            })  .catch(error => {
+          // Gérer les erreurs
+          console.error("Erreur lors de l'envoi du formulaire :", error);
+        });
+
+      }
+    }
+  }
+
+}
+
+</script>

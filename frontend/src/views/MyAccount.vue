@@ -86,109 +86,67 @@ button:hover {
 
 <script >
 export default {
-    name: 'MyAccount',
-    data() {
-        return {
-            pseudo: 'JohnDoe',
-            genre: 'homme',
-            email: 'john@example.com',
-            birthdate: '',
-            books: 0
-        };
+  name:'MyAccount',
+  data() {
+    return {
+      pseudo: 'JohnDoe',
+      genre: 'homme',
+      email: 'john@example.com',
+      birthdate: '',
+      books: 0
+    };
+  },
+  mounted() {
+    this.fetchUserData();
+  },
+  methods: {
+    fetchUserData() {
+      // Effectuer une requête HTTP vers la page PHP pour récupérer les données utilisateur
+      fetch('http://localhost:80/elements_to_send.php')
+          .then(response => response.json())
+          .then(data => {
+            console.log('Données utilisateur reçues:', data);
+            this.pseudo = data.pseudo;
+            this.genre = data.genre;
+            this.email = data.email;
+            this.birthdate = data.birthdate;
+            this.books = data.books;
+          })
+          .catch(error => {
+            console.error('Erreur lors de la récupération des données utilisateur:', error);
+          });
     },
-    mounted() {
-        this.fetchUserData();
-    },
-    methods: {
-        fetchUserData() {
-            // Effectuer une requête HTTP vers la page PHP pour récupérer les données utilisateur
-            fetch('/elements_to_send.php')
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Données utilisateur reçues:', data);
-                    this.pseudo = data.pseudo;
-                    this.genre = data.genre;
-                    this.email = data.email;
-                    this.birthdate = data.birthdate;
-                    this.books = data.books;
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des données utilisateur:', error);
-                });
-        },
-        submitForm(event) {
-            // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
-            console.log('Formulaire soumis !', this.pseudo, this.genre, this.email, this.birthdate, this.books);
-            event.preventDefault();
+    submitForm(event) {
+      // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+      console.log('Formulaire soumis !', this.pseudo, this.genre, this.email, this.birthdate, this.books);
+      event.preventDefault();
 
-            var datas = {
-                pseudo: this.pseudo,
-                genre: this.genre,
-                email: this.email,
-                birthdate: this.birthdate,
-                books: this.books
-            };
+      var datas = {
+        pseudo: this.pseudo,
+        genre: this.genre,
+        email: this.email,
+        birthdate: this.birthdate,
+        books: this.books
+      };
 
-            fetch("/test_recup.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
-                    //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
-                },
-                body: JSON.stringify(datas)
-            })
-                .then(response => response.text())
-                .then(data => {
-                    // Traiter la réponse du serveur
-                    console.log("now on serveur", data);
-                }).catch(error => {
-                    // Gérer les erreurs
-                    console.error("Erreur lors de l'envoi du formulaire :", error);
-                });
+      fetch("http://localhost:80/test_recup.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+          //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+        },
+        body: JSON.stringify(datas)
+      })
+          .then(response => response.text())
+          .then(data => {
+            // Traiter la réponse du serveur
+            console.log("now on serveur", data);
+          })  .catch(error => {
+        // Gérer les erreurs
+        console.error("Erreur lors de l'envoi du formulaire :", error);
+      });
 
-        },
-        link_HomePage: function (event) {
-            this.$router.push({ path: '/' })
-        },
-        link_LogIn: function (event) {
-            this.$router.push({ path: '/LogIn' })
-        },
-        link_SignUp: function (event) {
-            this.$router.push({ path: '/SignUp' })
-        },
-        link_ForgottenPassword: function (event) {
-            this.$router.push({ path: '/ForgottenPassword' })
-        },
-        link_MyAccount: function (event) {
-            this.$router.push({ path: '/MyAccount' })
-        },
-        link_BookDetails: function (event) {
-            this.$router.push({ path: '/BookDetails' })
-        },
-        link_MyEbooks: function (event) {
-            this.$router.push({ path: '/MyEbooks' })
-        },
-        link_MyFavorites: function (event) {
-            this.$router.push({ path: '/MyFavorites' })
-        },
-        link_MyHistory: function (event) {
-            this.$router.push({ path: '/MyHistory' })
-        },
-        link_BorrowBook: function (event) {
-            this.$router.push({ path: '/BorrowBook' })
-        },
-        link_ReadBook: function (event) {
-            this.$router.push({ path: '/ReadBook' })
-        },
-        link_SearchBook: function (event) {
-            this.$router.push({ path: '/SearchBook' })
-        },
-        link_ShareBook: function (event) {
-            this.$router.push({ path: '/ShareBook' })
-        },
-        link_MainPage: function (event) {
-            this.$router.push({ path: '/MainPage' })
-        },
     }
-}
+  }
+};
 </script>
