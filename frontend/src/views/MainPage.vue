@@ -1,25 +1,86 @@
 <script setup>
     import NavbarConnected from "@/components/NavbarConnected.vue";
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
+    import Carousel from "@/components/Carousel.vue";
     import TheFooter from "@/components/TheFooter.vue";
 
+    const images = [
+        {
+            id: 1,
+            src: require("@/assets/onepiece96.png"),
+            title: "One Piece 96",
+        },
+
+        {
+            id: 2,
+            src: require("@/assets/onepiece97.png"),
+            title: "One Piece 97",
+        },
+
+        {
+            id: 3,
+            src: require("@/assets/onepiece98.png"),
+            title: "One Piece 98",
+        },
+
+        {
+            id: 4,
+            src: require("@/assets/onepiece99.png"),
+            title: "One Piece 99",
+        }
+    ]
     var connected = true;
 </script>
 
 <template>
     <NavbarConnected v-if="connected" />
     <NavbarNonConnected v-if="!connected" />
-    <p>Hi</p>
+    <h1 id="titleMainPage">Unleash your imagination with an extensive eBook collection</h1>
+    <hr id="hr">
+    <div id="carousels">
+        <Carousel :images="images" :name="'Continue to read'" />
+        <Carousel :images="images" :name="'New'" />
+        <Carousel :images="images" :name="'Discover'" />
+    </div>
+
     <TheFooter />
+    
 </template>
-  
-  
-  
-<style></style>
-  
+
+
+
+
+<style>
+
+#hr {
+    width: 80%;
+    margin: auto;
+}
+
+#carousels {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin-top: 20px;
+}
+
+#titleMainPage {
+    margin: auto;
+    width: 100%;
+    display: block;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 5vmin;
+    margin-bottom: 20px;
+}
+</style>
+
 <script>
 export default {
-    name: 'ReadBook',
+    name: 'MainPage',
     data() { return {} },
     methods: {
         link_HomePage: function (event) {

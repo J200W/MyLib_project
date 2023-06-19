@@ -2,12 +2,12 @@
 import function_nav from "@/router/functions_nav";
 </script>
 <template>
-  <div class="container">
-      <img src="../assets/logo.png" width="140" height="140">
-      <h1 class="main"> Welcome to MyLib </h1>
-      <p> Explore our extensive catalog and dive into a world of captivating reads. </p>
-      <button>Explore Now</button>
-  </div>
+    <div class="container">
+        <img src="../assets/logo.png" width="140" height="140">
+        <h1 class="main"> Welcome to MyLib </h1>
+        <p> Explore our extensive catalog and dive into a world of captivating reads. </p>
+        <router-link class="link" to="/MainPage">Explore Now</router-link>
+    </div>
    <body>
     This is the Home Page !<br><br>
       <p v-on:click=function_nav.link_MyEbooks.call(this) >MyEbooks</p>
@@ -15,54 +15,69 @@ import function_nav from "@/router/functions_nav";
       <p v-on:click=function_nav.link_SignUp.call(this) >SignUp</p>
       <p v-on:click=function_nav.link_ForgottenPassword.call(this) >ForgottenPassword</p>
       <p v-on:click=function_nav.link_MyAccount.call(this) >MyAccount</p>
-  </body> 
+      <p v-on:click=function_nav.link_BookDetails.call(this)>BookDetails</p>
+      <p v-on:click=function_nav.link_MyFavorites.call(this)>MyFavorites</p>
+  </body>
+  
+  <TheFooter />
 </template>
 
 
 
 
 <style scoped>
-p {
-color : #6D6779;
-font-weight: bold;
-}
+    p {
+        color: #6D6779;
+        font-weight: bold;
+    }
 
-h1.main {
-/* margin: auto;
-padding: 300px; */
-color : black;
-font-family: 'Kanit';
-font-weight: bold;
-font-size: 5rem;
+    h1.main {
+        font-weight: 600;
+        color: black;
+        font-weight: bold;
+        font-size: 5rem;
 
-}  
+    }
+    
+    .link {
+        background-color: #A8A787;
+        padding: 10px 44px;
+        border-radius: 20px;
+        color: white;
+        transition-duration: 0.25s;
+    }
+
+    .link:hover {
+        background-color: #545444;
+        /* Green */
+        color: white;
+    }
+
+    button {
+        background-color: black;
+        padding: 10px 44px;
+        border-radius: 20px;
+        color: white;
+        font-family: 'Kanit';
+
+        transition-duration: 0.25s;
+    }
+
+    button:hover {
+        background-color: white;
+        /* Green */
+        color: black;
+    }
 
 
-button {
-background-color: black;
-padding: 10px 44px;
-border-radius: 20px;
-color: white;
-font-family : 'Kanit';
-
-transition-duration: 0.25s;
-}
-
-button:hover {
-background-color: white; /* Green */
-color: black;
-}
-
-
-.container{
-margin-top : 120px;
-display: flex;
-flex-direction: column;
-justify-content: space-evenly;
-align-items: center;
-gap : 2em
-
-}
+    .container {
+        margin-top: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        gap: 2em
+    }
 </style>
 
 <script>
@@ -71,5 +86,5 @@ gap : 2em
     data(){return {}},
     methods:{
     }
-  }
+}
 </script>

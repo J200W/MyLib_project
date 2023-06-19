@@ -1,0 +1,145 @@
+<template>
+    <div id="searchBookList">
+        <div class="searchBook" v-for="book in books" :key="book.id">
+            <router-link class="bookLongCard-search" :to="{ path: '/BookDetails', query: { name: book.title } }">
+                <div class="bookImg">
+                    <img :src="book.src" alt="{{book.title}}" />
+                </div>
+                <div class="bookInfo">
+                    <p><span class="titleBook-search">{{ book.title }}</span></p>
+                    <p><span>Author: </span>{{ book.author }}</p>
+                    <p><span>Date: </span>{{ book.date }}</p>
+                    <p><span>Library: </span>{{ book.library }}</p>
+                    <p><span>Genre: </span>{{ book.genre }}</p>
+                </div>
+            </router-link>
+        </div>
+    </div>
+</template>
+
+<style>
+    #searchBookList {
+        --gap: 16px;
+        --num-cols: 2;
+        --row-height: 300px;
+
+        box-sizing: border-box;
+        padding: var(--gap);
+
+        display: grid;
+        grid-template-columns: repeat(var(--num-cols), 1fr);
+        grid-auto-rows: var(--row-height);
+        gap: var(--gap);
+        width: 98%;
+    }
+
+    .searchBook {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+
+    .bookLongCard-search {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        width: 100%;
+        height: 100%;
+        margin: 10px;
+        padding: 10px;
+        background-color: white;
+        text-decoration: none;
+        color: black;
+        padding: 20px;
+    }
+
+    .titleBook-search {
+        font-weight: bold;
+        font-size: 2.5vmin;
+        color: #a8a787;
+    }
+
+    .bookImg {
+        flex: 0.5;
+    }
+
+    .bookLongCard-search img {
+        height: auto;
+        width: auto;
+        max-height: 260px;
+    }
+
+    .bookLongCard-search:hover {
+        background-color: #f1f1f1;
+        color: black;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .bookInfo {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: flex-start;
+        padding-left: 20px;
+    }
+
+    .bookInfo p {
+        text-align: left;
+        flex: 1;
+        font-size: 2vmin;
+    }
+
+    .bookInfo span {
+        font-weight: bold;
+    }
+
+    .bookLongCard-search p {
+        text-align: left;
+        flex: 1;
+        font-size: 2.5vmin;
+    }
+
+
+    @media screen and (max-width: 900px) {
+
+        .bookLongCard-search p {
+            text-align: center;
+            flex: 1;
+            font-size: 2vmin;
+        }
+
+        .bookLongCard-search img {
+            height: auto;
+            width: auto;
+            max-height: 200px;
+        }
+
+
+        #searchBookList {
+            --gap: 16px;
+            --num-cols: 1;
+            --row-height: 240px;
+
+            box-sizing: border-box;
+            padding: var(--gap);
+
+            display: grid;
+            grid-template-columns: repeat(var(--num-cols), 1fr);
+            grid-auto-rows: var(--row-height);
+            gap: var(--gap);
+        }
+
+    }
+</style>
+
+<script>
+    export default {
+        name: 'MyEbooksContent',
+        props: ['books'],
+    }
+
+</script>
