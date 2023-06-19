@@ -1,5 +1,6 @@
 <script setup>
 import NavbarSimple from "@/components/NavbarSimple.vue";
+import TheFooter from "@/components/TheFooter.vue";
 </script>
 
 <template>
@@ -23,6 +24,7 @@ import NavbarSimple from "@/components/NavbarSimple.vue";
         </form>
 
     </body>
+    <TheFooter />
 </template>
 
 <style>

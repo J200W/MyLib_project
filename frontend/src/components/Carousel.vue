@@ -1,5 +1,5 @@
 <template>
-
+        <hr>
     <div id="carousel">
         <h1 id="title-section">{{ name }}</h1>
         <div id="carouselImages">
@@ -118,11 +118,16 @@
         text-align: center;
         font-weight: bolder;
         margin-top: 20px;
+        color: #a8a787;
+        font-size: 2.2vmin;
     }
 
     @media screen and (max-width: 1000px) {
         #carouselImagesContainerImages img {
             max-width: 150px;
+        }
+        #carouselImagesContainerImages p {
+            font-size: 2vmin;
         }
     }
 

@@ -9,6 +9,7 @@
     }
     body {
         background-color: #F7EDE2;
+        min-height: 80vh;
     }
 
     #titlePage {

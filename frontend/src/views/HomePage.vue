@@ -3,7 +3,7 @@
         <img src="../assets/logo.png" width="140" height="140">
         <h1 class="main"> Welcome to MyLib </h1>
         <p> Explore our extensive catalog and dive into a world of captivating reads. </p>
-        <router-link class="link" to="/LogIn">Explore Now</router-link>
+        <router-link class="link" to="/MainPage">Explore Now</router-link>
     </div>
 
     <body>
@@ -16,6 +16,8 @@
         <p v-on:click=link_BookDetails()>BookDetails</p>
         <p v-on:click=link_MyFavorites()>MyFavorites</p>
     </body>
+
+    <TheFooter />
 </template>
 
 
@@ -77,6 +79,8 @@
 </style>
 
 <script>
+
+import TheFooter from '@/components/TheFooter.vue'
 export default {
     name: 'HomePage',
     data() { return {} },

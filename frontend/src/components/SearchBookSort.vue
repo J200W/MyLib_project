@@ -1,20 +1,17 @@
 <template>
-    <h1 id="title-MyEbook">Ebook of {{ pseudo }}</h1>
+    <h1 id="title-MyEbook">Results for "{{ result }}"</h1>
 
-    <div class="sort-collection">
-        <h3 class="label-selector">Sort</h3>
-        <select class="sort-collection-select">
+    <div class="sort-collection-search">
+        <h3 class="label-selector-search">Sort</h3>
+        <select class="sort-collection-select-search">
             <option value="title">Title</option>
             <option value="author">Author</option>
             <option value="date">Date</option>
-            <option value="time">Time Remaining</option>
+            <option value="time-remaining">Time Remaining</option>
         </select>
-    </div>
 
-    <div class="sort-collection">
-
-        <h3 class="label-selector">Genre</h3>
-        <select class="sort-collection-select">
+        <h3 class="label-selector-search">Genre</h3>
+        <select class="sort-collection-select-search">
             <option value="Biography">Biography</option>
             <option value="Classic">Classic</option>
             <option value="Children's literature">Children's literature</option>
@@ -42,14 +39,6 @@
             <option value="Young adult fiction">Young adult fiction</option>
         </select>
     </div>
-
-    <div class="input-container">
-        <h3 class="label-selector-shared">Shared</h3>
-        <label for="search-checkbox" class="search-label">
-            <input type="checkbox" id="search-checkbox" class="search-checkbox">
-            <span class="checkmark"></span>
-        </label>
-    </div>
 </template>
 
 <style>
@@ -60,7 +49,7 @@
         margin-left: 5%;
     }
 
-    .sort-collection {
+    .sort-collection-search {
         margin-left: 5%;
         margin-bottom: 1%;
         display: flex;
@@ -70,15 +59,16 @@
         width: 50%;
     }
 
-    .label-selector {
+    .label-selector-search {
         margin-right: 1%;
         font-size: 2vmin;
         flex: 0.5;
         height: auto;
+        margin-left: 4vmin;
     }
 
-    .sort-collection-select {
-        width: 20%;
+    .sort-collection-select-search {
+        width: 200px;
         height: 5%;
         flex: 1;
         font-size: 2vmin;
@@ -87,7 +77,7 @@
         border-radius: 20px;
     }
 
-    .sort-collection h3 {
+    .sort-collection-search h3 {
         font-size: 2vmin;
         flex: 0.25;
         margin-bottom: 0;
@@ -95,67 +85,13 @@
         justify-content: center;
         height: auto;
     }
-
-
-    .input-container {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-left: 5%;
-        margin-bottom: 1%;
-        max-width: 300px;
-        width: 50%;
-    }
-
-    .search-label {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .search-checkbox {
-        display: none;
-    }
-
-    .checkmark {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        background-color: #FFF;
-        border-radius: 3px;
-        margin-left: 5px;
-        position: relative;
-        border: #000 solid 2px;
-    }
-
-    .label-selector-shared {
-        margin-right: 1%;
-        font-size: 2vmin;
-        flex: 0.25;
-        height: auto;
-    }
-
-    .checkmark:after {
-        content: "";
-        position: absolute;
-        display: none;
-        left: 6px;
-        top: 2px;
-        width: 4px;
-        height: 8px;
-        border: solid #000;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-    }
-
-    .search-checkbox:checked+.checkmark:after {
-        display: block;
-    }
+    
 </style>
 
 <script>
 export default {
-    props: ['pseudo'],
+    name: 'SearchBookSort',
+    props: ['result'],
 }
 
 </script>

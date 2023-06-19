@@ -3,15 +3,18 @@
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
     import BookDetailsComp from "@/components/BookDetailsComp.vue";
     import Comments from "@/components/Comments.vue";
+    import TheFooter from "@/components/TheFooter.vue";
+    var connected = true;
 </script>
 
 <template>
-    <NavbarConnected />
+    <NavbarConnected v-if="connected" />
+    <NavbarNonConnected v-if="!connected" />
     <body>
         <BookDetailsComp />
         <Comments />
     </body>
-    
+    <TheFooter />
 </template>
 
 

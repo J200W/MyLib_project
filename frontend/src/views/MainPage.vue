@@ -2,36 +2,39 @@
     import NavbarConnected from "@/components/NavbarConnected.vue";
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
     import Carousel from "@/components/Carousel.vue";
+    import TheFooter from "@/components/TheFooter.vue";
 
     const images = [
         {
             id: 1,
-            src: require("@/assets/book_example.png"),
+            src: require("@/assets/onepiece96.png"),
             title: "One Piece 96",
         },
 
         {
             id: 2,
-            src: require("@/assets/book_example2.png"),
+            src: require("@/assets/onepiece97.png"),
             title: "One Piece 97",
         },
 
         {
             id: 3,
-            src: require("@/assets/book_example3.png"),
+            src: require("@/assets/onepiece98.png"),
             title: "One Piece 98",
         },
 
         {
             id: 4,
-            src: require("@/assets/book_example4.png"),
+            src: require("@/assets/onepiece99.png"),
             title: "One Piece 99",
         }
     ]
+    var connected = true;
 </script>
 
 <template>
-    <NavbarConnected />
+    <NavbarConnected v-if="connected" />
+    <NavbarNonConnected v-if="!connected" />
     <h1 id="titleMainPage">Unleash your imagination with an extensive eBook collection</h1>
     <hr id="hr">
     <div id="carousels">
@@ -39,6 +42,8 @@
         <Carousel :images="images" :name="'New'" />
         <Carousel :images="images" :name="'Discover'" />
     </div>
+
+    <TheFooter />
     
 </template>
 

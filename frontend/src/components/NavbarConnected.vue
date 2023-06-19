@@ -1,7 +1,7 @@
 <template>
     <div id="navbar">
         <div id="navbar-left">
-            <router-link to="/">
+            <router-link to="/MainPage">
                 <img id="logo" src="@/assets/logo.png" alt="logo">
             </router-link>
             <form id="search-bar" action="" method="post">

@@ -14,7 +14,7 @@ $(document).ready(function () {
     <div id="allPage">
         <div id="left-section">
             <div id="left-left-section">
-                <img id="bookImg" src="@/assets/book_example.png" alt="Book_example">
+                <img id="bookImg" src="@/assets/onepiece96.png" alt="Book_example">
                 <router-link to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
                 <p>Stock: <span>0</span></p>
                 <p>Source: <span>Bibliothèque de crimée, Paris 19</span></p>
