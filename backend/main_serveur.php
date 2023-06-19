@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     switch($_SERVER['REQUEST_URI']){
         case '/elements_to_send.php':
             // Inclure le fichier contenant les éléments à renvoyer
-            include '/elements_to_send.php';
+            include 'elements_to_send.php';
             // Renvoie les éléments en tant que réponse JSON
             // Utilisez les éléments importés ici selon vos besoins
             header('Content-Type: application/json');
