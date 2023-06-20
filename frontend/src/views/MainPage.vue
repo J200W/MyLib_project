@@ -35,6 +35,10 @@
 <template>
     <NavbarConnected v-if="connected" />
     <NavbarNonConnected v-if="!connected" />
+
+    
+    
+    
     <h1 id="titleMainPage">Unleash your imagination with an extensive eBook collection</h1>
     <hr id="hr">
     <div id="carousels">

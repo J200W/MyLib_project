@@ -8,30 +8,37 @@ $(document).ready(function () {
     });
 
 });
+
+const admin = true
+
 </script>
 
 <template>
     <div id="allPage">
         <div id="left-section">
             <div id="left-left-section">
-                <img id="bookImg" src="@/assets/onepiece96.png" alt="Book_example">
+                <img id="bookImg" :src="book.src" alt="{{ book.title }}">
                 <router-link to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
-                <p>Stock: <span>0</span></p>
-                <p>Source: <span>Bibliothèque de crimée, Paris 19</span></p>
+                <p>Stock: 
+                    <span>{{ book.stock }}</span>
+                </p>
+                <p>Source: <span>{{ book.source }}</span></p>
             </div>
-            <div id="bookInfo">
+            <div v-show="admin" id="bookInfo">
                 <h2>Info</h2>
-                <p>Author : <span>Eichiro Oda</span></p>
+                <p>Author : <span>{{book.author}}</span></p>
                 <hr>
-                <p>Edition : <span>Glénat</span></p>
+                <p>Edition : <span>{{book.edition}}</span></p>
                 <hr>
-                <p>Release : <span>7 octobre 2020</span></p>
+                <p>Release : <span>{{ book.date }}</span></p>
                 <hr>
-                <p>Languages : <span>French</span></p>
+                <p>Languages : <span>{{ book.langue }}</span></p>
                 <hr>
-                <p>Genre : <span>Manga, Aventures, Pirates</span></p>
+                <p>Genre : <span>{{ book.genre }}</span></p>
                 <hr>
-                <p>Pages : <span>192</span></p>
+                <p>Theme : <span>{{ book.theme }}</span></p>
+                <hr>
+                <p>Pages : <span>{{  book.page }}</span></p>
             </div>
         </div>
 
@@ -39,21 +46,29 @@ $(document).ready(function () {
             <h2>Resume</h2>
             <div id="book-resume">
                 <div class="row">
-                    <p>Luffy va-t-il réussir à redonner le sourire aux habitants du pays des Wa et à 
-                        libérer cette île qui a traversé de rudes épreuves au cours des vingt années de domination de 
-                        Kaido et Orochi ?! Tout repose désormais sur la puissance de ses poings ! L’arc du pays des 
-                        Wa est à son apogée ! Les aventures de Luffy à la poursuite du One Piece continuent !
-                        Sed eleifend lectus id semper accumsan. Sed lobortis id ligula eget blandit. 
-                        Integer interdum iaculis nunc, sed porttitor magna tincidunt in. Interdum et malesuada fames 
-                        ac ante ipsum primis in faucibus. Aliquam lobortis accumsan tempor. Aliquam sollicitudin pulvinar 
-                        est, quis convallis tellus.</p>
+                    <p>{{ book.description }}</p>
                 </div>
             </div>
         </div>
     </div>
 </template>
 
+<script>
+    export default {
+        name: 'BookDetailComp',
+        props: ['book'],
+        data() {
+            return {
+            message: ''
+            }
+        }
+    }
+
+</script>
+
 <style>
+
+    
 
     hr {
         border: 0;
@@ -129,11 +144,12 @@ $(document).ready(function () {
     #bookImg {
         margin: auto;
         display: block;
-        max-width: 225px;
+        max-width: 300px;
     }
 
     #borrow-book {
         margin-top: 20px !important;
+        margin-bottom: 20px !important;
         background-color: #A8A787;
         border: none;
         color: white;

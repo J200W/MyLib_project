@@ -11,6 +11,14 @@
                     <p><span>Date: </span>{{ book.date }}</p>
                     <p><span>Library: </span>{{ book.library }}</p>
                     <p><span>Genre: </span>{{ book.genre }}</p>
+
+                    <p><span>Theme: </span>{{ book.theme }}</p>
+                    <div class="ContainerManageBookButton">
+                        <button class ="bookButton" id="deleteButton">Delete</button>
+                        <button class ="bookButton" id="modifyButton">Modify</button>
+                    </div> 
+
+
                 </div>
             </router-link>
         </div>
@@ -18,6 +26,44 @@
 </template>
 
 <style>
+
+    #manageBookButton{
+        text-align: left;
+        flex: 1;
+        font-size: 2vmin;
+    }
+
+    .bookButton{
+        border-radius: 10%;
+        transition-duration: 0.4s;
+    }
+
+    #deleteButton{
+        background-color: red;
+    }
+
+    #deleteButton:hover{
+        background-color: rgb(146, 32, 32);
+    }
+
+    #modifyButton{
+        background-color: rgb(94, 94, 221);
+    }
+
+    #modifyButton:hover{
+        background-color: rgb(15, 15, 126);
+    }
+
+
+    .ContainerManageBookButton {
+        display: flex;
+        align-items: flex-end;
+        margin-left: 320px;
+        flex-direction: row;
+        gap: 1.2em;
+    }
+
+
     #searchBookList {
         --gap: 16px;
         --num-cols: 2;
@@ -138,7 +184,7 @@
 
 <script>
     export default {
-        name: 'MyEbooksContent',
+        name: 'SearchBookContent',
         props: ['books'],
     }
 

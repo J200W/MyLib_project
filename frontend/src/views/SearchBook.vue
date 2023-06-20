@@ -14,6 +14,8 @@
             date: "04/11/2020",
             library: "Bibliothèque de l'Université de Lille",
             genre: "Manga",
+            theme: "Romance"
+            
         },
 
         {
@@ -24,6 +26,7 @@
             date: "03/02/2021",
             library: "Bibliothèque de l'Université de Paris 8",
             genre: "Manga",
+            theme: "Action"
         },
         {
             id: 3,
@@ -33,6 +36,7 @@
             date: "07/04/2021",
             library: "Bibliothèque Municipale de Lyon",
             genre: "Manga",
+            theme: "Action"
         },
         {
             id: 4,
@@ -42,6 +46,7 @@
             date: "04/08/2021",
             library: "Bibliothèque Municipale de Livry-Gargan",
             genre: "Manga",
+            theme: "Action"
         },
     ]
 

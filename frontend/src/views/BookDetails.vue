@@ -4,6 +4,25 @@
     import BookDetailsComp from "@/components/BookDetailsComp.vue";
     import Comments from "@/components/Comments.vue";
     import TheFooter from "@/components/TheFooter.vue";
+
+    const book = 
+        {
+            id: 1,
+            title: "One Piece Tome 96",
+            src: require("@/assets/onepiece96.png"),
+            author: "Eiichiro Oda",
+            edition: "Glenat",
+            date: "04/11/2020",
+            langue: "french",
+            library: "Bibliothèque de l'Université de Lille",
+            description:" Luffy va-t-il réussir à redonner le sourire aux habitants du pays des Wa et à libérer cette île qui a traversé de rudes épreuves au cours des vingt années de domination de Kaido et Orochi ?! Tout repose désormais sur la puissance de ses poings ! L’arc du pays des Wa est à son apogée ! Les aventures de Luffy à la poursuite du One Piece continuent ! Sed eleifend lectus id semper accumsan. Sed lobortis id ligula eget blandit. Integer interdum iaculis nunc, sed porttitor magna tincidunt in. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam lobortis accumsan tempor. Aliquam sollicitudin pulvinar est, quis convallis tellus.",
+            genre: "Manga",
+            theme: "Romance",
+            page: "120",
+            stock: "8",
+            source: "Crimée, bibliotheque",
+        }
+
     var connected = true;
 </script>
 
@@ -11,8 +30,8 @@
     <NavbarConnected v-if="connected" />
     <NavbarNonConnected v-if="!connected" />
     <body>
-        <BookDetailsComp />
-        <Comments />
+        <BookDetailsComp :book="book" />
+        <Comments/>
     </body>
     <TheFooter />
 </template>

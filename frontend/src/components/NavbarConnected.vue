@@ -1,3 +1,12 @@
+<script setup>
+
+
+const admin = true
+
+</script>
+
+
+
 <template>
     <div id="navbar">
         <div id="navbar-left">
@@ -18,6 +27,13 @@
                     <a class="dropdown-item" href="/MyEbooks">My Ebooks</a>
                     <a class="dropdown-item" href="/MyFavorites">My Favorites</a>
                     <a class="dropdown-item" href="/MyHistory">History</a>
+
+                    <div v-show="admin">
+                        <a class="dropdown-item" href="/SearchBook">ManageBooks</a>
+                        <a class="dropdown-item" href="/ManageUsers">ManageUsers</a>
+                    </div>
+                    
+                    
                 </div>
             </div>
             <router-link class="navbar-link" to="/MyAccount">My Account</router-link>

@@ -1,22 +1,25 @@
 <script setup>
     import NavbarConnected from "@/components/NavbarConnected.vue";
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
+    import BookReader from "@/components/BookReader.vue"
     import TheFooter from "@/components/TheFooter.vue";
 
     var connected = true;
+
+    const source3 = "@/assets/Yohan_Saba_TP4_database.pdf"
+    // const source3 = require("@/assets/onepiece97.png")
+
 </script>
 
 <template>
     <NavbarConnected v-if="connected" />
     <NavbarNonConnected v-if="!connected" />
-    <p>Hi</p>
+    <BookReader :src="source3"></BookReader>
     <TheFooter />
 </template>
   
   
-  
-<style></style>
-  
+
 <script>
 export default {
     name: 'ReadBook',
@@ -64,6 +67,6 @@ export default {
         link_MainPage: function (event) {
             this.$router.push({ path: '/MainPage' })
         },
-    }
+    },
 }
 </script>

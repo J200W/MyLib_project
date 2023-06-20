@@ -16,6 +16,7 @@
         </div>
     </div>
 
+
 </template>
 
 <style>
@@ -77,40 +78,13 @@
         transition: transform 0.5s;
     }
 
-    #carouselImagesContainerImages img:active {
-        transform: scale(1.1);
-        transition: transform 0.5s;
-    }
-
-    #carouselImagesContainerImages img:focus {
-        transform: scale(1.1);
-        transition: transform 0.5s;
-    }
-
-    #carouselImagesContainerImages img:visited {
-        transform: scale(1.1);
-        transition: transform 0.5s;
-    }
-
-    #carouselImagesContainerImages img:link {
-        transform: scale(1.1);
-        transition: transform 0.5s;
-    }
-
-    #carouselImagesContainerImages img:after {
-        transform: scale(1.1);
-        transition: transform 0.5s;
-    }
 
     #carouselImagesContainerImages img:before {
         transform: scale(1.1);
         transition: transform 0.5s;
     }
 
-    #carouselImagesContainerImages img:selection {
-        transform: scale(1.1);
-        transition: transform 0.
-    }
+
 
     #carouselImagesContainerImages p {
         width: 100%;
@@ -142,6 +116,6 @@
 <script>
 export default {
     name: 'Carousel',
-    props: ['name', 'images'],
+    props: ['name', 'images']
 }
 </script>
