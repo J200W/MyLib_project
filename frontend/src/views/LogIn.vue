@@ -13,7 +13,7 @@ import TheFooter from "@/components/TheFooter.vue";
             <router-link class="tabs" to="/SignUp">Sign Up</router-link>
         </div>
 
-        <form id="form-login" action="" method="post">
+        <form id="form-login" @submit="submitForm">
             <label class="form-label" for="username">Email Address</label>
             <input class="form-input" type="email" id="username" name="username" v-model="email" required>
             <label class="form-label" for="password">Password</label>
@@ -133,52 +133,52 @@ body {
 }
 </style>
 
-  <script>
+<script>
 
 
-    export default
-    {
-      name:'LogIn',
-      data() {
-        return {
-          email: 'john@example.com',
-          password: ''
+  export default
+  {
+    name:'LogIn',
+    data() {
+      return {
+        email: 'john@example.com',
+        password: ''
+      };
+    },
+    mounted() {
+      this.fetchUserData();
+    },
+    methods: {
+      fetchUserData() {
+      },
+      submitForm(event) {
+        // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+        console.log('Formulaire soumis !', this.email, this.password);
+        event.preventDefault();
+
+        var datas = {
+          email: this.email,
+          password: this.password
         };
-      },
-      mounted() {
-        this.fetchUserData();
-      },
-      methods: {
-        fetchUserData() {
-        },
-        submitForm(event) {
-          // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
-          console.log('Formulaire soumis !', this.email, this.password);
-          event.preventDefault();
 
-          var datas = {
-            email: this.email,
-            password: this.password
-          };
+        fetch("http://localhost:80/send_login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+            //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+          },
+          body: JSON.stringify(datas)
+        })
+            .then(response => response.text())
+            .then(data => {
+              // Traiter la réponse du serveur
+              console.log("Connexion on serveur", data);
+            })  .catch(error => {
+          // Gérer les erreurs
+          console.error("Erreur lors de l'envoi du formulaire :", error);
+        });
 
-          fetch("http://localhost:80/send_login", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
-              //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
-            },
-            body: JSON.stringify(datas)
-          })
-              .then(response => response.text())
-              .then(data => {
-                // Traiter la réponse du serveur
-                console.log("Connexion on serveur", data);
-              })  .catch(error => {
-            // Gérer les erreurs
-            console.error("Erreur lors de l'envoi du formulaire :", error);
-          });
-
-        }
       }
     }
-  </script>
+  }
+</script>

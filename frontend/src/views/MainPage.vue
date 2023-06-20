@@ -3,32 +3,42 @@
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
     import Carousel from "@/components/Carousel.vue";
     import TheFooter from "@/components/TheFooter.vue";
+    //import {OnePiece96} from "../assets";
+    /*
+    const src_images = [require("@/assets/onepiece96.png"),
+      require("@/assets/onepiece97.png"),
+      require("@/assets/onepiece98.png"),
+      require("@/assets/onepiece99.png")];*/
 
-    const images = [
-        {
-            id: 1,
-            src: require("@/assets/onepiece96.png"),
-            title: "One Piece 96",
-        },
 
-        {
-            id: 2,
-            src: require("@/assets/onepiece97.png"),
-            title: "One Piece 97",
-        },
 
-        {
-            id: 3,
-            src: require("@/assets/onepiece98.png"),
-            title: "One Piece 98",
-        },
+    // VARIABLE TEMPORAIRE: pour les require uniquement
+    const temp_images = [
+      {
+        id: 11,
+        src: require("@/assets/onepiece96.png"),
+        title: "96",
+      },
 
-        {
-            id: 4,
-            src: require("@/assets/onepiece99.png"),
-            title: "One Piece 99",
-        }
+      {
+        id: 12,
+        src: require("@/assets/onepiece97.png"),
+        title: "97",
+      },
+
+      {
+        id: 13,
+        src: require("@/assets/onepiece98.png"),
+        title: "98",
+      },
+
+      {
+        id: 14,
+        src: require("@/assets/onepiece99.png"),
+        title: "99",
+      }
     ]
+
     var connected = true;
 </script>
 
@@ -38,9 +48,9 @@
     <h1 id="titleMainPage">Unleash your imagination with an extensive eBook collection</h1>
     <hr id="hr">
     <div id="carousels">
-        <Carousel :images="images" :name="'Continue to read'" />
-        <Carousel :images="images" :name="'New'" />
-        <Carousel :images="images" :name="'Discover'" />
+        <Carousel :images="temp_images" :name="'Continue to read'" />
+        <Carousel :images="temp_images" :name="'New'" />
+        <Carousel :images="temp_images" :name="'Discover'" />
     </div>
 
     <TheFooter />
@@ -78,53 +88,31 @@
 }
 </style>
 
-<script>
+<script >
 export default {
-    name: 'MainPage',
-    data() { return {} },
-    methods: {
-        link_HomePage: function (event) {
-            this.$router.push({ path: '/' })
-        },
-        link_LogIn: function (event) {
-            this.$router.push({ path: '/LogIn' })
-        },
-        link_SignUp: function (event) {
-            this.$router.push({ path: '/SignUp' })
-        },
-        link_ForgottenPassword: function (event) {
-            this.$router.push({ path: '/ForgottenPassword' })
-        },
-        link_MyAccount: function (event) {
-            this.$router.push({ path: '/MyAccount' })
-        },
-        link_BookDetails: function (event) {
-            this.$router.push({ path: '/BookDetails' })
-        },
-        link_MyEbooks: function (event) {
-            this.$router.push({ path: '/MyEbooks' })
-        },
-        link_MyFavorites: function (event) {
-            this.$router.push({ path: '/MyFavorites' })
-        },
-        link_MyHistory: function (event) {
-            this.$router.push({ path: '/MyHistory' })
-        },
-        link_BorrowBook: function (event) {
-            this.$router.push({ path: '/BorrowBook' })
-        },
-        link_ReadBook: function (event) {
-            this.$router.push({ path: '/ReadBook' })
-        },
-        link_SearchBook: function (event) {
-            this.$router.push({ path: '/SearchBook' })
-        },
-        link_ShareBook: function (event) {
-            this.$router.push({ path: '/ShareBook' })
-        },
-        link_MainPage: function (event) {
-            this.$router.push({ path: '/MainPage' })
-        },
+  name:'MainPage',
+  data() {
+    return {
+      images: []
+    };
+  },
+  mounted() {
+    this.fetchUserData();
+  },
+  methods: {
+    fetchUserData() {
+      // Effectuer une requête HTTP vers la page PHP pour récupérer les données utilisateur
+      fetch('http://localhost:80/books_for_main_page')
+          .then(response => response.json())
+          .then(data => {
+            console.log('Données utilisateur reçues:', data);
+            this.images = data;
+            /*Tri en fonction des templates ?*/
+          })
+          .catch(error => {
+            console.error('Erreur lors de la récupération des données utilisateur:', error);
+          });
     }
-}
+  }
+};
 </script>

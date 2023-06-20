@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const port = 80;
+//import { verify_signIn } from './database/authBDD.js';
+//require('./database/authBDD.js')
+const { verify_signIn } = require("./database/authBDD");
 /*
 const bodyParser = require('body-parser');
 
@@ -60,6 +63,20 @@ app.post('*', (req, res) => {
             break;
         case '/send_login':
             // Retourne une réponse JSON
+            verify_signIn(req.body.email, req.body.password).then((result) => {
+                if (result) {
+                    res.header('Content-Type', 'application/json');
+                    res.json([{ message: 'Authentification réussie !' }, { donnees: req.body }]);
+                } else {
+                    res.header('Content-Type', 'application/json');
+                    res.json([{ message: 'Authentification échouée !' }, { donnees: req.body }]);
+                }
+            });
+
+            break;
+
+        case '/send_login_forgotMdp':
+            // Retourne une réponse JSON
             res.header('Content-Type', 'application/json');
             res.json([{ message: 'Données reçues avec succès from test_serveur.php !' }, { donnees: req.body }]);
             break;
@@ -98,9 +115,48 @@ app.get('*', (req, res) => {
             res.header('Content-Type', 'application/json');
             res.json(req.body);
             break;
-        default:
-            res.status(404).json({ message: 'Erreur d\'URL pour la méthode GET' });
+
+        case '/books_for_main_page':
+            // Renvoie les éléments en tant que réponse JSON
+            // Utilisez les éléments importés ici selon vos besoins
+
+            const images = [
+                {
+                    id: 1,
+                    src: "@/assets/onepiece96.png",
+                    title: "One Piece 96",
+                },
+
+                {
+                    id: 2,
+                    src: "@/assets/onepiece97.png",
+                    title: "One Piece 97",
+                },
+
+                {
+                    id: 3,
+                    src: "@/assets/onepiece98.png",
+                    title: "One Piece 98",
+                },
+
+                {
+                    id: 4,
+                    src: "@/assets/onepiece99.png",
+                    title: "One Piece 99",
+                }
+            ]
+
+            res.header('Content-Type', 'application/json');
+            res.json(images);
             break;
+
+
+
+
+        default:
+            res.status(404).json({ message: 'Erreur d\'URL pour la méthode GET' + req.originalUrl.toString() });
+            break;
+
     }
 });
 
