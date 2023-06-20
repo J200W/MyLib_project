@@ -1,3 +1,6 @@
+<script setup>
+import function_nav from "@/router/functions_nav";
+</script>
 <template>
     <div class="container">
         <img src="../assets/logo.png" width="140" height="140">
@@ -5,19 +8,18 @@
         <p> Explore our extensive catalog and dive into a world of captivating reads. </p>
         <router-link class="link" to="/MainPage">Explore Now</router-link>
     </div>
-
-    <body>
-        This is the Home Page !<br><br>
-        <p v-on:click=link_MyEbooks()>MyEbooks</p>
-        <p v-on:click=link_LogIn()>LogIn</p>
-        <p v-on:click=link_SignUp()>SignUp</p>
-        <p v-on:click=link_ForgottenPassword()>ForgottenPassword</p>
-        <p v-on:click=link_MyAccount()>MyAccount</p>
-        <p v-on:click=link_BookDetails()>BookDetails</p>
-        <p v-on:click=link_MyFavorites()>MyFavorites</p>
-    </body>
-
-    <TheFooter />
+   <body>
+    This is the Home Page !<br><br>
+      <p v-on:click=function_nav.link_MyEbooks.call(this) >MyEbooks</p>
+      <p v-on:click=function_nav.link_LogIn.call(this) >LogIn</p>
+      <p v-on:click=function_nav.link_SignUp.call(this) >SignUp</p>
+      <p v-on:click=function_nav.link_ForgottenPassword.call(this) >ForgottenPassword</p>
+      <p v-on:click=function_nav.link_MyAccount.call(this) >MyAccount</p>
+      <p v-on:click=function_nav.link_BookDetails.call(this)>BookDetails</p>
+      <p v-on:click=function_nav.link_MyFavorites.call(this)>MyFavorites</p>
+  </body>
+  
+  <TheFooter />
 </template>
 
 
@@ -79,51 +81,10 @@
 </style>
 
 <script>
-
-import TheFooter from '@/components/TheFooter.vue'
-export default {
-    name: 'HomePage',
-    data() { return {} },
-    methods: {
-        link_HomePage: function (event) {
-            this.$router.push({ path: '/' })
-        },
-        link_LogIn: function (event) {
-            this.$router.push({ path: '/LogIn' })
-        },
-        link_SignUp: function (event) {
-            this.$router.push({ path: '/SignUp' })
-        },
-        link_ForgottenPassword: function (event) {
-            this.$router.push({ path: '/ForgottenPassword' })
-        },
-        link_MyAccount: function (event) {
-            this.$router.push({ path: '/MyAccount' })
-        },
-        link_BookDetails: function (event) {
-            this.$router.push({ path: '/BookDetails' })
-        },
-        link_MyEbooks: function (event) {
-            this.$router.push({ path: '/MyEbooks' })
-        },
-        link_MyFavorites: function (event) {
-            this.$router.push({ path: '/MyFavorites' })
-        },
-        link_MyHistory: function (event) {
-            this.$router.push({ path: '/MyHistory' })
-        },
-        link_BorrowBook: function (event) {
-            this.$router.push({ path: '/BorrowBook' })
-        },
-        link_ReadBook: function (event) {
-            this.$router.push({ path: '/ReadBook' })
-        },
-        link_SearchBook: function (event) {
-            this.$router.push({ path: '/SearchBook' })
-        },
-        link_ShareBook: function (event) {
-            this.$router.push({ path: '/ShareBook' })
-        }
+  export default{
+    name:'HomePage',
+    data(){return {}},
+    methods:{
     }
 }
 </script>

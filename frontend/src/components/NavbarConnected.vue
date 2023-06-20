@@ -13,9 +13,9 @@ const admin = true
             <router-link to="/MainPage">
                 <img id="logo" src="@/assets/logo.png" alt="logo">
             </router-link>
-            <form id="search-bar" action="" method="post">
-                <input placeholder="I am looking for..." type="text" name="search-bar" id="search-input">
-                <input type="submit" value="Search" id="search-submit">
+            <form id="search-bar" @submit="submitForm">
+                <input placeholder="I am looking for..." type="text" name="search-bar" id="search-input" v-model="researched_name">
+                <input type="submit" value="Search" id="search-submit" onsubmit="submitForm()">
             </form>
         </div>
         <div id="navbar-right">
@@ -45,10 +45,10 @@ const admin = true
 <style>
 
     .btn {
-        background-color: #5C5C50;
-        border: 2px solid white;
+        background-color: #D0AB77;
+        border: 2px solid black;
         border-radius: 40px;
-        color: white;
+        color: black;
         font-size: 2vmin;
         padding: 15px;
         margin: 0.5rem;
@@ -58,7 +58,7 @@ const admin = true
 
     .btn:hover {
         background-color: #0C0A0B;
-        border: white 2px solid;
+        border: black 2px solid;
         border-radius: 40px;
         transition: all 0.3s ease-in-out;
     }
@@ -75,7 +75,7 @@ const admin = true
         justify-content: left;
         max-height: 100px;
         height: auto;
-        background-color: #5C5C50;
+        background-color: #D0AB77;
         width: 100%;
         z-index: 2;
         padding-left: 20px;
@@ -93,15 +93,15 @@ const admin = true
         padding: 1em;
         margin: 0.5rem;
         text-decoration: none;
-        color: white;
+        color: black;
         align-items: left;
-        border: 2px solid white;
+        border: 2px solid black;
         border-radius: 40px;
     }
 
     .navbar-link:hover {
         background-color: #0C0A0B;
-        border: white 2px solid;
+        border: black 2px solid;
         border-radius: 40px;
         transition: all 0.3s ease-in-out;
         color: white;
@@ -111,7 +111,7 @@ const admin = true
         display: flex;
         flex-direction: row;
         max-height: 100px;
-        background-color: #5C5C50;
+        background-color: #FFF;
         width: 100%;
         padding: 0.6rem;
         flex: 1;
@@ -129,8 +129,8 @@ const admin = true
         text-decoration: none;
         color: black;
         align-items: left;
-        border: 2px solid #AAA;
-        background-color: #AAA;
+        border: 2px solid #FFF;
+        background-color: #FFF;
         width: 50%;
     }
 
@@ -156,7 +156,7 @@ const admin = true
         align-items: center;
         justify-content: center;
         max-height: 100px;
-        background-color: #5C5C50;
+        background-color: #D0AB77;
         width: 100%;
     }
 
@@ -165,7 +165,7 @@ const admin = true
         justify-content: right;
         align-items: right;
         max-height: 140px;
-        background-color: #5C5C50;
+        background-color: #D0AB77;
         width: 100%;
     }
 
@@ -188,3 +188,59 @@ const admin = true
         }
     }
 </style>
+
+
+<script>
+
+import functions_nav from "@/router/functions_nav";
+
+export default
+{
+  name:'NavBar',
+  data() {
+    return {
+      researched_name: ''
+    };
+  },
+  mounted() {
+    this.fetchUserData();
+  },
+  methods: {
+    fetchUserData() {
+    },
+    submitForm(event) {
+      // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+
+      if (this.researched_name !== ''){
+        console.log('Formulaire soumis !', this.researched_name);
+        event.preventDefault();
+
+        let datas = {
+          researched_name : this.researched_name
+        };
+
+        fetch("http://localhost:80/send_research_fromNavBar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+            //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+          },
+          body: JSON.stringify(datas)
+        })
+            .then(response => response.text())
+            .then(data => {
+              // Traiter la réponse du serveur
+              console.log("Recherche envoyée", data);
+              functions_nav.link_SearchBook.call(this);
+            })  .catch(error => {
+          // Gérer les erreurs
+          console.error("Erreur lors de l'envoi du formulaire :", error);
+        });
+
+      }
+    }
+  }
+
+}
+
+</script>

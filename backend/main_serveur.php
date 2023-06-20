@@ -33,9 +33,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Content-Type: application/json');
             echo json_encode([['message' => 'Données reçues avec succès from test_serveur.php !'], ['donnees' => $data]]);
             break;
+
+        case '/send_research_fromNavBar':
+            // Renvoie les éléments en tant que réponse JSON
+            // Utilisez les éléments importés ici selon vos besoins
+            header('Content-Type: application/json');
+            echo json_encode($data);
+            break;
+
         default:
             echo json_encode(['message' => "Erreur d'url pour methode POST"]);
             break;
+
+
     }
     exit();
 }
@@ -46,11 +56,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     switch($_SERVER['REQUEST_URI']){
         case '/elements_to_send.php':
             // Inclure le fichier contenant les éléments à renvoyer
-            include '/elements_to_send.php';
+            include 'elements_to_send.php';
             // Renvoie les éléments en tant que réponse JSON
             // Utilisez les éléments importés ici selon vos besoins
             header('Content-Type: application/json');
             echo json_encode($elements);
+            break;
+        case '/send_research_fromNavBar':
+            // Renvoie les éléments en tant que réponse JSON
+            // Utilisez les éléments importés ici selon vos besoins
+            header('Content-Type: application/json');
+            echo json_encode($data);
             break;
         default:
             echo json_encode(['message' => "Erreur d'url pour methode POST"]);

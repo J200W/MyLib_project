@@ -1,11 +1,3 @@
-<script setup>
-$(document).ready(function () {
-    $('.nav-toggle').click(function () {
-        var collapse_content_selector = $(this).attr('href');
-        var toggle_switch = $(this);
-        $(collapse_content_selector).toggle(function () {
-        });
-    });
 
 });
 
@@ -139,6 +131,7 @@ const admin = true
         padding: 20px;
         border-radius: 20px;
         font-size: 2vmin;
+        overflow: auto;
     }
 
     #bookImg {
@@ -163,7 +156,7 @@ const admin = true
     }
 
     #borrow-book:hover {
-        background-color: #545444;
+        background-color: #D79262;
         color: white;
         transition: all 0.3s ease 0s;
     }

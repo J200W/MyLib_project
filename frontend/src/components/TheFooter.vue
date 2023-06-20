@@ -11,7 +11,7 @@
         justify-content: center;
         align-items: center;
         width: 100%;
-        background-color: #5C5C50;
+        background-color: #D79262;
         color: white;
         padding: 20px;
         margin-top: 30px;
