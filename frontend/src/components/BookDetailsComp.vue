@@ -1,14 +1,4 @@
-<script setup>
-$(document).ready(function () {
-    $('.nav-toggle').click(function () {
-        var collapse_content_selector = $(this).attr('href');
-        var toggle_switch = $(this);
-        $(collapse_content_selector).toggle(function () {
-        });
-    });
 
-});
-</script>
 
 <template>
     <div id="allPage">
@@ -124,6 +114,7 @@ $(document).ready(function () {
         padding: 20px;
         border-radius: 20px;
         font-size: 2vmin;
+        overflow: auto;
     }
 
     #bookImg {
@@ -134,7 +125,7 @@ $(document).ready(function () {
 
     #borrow-book {
         margin-top: 20px !important;
-        background-color: #A8A787;
+        background-color: #D0AB77;
         border: none;
         color: white;
         padding: 15px 32px;
@@ -147,7 +138,7 @@ $(document).ready(function () {
     }
 
     #borrow-book:hover {
-        background-color: #545444;
+        background-color: #D79262;
         color: white;
         transition: all 0.3s ease 0s;
     }

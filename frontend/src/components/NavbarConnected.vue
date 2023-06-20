@@ -29,10 +29,10 @@
 <style>
 
     .btn {
-        background-color: #5C5C50;
-        border: 2px solid white;
+        background-color: #D0AB77;
+        border: 2px solid black;
         border-radius: 40px;
-        color: white;
+        color: black;
         font-size: 2vmin;
         padding: 15px;
         margin: 0.5rem;
@@ -42,7 +42,7 @@
 
     .btn:hover {
         background-color: #0C0A0B;
-        border: white 2px solid;
+        border: black 2px solid;
         border-radius: 40px;
         transition: all 0.3s ease-in-out;
     }
@@ -59,7 +59,7 @@
         justify-content: left;
         max-height: 100px;
         height: auto;
-        background-color: #5C5C50;
+        background-color: #D0AB77;
         width: 100%;
         z-index: 2;
         padding-left: 20px;
@@ -77,15 +77,15 @@
         padding: 1em;
         margin: 0.5rem;
         text-decoration: none;
-        color: white;
+        color: black;
         align-items: left;
-        border: 2px solid white;
+        border: 2px solid black;
         border-radius: 40px;
     }
 
     .navbar-link:hover {
         background-color: #0C0A0B;
-        border: white 2px solid;
+        border: black 2px solid;
         border-radius: 40px;
         transition: all 0.3s ease-in-out;
         color: white;
@@ -95,7 +95,7 @@
         display: flex;
         flex-direction: row;
         max-height: 100px;
-        background-color: #5C5C50;
+        background-color: #FFF;
         width: 100%;
         padding: 0.6rem;
         flex: 1;
@@ -113,8 +113,8 @@
         text-decoration: none;
         color: black;
         align-items: left;
-        border: 2px solid #AAA;
-        background-color: #AAA;
+        border: 2px solid #FFF;
+        background-color: #FFF;
         width: 50%;
     }
 
@@ -140,7 +140,7 @@
         align-items: center;
         justify-content: center;
         max-height: 100px;
-        background-color: #5C5C50;
+        background-color: #D0AB77;
         width: 100%;
     }
 
@@ -149,7 +149,7 @@
         justify-content: right;
         align-items: right;
         max-height: 140px;
-        background-color: #5C5C50;
+        background-color: #D0AB77;
         width: 100%;
     }
 

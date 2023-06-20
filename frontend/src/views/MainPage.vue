@@ -4,7 +4,7 @@
     import Carousel from "@/components/Carousel.vue";
     import TheFooter from "@/components/TheFooter.vue";
 
-    const images = [
+    const books = [
         {
             id: 1,
             src: require("@/assets/onepiece96.png"),
@@ -38,9 +38,9 @@
     <h1 id="titleMainPage">Unleash your imagination with an extensive eBook collection</h1>
     <hr id="hr">
     <div id="carousels">
-        <Carousel :images="images" :name="'Continue to read'" />
-        <Carousel :images="images" :name="'New'" />
-        <Carousel :images="images" :name="'Discover'" />
+        <Carousel :books="books" :name="'Continue to read'" />
+        <Carousel :books="books" :name="'New'" />
+        <Carousel :books="books" :name="'Discover'" />
     </div>
 
     <TheFooter />

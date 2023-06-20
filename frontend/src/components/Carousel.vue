@@ -5,10 +5,10 @@
         <div id="carouselImages">
             <div id="carouselImagesContainer">
                 <div id="carouselImagesContainerImages">
-                    <div v-for="image in images" :key="image.id">
-                        <router-link :to="{ path: '/BookDetails', query: { name: image.title } }">
-                            <img :src="image.src" alt="image" />
-                            <p>{{ image.title }}</p>
+                    <div v-for="book in books" :key="book.id">
+                        <router-link :to="{ path: '/BookDetails', query: { name: book.title } }">
+                            <img :src="book.src" alt="image" />
+                            <p>{{ book.title }}</p>
                         </router-link>
                     </div>
                 </div>
@@ -28,6 +28,7 @@
         width: 80%;
         height: 100%;
         margin-top: 20px;
+        margin: auto;
     }
 
     #title-section {
@@ -118,7 +119,7 @@
         text-align: center;
         font-weight: bolder;
         margin-top: 20px;
-        color: #a8a787;
+        color: #D79262;
         font-size: 2.2vmin;
     }
 
@@ -142,6 +143,6 @@
 <script>
 export default {
     name: 'Carousel',
-    props: ['name', 'images'],
+    props: ['name', 'books'],
 }
 </script>
