@@ -1,37 +1,86 @@
+<script setup>
+
+const admin = true
+const isDisabled = true
+
+
+</script>
+
+
 <template>
     <div id="searchBookList">
         <div class="searchBook" v-for="book in books" :key="book.id">
-            <router-link class="bookLongCard-search" :to="{ path: '/BookDetails', query: { name: book.title } }">
+            <component id="book" class="bookLongCard-search" :is="isDisabled & admin ? 'span' : 'router-link'" :to="{ path: '/BookDetails', query: { name: book.title } }">
                 <div class="bookImg">
                     <img :src="book.src" alt="{{book.title}}" />
                 </div>
-                <div class="bookInfo">
-                    <p><span class="titleBook-search">{{ book.title }}</span></p>
-                    <p><span>Author: </span>{{ book.author }}</p>
-                    <p><span>Date: </span>{{ book.date }}</p>
-                    <p><span>Library: </span>{{ book.library }}</p>
-                    <p><span>Genre: </span>{{ book.genre }}</p>
+                    <div class="bookInfo">
+                        <p><span class="titleBook-search">{{ book.title }}</span></p>
+                        <p><span>Author: </span>{{ book.author }}</p>
+                        <p><span>Date: </span>{{ book.date }}</p>
+                        <p><span>Library: </span>{{ book.library }}</p>
+                        <p><span>Genre: </span>{{ book.genre }}</p>
+                        <p><span>Theme: </span>{{ book.theme }}</p>
+                    </div>
+                    <div v-show="admin">
+                        <button @click="remove_book()" class ="bookButton" id="deleteButton">Delete</button>
+                        <button class ="bookButton" id="modifyButton">Modify
 
-                    <p><span>Theme: </span>{{ book.theme }}</p>
-                    <div class="ContainerManageBookButton">
-                        <button class ="bookButton" id="deleteButton">Delete</button>
-                        <button class ="bookButton" id="modifyButton">Modify</button>
+                        <!-- ouvrir la page bookDetail du book en question  -->
+
+                        </button>
+                        
                     </div> 
-
-
-                </div>
-            </router-link>
+                
+            </component>
+            
         </div>
     </div>
 </template>
 
+
+
+
+<script>
+
+export default {
+        name: 'SearchBookContent',
+        props: ['books'],
+        methods: {
+            deleteBook(){
+                books.value.push({
+                id: nextTodoId++,
+                title: newTodoText.value
+            })
+        },
+        
+        test_function(){
+            let isMouseHover = false
+            let test = document.getElementById("deleteButton");
+            test.addEventListener("mouseleave", function (event) {
+            isMouseHover = false
+            event.target.textContent = "mouse out"
+            console.log(isMouseHover)
+            }, false);
+            test.addEventListener("mouseover", function (event) {
+            isMouseHover = true
+            event.target.textContent = "mouse in"
+            console.log(isMouseHover)
+            }, false);
+        },
+        remove_book(){
+            console.log("remove book")
+            // const element = document.getElementById("book");
+            // element.remove()
+        }
+    }
+}
+
+</script>
+
 <style>
 
-    #manageBookButton{
-        text-align: left;
-        flex: 1;
-        font-size: 2vmin;
-    }
+
 
     .bookButton{
         border-radius: 10%;
@@ -137,6 +186,7 @@
         text-align: left;
         flex: 1;
         font-size: 2vmin;
+        margin: 3px;
     }
 
     .bookInfo span {
@@ -182,10 +232,3 @@
     }
 </style>
 
-<script>
-    export default {
-        name: 'SearchBookContent',
-        props: ['books'],
-    }
-
-</script>

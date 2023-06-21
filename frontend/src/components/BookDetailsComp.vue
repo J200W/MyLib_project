@@ -1,9 +1,10 @@
 
-});
+<script setup>
 
 const admin = true
 
 </script>
+
 
 <template>
     <div id="allPage">
@@ -48,12 +49,7 @@ const admin = true
 <script>
     export default {
         name: 'BookDetailComp',
-        props: ['book'],
-        data() {
-            return {
-            message: ''
-            }
-        }
+        props: ['book']
     }
 
 </script>
