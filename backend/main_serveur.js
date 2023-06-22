@@ -6,6 +6,10 @@ const port = 80;
 //require('./database/authBDD.js')
 const { verify_signIn } = require("./database/authBDD");
 const { modify_myAccount } = require("./controllers/funct_user");
+const { list_books } = require("./database/listBooks");
+const { new_user } = require("./database/newUser");
+const { my_books } = require("./database/myEbooks");
+const { research } = require("./database/research");
 /*
 const bodyParser = require('body-parser');
 
@@ -57,6 +61,62 @@ app.post('*', (req, res) => {
             });
 
             break;
+
+            case '/send_signUp':
+            // Retourne une réponse JSON
+            new_user(req.body.email, req.body.name, req.body.fname, req.body.password).then((result) => {
+                if (result) {
+                    res.header('Content-Type', 'application/json');
+                    res.json([{ message: 'Account created successfully !' }, { donnees: req.body }]);
+                } else {
+                    res.header('Content-Type', 'application/json');
+                    res.json([{ message: 'Account creation failed !' }, { donnees: req.body }]);
+                }
+            });
+
+            break;
+
+            case '/list_books':
+                // Retourne une réponse JSON
+                list_books().then((result) => {
+                    if (result.length>0) {
+                        res.header('Content-Type', 'application/json');
+                        res.json([{ list: result }]);
+                    } else {
+                        res.header('Content-Type', 'application/json');
+                        res.json([{ message: 'empty list' }]);
+                    }
+                });
+    
+                break;
+
+            case '/my_books':
+                // Retourne une réponse JSON
+                my_books(req.body.id_client).then((result) => {
+                    if (result.length>0) {
+                        res.header('Content-Type', 'application/json');
+                        res.json([{ list: result }]);
+                    } else {
+                        res.header('Content-Type', 'application/json');
+                        res.json([{ message: 'empty list' }]);
+                    }
+                });
+    
+                break;
+
+                case '/search':
+                    // Retourne une réponse JSON
+                    research(req.body.title).then((result) => {
+                        if (result.length>0) {
+                            res.header('Content-Type', 'application/json');
+                            res.json([{ list: result }]);
+                        } else {
+                            res.header('Content-Type', 'application/json');
+                            res.json([{ message: 'no book found matching research' }]);
+                        }
+                    });
+        
+                    break;
 
         case '/send_login_forgotMdp':
             // Retourne une réponse JSON
