@@ -61,6 +61,13 @@ app.post('*', (req, res) => {
             }
 
             break;
+
+        case '/send_signIn':
+            // Retourne une réponse JSON
+            res.header('Content-Type', 'application/json');
+            res.json([{ message: 'Données reçues avec succès for' + req.originalUrl + 'from test_serveur.php !' }, { donnees: req.body }]);
+            break;
+
         case '/send_login':
             // Retourne une réponse JSON
             verify_signIn(req.body.email, req.body.password).then((result) => {
