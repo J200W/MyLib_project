@@ -6,16 +6,16 @@
 
     var connected = true;
 
-    const source3 = "@/assets/Yohan_Saba_TP4_database.pdf"
+    const source3 = 'Yohan_Saba_TP4_database.pdf#toolbar=0'
     // const source3 = require("@/assets/onepiece97.png")
 
 </script>
 
 <template>
-    <NavbarConnected v-if="connected" />
-    <NavbarNonConnected v-if="!connected" />
+    <!-- <NavbarConnected v-if="connected" /> -->
+    <!-- <NavbarNonConnected v-if="!connected" /> -->
     <BookReader :src="source3"></BookReader>
-    <TheFooter />
+    <!-- <TheFooter /> -->
 </template>
   
   

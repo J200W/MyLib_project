@@ -1,4 +1,5 @@
 import { router } from './index.js'
+
 export function link_MyAccount(event){
     this.$router.push({path: '/MyAccount'})
 }
@@ -39,6 +40,9 @@ export function link_SearchBook(event){
 export function link_ShareBook(event){
     this.$router.push({path: '/ShareBook'})
 }
+export function link_ManageUsers(event){
+    this.$router.push({path: '/ManageUsers'})
+}
 
 // Exportez les fonctions sous forme d'objet
 export default {
@@ -54,6 +58,7 @@ export default {
     link_BorrowBook,
     link_ReadBook,
     link_SearchBook,
-    link_ShareBook
+    link_ShareBook,
+    link_ManageUsers
 
 }
