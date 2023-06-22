@@ -36,6 +36,7 @@ export function link_ReadBook(event){
 }
 export function link_SearchBook(event){
     this.$router.push({path: '/SearchBook'})
+    // Forcer le rechargement de la page
 }
 export function link_ShareBook(event){
     this.$router.push({path: '/ShareBook'})

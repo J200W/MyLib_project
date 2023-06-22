@@ -13,7 +13,7 @@ import TheFooter from "@/components/TheFooter.vue";
             <router-link class="tabs" to="/SignUp">Sign Up</router-link>
         </div>
 
-        <form id="form-login" action="" method="post">
+        <form id="form-login"  @submit="submitForm">
             <label class="form-label" for="username">Email Address</label>
             <input class="form-input" type="email" id="username" name="username" v-model="email" required>
             <label class="form-label" for="password">Password</label>
@@ -72,13 +72,13 @@ body {
 }
 
 .tabs:hover {
-    background-color: #5C5C50;
+    background-color: #D79262;
     color: white;
     transition: all 0.3s ease 0s;
 }
 
 .selected {
-    background-color: #5C5C50;
+    background-color: #D79262;
     color: white;
 }
 
@@ -103,14 +103,14 @@ body {
     margin-bottom: 1rem;
     border-radius: 10px;
     border: #A8A787 2px solid;
-    background-color: #A8A787;
+    background-color: #D0AB77;
     color: #FFF;
     width: 50%;
     margin: auto;
 }
 
 .form-submit:hover {
-    background-color: #545444;
+    background-color: #D79262;
     border: #545444 2px solid;
     color: white;
     transition: all 0.3s ease 0s;
@@ -141,7 +141,7 @@ body {
       name:'LogIn',
       data() {
         return {
-          email: 'john@example.com',
+          email: '',
           password: ''
         };
       },

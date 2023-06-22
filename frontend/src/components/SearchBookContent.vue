@@ -11,8 +11,8 @@ const isDisabled = true
 
 <template>
     <div id="searchBookList">
-        <div id="book-comp" class="searchBook" v-for="book in books" :key="book.id">
-            <component id="book" class="bookLongCard-search" :is="isDisabled & admin ? 'span' : 'router-link'" :to="{ path: '/BookDetails', query: { name: book.title } }">
+        <div class="searchBook" v-for="book in books" :key="book.id">
+            <router-link class="bookLongCard-search" :to="{ path: '/BookDetails', query: { id: book.id } }">
                 <div class="bookImg">
                     <img :src="book.src" alt="{{book.title}}" />
                 </div>
@@ -34,9 +34,7 @@ const isDisabled = true
                         </button>
                         
                     </div> 
-                
-            </component>
-            
+            </router-link>
         </div>
     </div>
 </template>
@@ -84,7 +82,12 @@ export default {
 
 <style>
 
+    #manageBookButton{
+        text-align: center;
+        flex: 1;
+        font-size: 2vmin;
 
+    }
 
     .bookButton{
         border-radius: 10%;
@@ -110,10 +113,14 @@ export default {
 
     .ContainerManageBookButton {
         display: flex;
+        flex-direction: row;
         align-items: flex-end;
-        margin-left: 320px;
+        justify-content: flex-end;
+        width: 100%;
         flex-direction: row;
         gap: 1.2em;
+        font-size: 2vmin;
+        
     }
 
 
@@ -157,7 +164,7 @@ export default {
     .titleBook-search {
         font-weight: bold;
         font-size: 2.5vmin;
-        color: #a8a787;
+        color: #D79262;
     }
 
     .bookImg {
@@ -200,7 +207,7 @@ export default {
     .bookLongCard-search p {
         text-align: left;
         flex: 1;
-        font-size: 2.5vmin;
+        font-size: 2vmin;
     }
 
 
