@@ -1,7 +1,9 @@
 <script setup>
 
+import functions_nav from "@/router/functions_nav";
+
 const admin = true
-const isDisabled = true
+const isDisabled = true 
 
 
 </script>
@@ -9,7 +11,7 @@ const isDisabled = true
 
 <template>
     <div id="searchBookList">
-        <div class="searchBook" v-for="book in books" :key="book.id">
+        <div id="book-comp" class="searchBook" v-for="book in books" :key="book.id">
             <component id="book" class="bookLongCard-search" :is="isDisabled & admin ? 'span' : 'router-link'" :to="{ path: '/BookDetails', query: { name: book.title } }">
                 <div class="bookImg">
                     <img :src="book.src" alt="{{book.title}}" />
@@ -24,7 +26,8 @@ const isDisabled = true
                     </div>
                     <div v-show="admin">
                         <button @click="remove_book()" class ="bookButton" id="deleteButton">Delete</button>
-                        <button class ="bookButton" id="modifyButton">Modify
+                        <button @click="display_book_detail()" class ="bookButton" id="modifyButton">
+                            Modify
 
                         <!-- ouvrir la page bookDetail du book en question  -->
 
@@ -47,12 +50,7 @@ export default {
         name: 'SearchBookContent',
         props: ['books'],
         methods: {
-            deleteBook(){
-                books.value.push({
-                id: nextTodoId++,
-                title: newTodoText.value
-            })
-        },
+            
         
         test_function(){
             let isMouseHover = false
@@ -70,9 +68,15 @@ export default {
         },
         remove_book(){
             console.log("remove book")
-            // const element = document.getElementById("book");
-            // element.remove()
+            const element = document.getElementById("book");
+            console.log(element)
+            element.remove()
+        },
+        display_book_detail(){
+            console.log(1)
+            functions_nav.link_BookDetails.call(this)
         }
+        
     }
 }
 

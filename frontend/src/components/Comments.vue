@@ -4,6 +4,7 @@
         <div class="commentBox">
             <div class="leftPanelImg">
                 <div class="rightPanel">
+                    
                     <span>Username</span>
                     <div class="date">16/06/2023</div>
                     <div class="rating-number">
@@ -11,8 +12,10 @@
                     </div>
                     <hr>
                     <p class="theComment">COMMENTAIRE
+                        
                     </p>
                 </div>
+                <button id="delete-button">delete</button>
             </div>
         </div>
 
@@ -30,6 +33,10 @@
 </script>
 
 <style>
+
+
+
+
     #title-comments {
         margin-left: 5%;
         margin-top: 2%;
@@ -70,6 +77,11 @@
         width: auto;
         object-fit: cover;
         background: none;
+    }
+
+    .leftPanelImg button {
+        border-radius: 10%;
+        
     }
 
     #rating-number {

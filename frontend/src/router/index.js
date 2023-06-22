@@ -13,6 +13,7 @@ import ReadBook from '../views/ReadBook.vue'
 import SearchBook from '../views/SearchBook.vue'
 import ShareBook from '../views/ShareBook.vue'
 import MainPage from '../views/MainPage.vue'
+import ManageUsers from '../views/ManageUsers.vue'
 
 
 const routes = [
@@ -85,7 +86,14 @@ const routes = [
     path: '/MainPage',
     name: 'MainPage',
     component: MainPage
+  },
+  {
+    path: '/ManageUsers',
+    name: 'ManageUsers',
+    component: ManageUsers
   }
+  
+
 ]
 
 const router = createRouter({

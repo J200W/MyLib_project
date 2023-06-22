@@ -1,7 +1,8 @@
-
 <script setup>
 
 const admin = true
+
+const test_array = [1,2,3,4]
 
 </script>
 
@@ -9,29 +10,83 @@ const admin = true
 <template>
     <div id="allPage">
         <div id="left-section">
-            <div id="left-left-section">
+            <div id="left-left-section" >
                 <img id="bookImg" :src="book.src" alt="{{ book.title }}">
-                <router-link to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
-                <p>Stock: 
-                    <span>{{ book.stock }}</span>
-                </p>
-                <p>Source: <span>{{ book.source }}</span></p>
+                <router-link v-if="!admin" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
+
+                <button v-else @click="save_book_information()" id="borrow-book">Save Information</button>
+                <!-- add the popup -->
+
+            
+                    <p>Stock: 
+                    <!-- <span>{{ book.stock }}</span> -->
+                    <span v-if="!admin" >{{book.stock}}</span>
+                        <input v-else @click="console.log(book.stock)" v-model="book.stock" placeholder="Author" />
+                    </p>
+                    <p>Source: 
+                        <!-- <span>{{ book.source }}</span> -->
+                        <span v-if="!admin" >{{book.source}}</span>
+                        <input v-else @click="console.log(book.source)" v-model="book.source" placeholder="Author" />
+                    </p>
             </div>
-            <div v-show="admin" id="bookInfo">
+            <div id="bookInfo">
                 <h2>Info</h2>
-                <p>Author : <span>{{book.author}}</span></p>
+                <button v-if="!admin" @click="add_to_fav()" id="button-add-fav">add fav</button>
+                <p>Author : 
+                    <span v-if="!admin" >{{book.author}}</span>
+                    <input v-else @click="console.log(book.author)" v-model="book.author" placeholder="Author" />
+                    
+                </p>
                 <hr>
-                <p>Edition : <span>{{book.edition}}</span></p>
+                <p>Edition : 
+                    <!-- <span>{{book.edition}}</span> -->
+                    <span v-if="!admin" >{{book.edition}}</span>
+                    <input v-else @click="console.log(book.edition)" v-model="book.edition" placeholder="Edition" />
+                </p>
                 <hr>
-                <p>Release : <span>{{ book.date }}</span></p>
+                <p>Release : 
+                    <!-- <span>{{ book.date }}</span> -->
+                    <span v-if="!admin" >{{book.date}}</span>
+                    <input v-else @click="console.log(book.date)" v-model="book.date" placeholder="Edition" />
+                </p>
                 <hr>
-                <p>Languages : <span>{{ book.langue }}</span></p>
+                <p>Languages : 
+                    <span v-if="!admin" >{{ book.langue }}</span>
+                    <!-- <span v-if="!admin" >{{book.langue}}</span> -->
+
+                    <select v-else v-model="book.langue">
+                        <option v-for="num in test_array" :key="num" >French</option>
+                    </select>
+                    <!-- <input v-else @click="console.log(book.langue)" v-model="book.langue" placeholder="Edition" /> -->
+                    
+                </p>
                 <hr>
-                <p>Genre : <span>{{ book.genre }}</span></p>
+                <p>Genre : 
+                    <!-- <span>{{ book.genre }}</span> -->
+                    <span v-if="!admin" >{{book.genre}}</span>
+                    <!-- <input v-else @click="console.log(book.genre)" v-model="book.genre" placeholder="Edition" /> -->
+
+                    <select v-else v-model="book.genre">
+                        <option v-for="num in test_array" :key="num" >Manga</option>
+                    </select>
+                    
+                </p>
                 <hr>
-                <p>Theme : <span>{{ book.theme }}</span></p>
+                <p>Theme : 
+                    <!-- <span>{{ book.theme }}</span> -->
+                    <span v-if="!admin" >{{book.theme}}</span>
+                    <!-- <input v-else @click="console.log(book.theme)" v-model="book.theme" placeholder="Edition" /> -->
+                    <select v-else v-model="book.theme">
+                        <option v-for="num in test_array" :key="num" >Action</option>
+                        <!-- <option>Romance</option> -->
+                    </select>
+                </p>
                 <hr>
-                <p>Pages : <span>{{  book.page }}</span></p>
+                <p>Pages : 
+                    <!-- <span>{{ book.page }}</span> -->
+                    <span v-if="!admin" >{{book.page}}</span>
+                    <input v-else @click="console.log(book.page)" v-model="book.page" placeholder="Edition" />
+                </p>
             </div>
         </div>
 
@@ -39,9 +94,11 @@ const admin = true
             <h2>Resume</h2>
             <div id="book-resume">
                 <div class="row">
-                    <p>{{ book.description }}</p>
+                    <p v-if="!admin">{{ book.description }}</p>
+                    <textarea class="resume" v-else v-model="book.description" placeholder="resume"></textarea>
                 </div>
             </div>
+            
         </div>
     </div>
 </template>
@@ -49,14 +106,103 @@ const admin = true
 <script>
     export default {
         name: 'BookDetailComp',
-        props: ['book']
+        props: ['book'],
+        methods: {
+            save_book_information(){
+                console.log("save info to bd")
+                // pop up ? 
+            },
+            add_to_fav(){
+                console.log("add to fav to bd")
+                //
+            }
+        }
     }
 
 </script>
 
 <style>
 
-    
+
+    .resume{
+        height: 200px;
+    }
+
+
+    /* Popup container - can be anything you want */
+    .popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    }
+
+    /* The actual popup */
+    .popup .popuptext {
+    visibility: hidden;
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+    }
+
+    /* Popup arrow */
+    .popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+    }
+
+    /* Toggle this class - hide and show the popup */
+    .popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+    }
+
+    /* Add animation (fade in the popup) */
+    @-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+    }
+
+    @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+    }
+
+    #button-save-info{
+        margin-top: 50px;
+        margin-left: 150px;
+        width: 110px;
+        height: 80px;
+        color: white;
+        background-color: #A8A787;
+        border: none;
+        border-radius: 20px;
+   
+    }
+
+    #button-save-info:hover{
+        background-color: #D79262;
+        color: white;
+        transition: all 0.3s ease 0s;
+    }
 
     hr {
         border: 0;

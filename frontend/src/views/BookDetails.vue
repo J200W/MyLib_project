@@ -6,6 +6,8 @@
     import TheFooter from "@/components/TheFooter.vue";
     import Carousel from "@/components/Carousel.vue";
 
+    import { ref } from 'vue'
+
     const book = 
         {
             id: 1,
@@ -27,31 +29,32 @@
     
     var connected = true;
 
-    const books = [
-        {
-            id: 1,
-            src: require("@/assets/onepiece96.png"),
-            title: "One Piece 96",
-        },
+    // const books = [
+    //     {
+    //         id: 1,
+    //         src: require("@/assets/onepiece96.png"),
+    //         title: "One Piece 96",
+    //     },
 
-        {
-            id: 2,
-            src: require("@/assets/onepiece97.png"),
-            title: "One Piece 97",
-        },
+    //     {
+    //         id: 2,
+    //         src: require("@/assets/onepiece97.png"),
+    //         title: "One Piece 97",
+    //     },
 
-        {
-            id: 3,
-            src: require("@/assets/onepiece98.png"),
-            title: "One Piece 98",
-        },
+    //     {
+    //         id: 3,
+    //         src: require("@/assets/onepiece98.png"),
+    //         title: "One Piece 98",
+    //     },
 
-        {
-            id: 4,
-            src: require("@/assets/onepiece99.png"),
-            title: "One Piece 99",
-        }
-    ]
+    //     {
+    //         id: 4,
+    //         src: require("@/assets/onepiece99.png"),
+    //         title: "One Piece 99",
+    //     }
+    // ]
+    
 </script>
 
 <template>
