@@ -5,6 +5,7 @@ const port = 80;
 //import { verify_signIn } from './database/authBDD.js';
 //require('./database/authBDD.js')
 const { verify_signIn } = require("./database/authBDD");
+const { modify_myAccount } = require("./controllers/funct_user");
 /*
 const bodyParser = require('body-parser');
 
@@ -29,37 +30,12 @@ app.use(express.json()); // for parsing application/json
 
 // Vérifie si la requête est une requête POST
 app.post('*', (req, res) => {
+    const datas = req.body;
+    var response_funct = {};
+
     switch (req.originalUrl) {
-        case '/test_recup.php':
-            // Inclure et exécuter le fichier test_recup.js
-            //require('./test_recup.js')(req, res);
-            // Récupérer les données envoyées par le composant MyAccount.vue
-            const data = req.body;
-
-            // Vérifier si des données ont été envoyées
-            if (data) {
-                // Vous pouvez accéder aux données envoyées depuis le composant ici
-                const pseudo = data.pseudo;
-                const genre = data.genre;
-                // ...
-
-                // Faites quelque chose avec les données reçues, comme les enregistrer dans une base de données, les traiter, etc.
-
-                // Exemple de réponse renvoyée au composant
-                const response = {
-                    status: 'success',
-                    message: `Données reçues avec succès from test_recup.php : ${pseudo} ${genre}`,
-                };
-                res.json(response);
-            } else {
-                // Aucune donnée n'a été envoyée
-                const response = {
-                    status: 'error',
-                    message: 'Aucune donnée reçue.',
-                };
-                res.json(response);
-            }
-
+        case '/modify_myAccount': // Récupérer les données envoyées par le composant MyAccount.vue
+            response_funct = modify_myAccount(datas);
             break;
 
         case '/send_signIn':
@@ -94,15 +70,18 @@ app.post('*', (req, res) => {
             res.json(req.body);
             break;
         default:
+            response_funct = { message: 'Erreur d\'URL pour la méthode POST'}
             res.status(404).json({ message: 'Erreur d\'URL pour la méthode POST' });
             break;
     }
+    res.header('Content-Type', 'application/json');
+    res.json(response_funct);
 });
 
 // Vérifie si la requête est une requête GET
 app.get('*', (req, res) => {
     switch (req.originalUrl) {
-        case '/elements_to_send.php':
+        case '/datas_user':
             // Inclure et exécuter le fichier elements_to_send.js
             // Exemple de données à exporter
             const elements = {
