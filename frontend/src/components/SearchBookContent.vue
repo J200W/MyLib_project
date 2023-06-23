@@ -1,23 +1,129 @@
+<script setup>
+
+import functions_nav from "@/router/functions_nav";
+
+const admin = true
+const isDisabled = true 
+
+
+</script>
+
+
 <template>
     <div id="searchBookList">
         <div class="searchBook" v-for="book in books" :key="book.id">
-            <router-link class="bookLongCard-search" :to="{ path: '/BookDetails', query: { name: book.title } }">
+            <router-link class="bookLongCard-search" :to="{ path: '/BookDetails', query: { id: book.id } }">
                 <div class="bookImg">
                     <img :src="book.src" alt="{{book.title}}" />
                 </div>
-                <div class="bookInfo">
-                    <p><span class="titleBook-search">{{ book.title }}</span></p>
-                    <p><span>Author: </span>{{ book.author }}</p>
-                    <p><span>Date: </span>{{ book.date }}</p>
-                    <p><span>Library: </span>{{ book.library }}</p>
-                    <p><span>Genre: </span>{{ book.genre }}</p>
-                </div>
+                    <div class="bookInfo">
+                        <p><span class="titleBook-search">{{ book.title }}</span></p>
+                        <p><span>Author: </span>{{ book.author }}</p>
+                        <p><span>Date: </span>{{ book.date }}</p>
+                        <p><span>Library: </span>{{ book.library }}</p>
+                        <p><span>Genre: </span>{{ book.genre }}</p>
+                        <p><span>Theme: </span>{{ book.theme }}</p>
+                    </div>
+                    <div v-show="admin">
+                        <button @click="remove_book()" class ="bookButton" id="deleteButton">Delete</button>
+                        <button @click="display_book_detail()" class ="bookButton" id="modifyButton">
+                            Modify
+
+                        <!-- ouvrir la page bookDetail du book en question  -->
+
+                        </button>
+                        
+                    </div> 
             </router-link>
         </div>
     </div>
 </template>
 
+
+
+
+<script>
+
+export default {
+        name: 'SearchBookContent',
+        props: ['books'],
+        methods: {
+            
+        
+        test_function(){
+            let isMouseHover = false
+            let test = document.getElementById("deleteButton");
+            test.addEventListener("mouseleave", function (event) {
+            isMouseHover = false
+            event.target.textContent = "mouse out"
+            console.log(isMouseHover)
+            }, false);
+            test.addEventListener("mouseover", function (event) {
+            isMouseHover = true
+            event.target.textContent = "mouse in"
+            console.log(isMouseHover)
+            }, false);
+        },
+        remove_book(){
+            console.log("remove book")
+            const element = document.getElementById("book");
+            console.log(element)
+            element.remove()
+        },
+        display_book_detail(){
+            console.log(1)
+            functions_nav.link_BookDetails.call(this)
+        }
+        
+    }
+}
+
+</script>
+
 <style>
+
+    #manageBookButton{
+        text-align: center;
+        flex: 1;
+        font-size: 2vmin;
+
+    }
+
+    .bookButton{
+        border-radius: 10%;
+        transition-duration: 0.4s;
+    }
+
+    #deleteButton{
+        background-color: red;
+    }
+
+    #deleteButton:hover{
+        background-color: rgb(146, 32, 32);
+    }
+
+    #modifyButton{
+        background-color: rgb(94, 94, 221);
+    }
+
+    #modifyButton:hover{
+        background-color: rgb(15, 15, 126);
+    }
+
+
+    .ContainerManageBookButton {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: flex-end;
+        width: 100%;
+        flex-direction: row;
+        gap: 1.2em;
+        font-size: 2vmin;
+        
+    }
+
+
     #searchBookList {
         --gap: 16px;
         --num-cols: 2;
@@ -58,7 +164,7 @@
     .titleBook-search {
         font-weight: bold;
         font-size: 2.5vmin;
-        color: #a8a787;
+        color: #D79262;
     }
 
     .bookImg {
@@ -91,6 +197,7 @@
         text-align: left;
         flex: 1;
         font-size: 2vmin;
+        margin: 3px;
     }
 
     .bookInfo span {
@@ -100,7 +207,7 @@
     .bookLongCard-search p {
         text-align: left;
         flex: 1;
-        font-size: 2.5vmin;
+        font-size: 2vmin;
     }
 
 
@@ -136,10 +243,3 @@
     }
 </style>
 
-<script>
-    export default {
-        name: 'MyEbooksContent',
-        props: ['books'],
-    }
-
-</script>

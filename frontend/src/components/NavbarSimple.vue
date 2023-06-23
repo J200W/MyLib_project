@@ -19,7 +19,7 @@
         align-items: center;
         justify-content: center;
         max-height: 140px;
-        background-color: #5C5C50;
+        background-color: #D0AB77;
     }
 
     #logo {

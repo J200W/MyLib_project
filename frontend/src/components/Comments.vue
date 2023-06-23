@@ -1,10 +1,10 @@
 <template>
     <h1 id="title-comments">Comments</h1>
     <div id="clear">
-        
         <div class="commentBox">
             <div class="leftPanelImg">
                 <div class="rightPanel">
+                    
                     <span>Username</span>
                     <div class="date">16/06/2023</div>
                     <div class="rating-number">
@@ -12,59 +12,31 @@
                     </div>
                     <hr>
                     <p class="theComment">COMMENTAIRE
+                        
                     </p>
                 </div>
+                <button id="delete-button">delete</button>
             </div>
         </div>
 
-        <div class="commentBox">
-            <div class="leftPanelImg">
-                <div class="rightPanel">
-                    <span>Username</span>
-                    <div class="date">16/06/2023</div>
-                    <div class="rating-number">
-                        <span id="rating-number">5</span> /5
-                    </div>
-                    <hr>
-                    <p class="theComment">COMMENTAIRE
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="commentBox">
-            <div class="leftPanelImg">
-                <div class="rightPanel">
-                    <span>Username</span>
-                    <div class="date">16/06/2023</div>
-                    <div class="rating-number">
-                        <span id="rating-number">5</span> /5
-                    </div>
-                    <hr>
-                    <p class="theComment">COMMENTAIRE
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="commentBox">
-            <div class="leftPanelImg">
-                <div class="rightPanel">
-                    <span>Username</span>
-                    <div class="date">16/06/2023</div>
-                    <div class="rating-number">
-                        <span id="rating-number">5</span> /5
-                    </div>
-                    <hr>
-                    <p class="theComment">COMMENTAIRE
-                    </p>
-                </div>
-            </div>
-        </div>
+       
 
     </div>
 
 </template>
 
+<script>
+
+
+
+
+</script>
+
 <style>
+
+
+
+
     #title-comments {
         margin-left: 5%;
         margin-top: 2%;
@@ -105,6 +77,11 @@
         width: auto;
         object-fit: cover;
         background: none;
+    }
+
+    .leftPanelImg button {
+        border-radius: 10%;
+        
     }
 
     #rating-number {
