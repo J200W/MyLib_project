@@ -27,7 +27,6 @@ import TheFooter from "@/components/TheFooter.vue";
 
 
 
-
 <style scoped>
 p {
     color: #6D6779;

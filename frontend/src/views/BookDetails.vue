@@ -19,6 +19,7 @@ var book_list = sessionStorage.getItem('book_list');
 book_list = JSON.parse(book_list);
 
 const book = book_list[book_id - 1];
+console.log(book)
 
 var connected = true;
 
