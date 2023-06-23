@@ -123,7 +123,7 @@ body {
   
 <script>
 export default {
-  name:'SignIn',
+  name:'SignUp',
   data() {
     return {
       pseudo: '',
@@ -150,7 +150,7 @@ export default {
         birthdate: this.birthdate
       };
 
-      fetch("http://localhost:80/send_signIn", {
+      fetch("http://localhost:80/send_signUp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête

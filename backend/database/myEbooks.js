@@ -1,6 +1,6 @@
 const mysql = require('mysql2/promise');
 
-async function list_books() {
+async function my_books(id_client) {
   try {
     const connection = await mysql.createConnection({
         host: 'sql7.freesqldatabase.com',
@@ -9,8 +9,8 @@ async function list_books() {
         database: 'sql7624887',
     });
 
-    const query = 'SELECT * FROM ebook';
-    const [rows] = await connection.query(query);
+    const query = 'SELECT * FROM emprunter WHERE Id_Client=?';
+    const [rows] = await connection.query(query, [id_client]);
 
     // Perform additional operations on the retrieved rows as needed
 
@@ -22,14 +22,4 @@ async function list_books() {
   }
 }
 
-module.exports = { list_books };
-/*
-// Usage example:
-listBooks()
-  .then((books) => {
-    console.log('Books:', books);
-    // Handle the retrieved books data
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });*/
+module.exports = { my_books };

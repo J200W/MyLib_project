@@ -3,7 +3,7 @@ const mysql = require('mysql2/promise');
 
 
 
-async function new_user(email, name, fname, password){
+async function research(title){
   try {
     const connection = await mysql.createConnection({
         host: 'sql7.freesqldatabase.com',
@@ -12,11 +12,10 @@ async function new_user(email, name, fname, password){
         database: 'sql7624887',
     });
 
-    const query = 'INSERT INTO clients (mail_client, nom_client, prenom_client, mdp_client) VALUES (?, ?, ?, ?)';
-    const [result] = await connection.query(query, [email, name, fname, password]);
+    const query = 'SELECT * FROM ebook WHERE titre LIKE \'%'+title+'%\'';
+    const [result] = await connection.query(query);
 
-    connection.end();
-    return result.affectedRows > 0; /*{
+    return rows; /*{
       // Registration successful
       // Perform any necessary actions
       // Redirect or send a response indicating success
@@ -29,11 +28,11 @@ async function new_user(email, name, fname, password){
       res.send('Registration failed');
     }*/
 
-
+    connection.end();
   } catch (error) {
     console.error('Error during registration:', error);
     return false;
   }
-}
+};
 
-module.exports = { new_user };
+module.exports = { research };

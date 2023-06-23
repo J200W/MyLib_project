@@ -6,6 +6,15 @@ const port = 80;
 const firebase = require("./scripts/firebase_function.js");
 const retrieveImage = firebase.retrieveImage;
 const retrievePDF = firebase.retrievePDF;
+//import { verify_signIn } from './database/authBDD.js';
+//require('./database/authBDD.js')
+const { verify_signIn } = require("./database/authBDD");
+const { req_modifyMyAccount, req_signUp} = require("./controllers/funct_user");
+const { list_books } = require("./database/listBooks");
+
+const { my_books } = require("./database/myEbooks");
+const { research } = require("./database/research");
+
 /*
 const bodyParser = require('body-parser');
 
@@ -89,59 +98,94 @@ app.use(
 // Vérifie à chaque requête si le dossier public contient le fichier demandé
 app.use(express.json()); // for parsing application/json
 
-// Vérifie si la requête est une requête POST
-app.post("*", async (req, res) => {
-  switch (req.originalUrl) {
-    case "/test_recup.php":
-      // Inclure et exécuter le fichier test_recup.js
-      //require('./test_recup.js')(req, res);
-      // Récupérer les données envoyées par le composant MyAccount.vue
-      const data = req.body;
+app.post('*', (req, res) => {
+    const datas = req.body;
+    var response_funct = {};
 
-      // Vérifier si des données ont été envoyées
-      if (data) {
-        // Vous pouvez accéder aux données envoyées depuis le composant ici
-        const pseudo = data.pseudo;
-        const genre = data.genre;
-        // ...
+    switch (req.originalUrl) {
+        case '/modify_myAccount': // Récupérer les données envoyées par le composant MyAccount.vue
+            response_funct = req_modifyMyAccount(datas);
+            break;
 
-        // Faites quelque chose avec les données reçues, comme les enregistrer dans une base de données, les traiter, etc.
+        case '/send_signUp':
+            // Retourne une réponse JSON
+            response_funct = req_signUp(datas);
+            break;
 
-        // Exemple de réponse renvoyée au composant
-        const response = {
-          status: "success",
-          message: `Données reçues avec succès from test_recup.php : ${pseudo} ${genre}`,
-        };
-        res.json(response);
-      } else {
-        // Aucune donnée n'a été envoyée
-        const response = {
-          status: "error",
-          message: "Aucune donnée reçue.",
-        };
-        res.json(response);
-      }
+        case '/send_login':
+            // Retourne une réponse JSON
+            verify_signIn(req.body.email, req.body.password).then((result) => {
+                if (result) {
+                    res.header('Content-Type', 'application/json');
+                    res.json([{ message: 'Authentification réussie !' }, { donnees: req.body }]);
+                } else {
+                    res.header('Content-Type', 'application/json');
+                    res.json([{ message: 'Authentification échouée !' }, { donnees: req.body }]);
+                }
+            });
 
-      break;
-    case "/send_login":
-      // Retourne une réponse JSON
-      res.header("Content-Type", "application/json");
-      res.json([
-        { message: "Données reçues avec succès from test_serveur.php !" },
-        { donnees: req.body },
-      ]);
+            break;
 
-      break;
-    case "/send_research_fromNavBar":
-      // Renvoie les éléments en tant que réponse JSON
-      // Utilisez les éléments importés ici selon vos besoins
-      res.header("Content-Type", "application/json");
-      res.json(req.body);
-      break;
-    default:
-      res.status(404).json({ message: "Erreur d'URL pour la méthode POST" });
-      break;
-  }
+            case '/list_books':
+                // Retourne une réponse JSON
+                list_books().then((result) => {
+                    if (result.length>0) {
+                        res.header('Content-Type', 'application/json');
+                        res.json([{ list: result }]);
+                    } else {
+                        res.header('Content-Type', 'application/json');
+                        res.json([{ message: 'empty list' }]);
+                    }
+                });
+    
+                break;
+
+            case '/my_books':
+                // Retourne une réponse JSON
+                my_books(req.body.id_client).then((result) => {
+                    if (result.length>0) {
+                        res.header('Content-Type', 'application/json');
+                        res.json([{ list: result }]);
+                    } else {
+                        res.header('Content-Type', 'application/json');
+                        res.json([{ message: 'empty list' }]);
+                    }
+                });
+    
+                break;
+
+                case '/search':
+                    // Retourne une réponse JSON
+                    research(req.body.title).then((result) => {
+                        if (result.length>0) {
+                            res.header('Content-Type', 'application/json');
+                            res.json([{ list: result }]);
+                        } else {
+                            res.header('Content-Type', 'application/json');
+                            res.json([{ message: 'no book found matching research' }]);
+                        }
+                    });
+        
+                    break;
+
+        case '/send_login_forgotMdp':
+            // Retourne une réponse JSON
+            res.header('Content-Type', 'application/json');
+            res.json([{ message: 'Données reçues avec succès from test_serveur.php !' }, { donnees: req.body }]);
+            break;
+        case '/send_research_fromNavBar':
+            // Renvoie les éléments en tant que réponse JSON
+            // Utilisez les éléments importés ici selon vos besoins
+            res.header('Content-Type', 'application/json');
+            res.json(req.body);
+            break;
+        default:
+            response_funct = { message: 'Erreur d\'URL pour la méthode POST'}
+            res.status(404).json({ message: 'Erreur d\'URL pour la méthode POST' });
+            break;
+    }
+    res.header('Content-Type', 'application/json');
+    res.json(response_funct);
 });
 
 // Vérifie si la requête est une requête GET
