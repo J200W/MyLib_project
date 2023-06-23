@@ -1,0 +1,1 @@
+export { default as OnePiece96} from "./onepiece96.png";

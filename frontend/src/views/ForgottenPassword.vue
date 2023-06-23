@@ -7,11 +7,12 @@ import TheFooter from "@/components/TheFooter.vue";
     <NavbarSimple />
 
     <body>
-        <form id="form-forgotten" action="" method="post">
+        <form id="form-forgotten" @submit="submitForm">
             <label class="form-label" for="username">Enter your email address to reset your password</label>
             <input class="form-input" type="email" id="username" name="username" required> <br><br>
             <input class="form-submit" type="submit" value="Submit"><br><br>
         </form>
+        <div id="form_forgotten"></div>
     </body>
 
     <TheFooter />
@@ -109,52 +110,52 @@ body {
 </style>
 
 <script>
-export default {
-    name: 'ForgottenPassword',
-    data() { return {} },
-    methods: {
-        link_HomePage: function (event) {
-            this.$router.push({ path: '/' })
+
+
+export default
+{
+  name:'ForgottenPassword',
+  data() {
+    return {
+      email: '',
+    };
+  },
+  methods: {
+    submitForm(event) {
+      // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+      console.log('Formulaire soumis !', this.email, this.password);
+      event.preventDefault();
+
+      var datas = {
+        email: this.email,
+      };
+
+      fetch("http://localhost:80/send_login_forgotMdp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+          //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
         },
-        link_LogIn: function (event) {
-            this.$router.push({ path: '/LogIn' })
-        },
-        link_SignUp: function (event) {
-            this.$router.push({ path: '/SignUp' })
-        },
-        link_ForgottenPassword: function (event) {
-            this.$router.push({ path: '/ForgottenPassword' })
-        },
-        link_MyAccount: function (event) {
-            this.$router.push({ path: '/MyAccount' })
-        },
-        link_BookDetails: function (event) {
-            this.$router.push({ path: '/BookDetails' })
-        },
-        link_MyEbooks: function (event) {
-            this.$router.push({ path: '/MyEbooks' })
-        },
-        link_MyFavorites: function (event) {
-            this.$router.push({ path: '/MyFavorites' })
-        },
-        link_MyHistory: function (event) {
-            this.$router.push({ path: '/MyHistory' })
-        },
-        link_BorrowBook: function (event) {
-            this.$router.push({ path: '/BorrowBook' })
-        },
-        link_ReadBook: function (event) {
-            this.$router.push({ path: '/ReadBook' })
-        },
-        link_SearchBook: function (event) {
-            this.$router.push({ path: '/SearchBook' })
-        },
-        link_ShareBook: function (event) {
-            this.$router.push({ path: '/ShareBook' })
-        },
-        link_MainPage: function (event) {
-            this.$router.push({ path: '/MainPage' })
-        },
+        body: JSON.stringify(datas)
+      })
+          .then(response => response.text())
+          .then(data => {
+            // Traiter la réponse du serveur
+            console.log("Envoi du mail:", data);
+            // Crée un paragraphe avec du css indiquant que le mail a bien été envoyé
+            var para = document.createElement("p");
+            var node = document.createTextNode(data ? "An email has been sent to you" : "An error occured while sending the email");
+            para.appendChild(node);
+            para.style.color = data ? "green" : "red";
+            var element = document.getElementById("form-forgotten");
+            element.appendChild(para);
+
+          })  .catch(error => {
+        // Gérer les erreurs
+        console.error("Erreur lors de l'envoi du formulaire :", error);
+      });
+
     }
+  }
 }
 </script>

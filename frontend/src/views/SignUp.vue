@@ -13,15 +13,15 @@ import TheFooter from "@/components/TheFooter.vue";
             <router-link class="tabs selected" to="/SignUp">Sign Up</router-link>
         </div>
 
-        <form id="form-signup" action="" method="post">
+        <form id="form-signup" @submit="submitForm">
             <label class="form-label" for="pseudo">Pseudo</label>
-            <input class="form-input" type="text" id="pseudo" name="pseudo" required>
+            <input class="form-input" type="text" id="pseudo" name="pseudo" v-model="pseudo" required>
             <label class="form-label" for="date">Date of birth</label>
-            <input class="form-input" type="date" id="date" name="date" required>
+            <input class="form-input" type="date" id="date" name="date" v-model="birthdate" required>
             <label class="form-label" for="email">Email Address</label>
-            <input class="form-input" type="email" id="email" name="email" required>
+            <input class="form-input" type="email" id="email" name="email" v-model="email" required>
             <label class="form-label" for="password">Password</label>
-            <input class="form-input" type="password" id="password" name="password" required><br><br>
+            <input class="form-input" type="password" id="password" name="password" v-model="password" required><br><br>
             <input class="form-submit" type="submit" value="Submit">
         </form>
 
@@ -123,51 +123,52 @@ body {
   
 <script>
 export default {
-    name: 'SignUp',
-    data() { return {} },
-    methods: {
-        link_HomePage: function (event) {
-            this.$router.push({ path: '/' })
+  name:'SignIn',
+  data() {
+    return {
+      pseudo: '',
+      birthdate: '',
+      email: 'john@example.com',
+      password: ''
+    };
+  },
+  mounted() {
+    this.fetchUserData();
+  },
+  methods: {
+    fetchUserData() {
+    },
+    submitForm(event) {
+      // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+      console.log('Formulaire soumis !', this.email, this.password, this.pseudo, this.birthdate);
+      event.preventDefault();
+
+      var datas = {
+        email: this.email,
+        password: this.password,
+        pseudo: this.pseudo,
+        birthdate: this.birthdate
+      };
+
+      fetch("http://localhost:80/send_signIn", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+          //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
         },
-        link_LogIn: function (event) {
-            this.$router.push({ path: '/LogIn' })
-        },
-        link_SignUp: function (event) {
-            this.$router.push({ path: '/SignUp' })
-        },
-        link_ForgottenPassword: function (event) {
-            this.$router.push({ path: '/ForgottenPassword' })
-        },
-        link_MyAccount: function (event) {
-            this.$router.push({ path: '/MyAccount' })
-        },
-        link_BookDetails: function (event) {
-            this.$router.push({ path: '/BookDetails' })
-        },
-        link_MyEbooks: function (event) {
-            this.$router.push({ path: '/MyEbooks' })
-        },
-        link_MyFavorites: function (event) {
-            this.$router.push({ path: '/MyFavorites' })
-        },
-        link_MyHistory: function (event) {
-            this.$router.push({ path: '/MyHistory' })
-        },
-        link_BorrowBook: function (event) {
-            this.$router.push({ path: '/BorrowBook' })
-        },
-        link_ReadBook: function (event) {
-            this.$router.push({ path: '/ReadBook' })
-        },
-        link_SearchBook: function (event) {
-            this.$router.push({ path: '/SearchBook' })
-        },
-        link_ShareBook: function (event) {
-            this.$router.push({ path: '/ShareBook' })
-        },
-        link_MainPage: function (event) {
-            this.$router.push({ path: '/MainPage' })
-        },
+        body: JSON.stringify(datas)
+      })
+          .then(response => response.text())
+          .then(data => {
+            // Traiter la réponse du serveur
+            console.log("Send by serveur: ", data);
+
+          })  .catch(error => {
+        // Gérer les erreurs
+        console.error("Erreur lors de l'envoi du formulaire :", error);
+      });
+
     }
+  }
 }
 </script>

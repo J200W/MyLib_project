@@ -1,5 +1,16 @@
 <?php
 
+//Liste possible de futurs queries :
+
+
+//DeleteBookByID
+//DeleteUserByID
+
+//ListUsers
+//AddUser
+
+//AddComment
+//DeleteComment
 ini_set('display_errors', 1);
 function listBooks() //list all Recipes + bonus = click on the text leads to the Recipe
 {
@@ -125,6 +136,139 @@ function getUserById(int $id)
         }
     }
 }
+
+function addBook(String $title, String $date_parution, String $auteur, int $nb_chapitres, int $nb_pages, String $editeur, String $category, int $age_limite, String $langue, int $id_biblio){
+    require 'Connection.php';
+    include_once '../index.php';
+    $result = $db->prepare('INSERT INTO ebook (title, date_parution, auteur, nb_chapitres, nb_pages, editeur, category, age_limite, langue, id_biblio) VALUES (titlev, date_parutionv, auteurv, nb_chapitresv, nb_pagesv, editeurv, categoryv, age_limitev, languev, id_bibliov);');
+
+    $result->bindParam('titlev', $title);
+    $result->bindParam('date_parutionv', $date_parution);
+    $result->bindParam('auteurv', $auteur);
+    $result->bindParam('nb_chapitresv', $nb_chapitres);
+    $result->bindParam('nb_pagesv', $nb_pages);
+    $result->bindParam('editeurv', $editeur);
+    $result->bindParam('categoryv', $category);
+    $result->bindParam('age_limitev', $age_limite);
+    $result->bindParam('languev', $langue);
+    $result->bindParam('id_bibliov', $id_biblio);
+
+    $result->execute();
+}
+
+function ListBookByCategory(String $category){
+    require 'Connection.php';
+    include_once 'Home.php';
+    include_once '../index.php';
+    include_once '../classes/ebook.php';
+
+    //echo "in function";
+    $arr = array();
+    $result = $db->query('select * from ebook where category = categoryv'); //all the infos in ebook
+    $result->bindParam('categoryv', $category);
+    while ($row = $result->fetch(PDO::FETCH_OBJ)) { //each result will be put in $row as an object with keys as their SQL names
+        $arr[] = new Ebook($row->Id_ebook, $row->titre, $row->date_parution, $row->auteur, $row->nb_chapitres, $row->nb_pages, $row->editeur, $row->age_limite, $row->Id_Biblio); //create a new object Ebook
+        // echo "<tr>";
+
+        //add languages and categories
+        $res = $db->prepare('select * from est_en join langues on langues.Id_Langue=est_en.Id_Langue where Id_ebook= ?');
+        $res2 = $db->prepare('select * from est_un join categories on categories.Id_category=est_un.Id_category where Id_ebook= ?');
+        foreach($arr as $ebook){
+
+            $res->execute(array($ebook->getId()));
+            while ($row = $res->fetch(PDO::FETCH_OBJ)) {
+                $ebook->setLanguage($row->langue);
+            }
+
+
+            $res2->execute(array($ebook->getId()));
+            while ($row2 = $res2->fetch(PDO::FETCH_OBJ)) {
+                $ebook->setCategory($row2->category);
+            }
+        }
+
+
+        /*
+        echo '<form method ="get" action ="lectureRecipe.php" >';
+
+
+
+
+        echo '<div class="recipe-name"><p><b>' . $row->name . '</b></p></div>';
+
+        echo "<p class='creator'>From " . $row->uname . "</p>";
+
+        echo '<input id="name" name="name" type="hidden" style="background-color : rgb(255, 255, 255); color : orange; font-family: verdana" placeholder="' . $row->name . '" value ="' . $row->name . '" readonly><input class="card-button" type="submit" value="See more"></form>';
+        echo "</div>";
+        // echo "</tr>";
+        echo "</div>";*/
+    }
+    return $arr;
+}
+
+function ListBookByBiblio($id_biblio){
+    require 'Connection.php';
+    include_once 'Home.php';
+    include_once '../index.php';
+    include_once '../classes/ebook.php';
+
+    //echo "in function";
+    $arr = array();
+    $result = $db->query('select * from ebook where id_biblio = biblio'); //all the infos in ebook
+    $result->bindParam('biblio', $id_biblio);
+    while ($row = $result->fetch(PDO::FETCH_OBJ)) { //each result will be put in $row as an object with keys as their SQL names
+        $arr[] = new Ebook($row->Id_ebook, $row->titre, $row->date_parution, $row->auteur, $row->nb_chapitres, $row->nb_pages, $row->editeur, $row->age_limite, $row->Id_Biblio); //create a new object Ebook
+        // echo "<tr>";
+
+        //add languages and categories
+        $res = $db->prepare('select * from est_en join langues on langues.Id_Langue=est_en.Id_Langue where Id_ebook= ?');
+        $res2 = $db->prepare('select * from est_un join categories on categories.Id_category=est_un.Id_category where Id_ebook= ?');
+        foreach($arr as $ebook){
+
+            $res->execute(array($ebook->getId()));
+            while ($row = $res->fetch(PDO::FETCH_OBJ)) {
+                $ebook->setLanguage($row->langue);
+            }
+
+
+            $res2->execute(array($ebook->getId()));
+            while ($row2 = $res2->fetch(PDO::FETCH_OBJ)) {
+                $ebook->setCategory($row2->category);
+            }
+        }
+
+
+        /*
+        echo '<form method ="get" action ="lectureRecipe.php" >';
+
+
+
+
+        echo '<div class="recipe-name"><p><b>' . $row->name . '</b></p></div>';
+
+        echo "<p class='creator'>From " . $row->uname . "</p>";
+
+        echo '<input id="name" name="name" type="hidden" style="background-color : rgb(255, 255, 255); color : orange; font-family: verdana" placeholder="' . $row->name . '" value ="' . $row->name . '" readonly><input class="card-button" type="submit" value="See more"></form>';
+        echo "</div>";
+        // echo "</tr>";
+        echo "</div>";*/
+    }
+    return $arr;
+}
+
+function listUsers() //list all Recipes + bonus = click on the text leads to the Recipe
+{
+    require 'Connection.php';
+    include_once 'Home.php';
+    include_once '../index.php';
+
+    //echo "in function";
+    $arr = array();
+    $result = $db->query('select * from users'); //all the infos in users
+    $result->execute();
+}
+
+
 /*
 function getUserNameById(int $id)
 {

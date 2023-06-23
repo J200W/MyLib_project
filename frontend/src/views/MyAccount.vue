@@ -102,7 +102,7 @@ export default {
   methods: {
     fetchUserData() {
       // Effectuer une requête HTTP vers la page PHP pour récupérer les données utilisateur
-      fetch('http://localhost:80/elements_to_send.php')
+      fetch('http://localhost:80/datas_user')
           .then(response => response.json())
           .then(data => {
             console.log('Données utilisateur reçues:', data);
@@ -129,7 +129,7 @@ export default {
         books: this.books
       };
 
-      fetch("http://localhost:80/test_recup.php", {
+      fetch("http://localhost:80/modify_myAccount", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
