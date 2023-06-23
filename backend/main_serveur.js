@@ -5,9 +5,9 @@ const port = 80;
 //import { verify_signIn } from './database/authBDD.js';
 //require('./database/authBDD.js')
 const { verify_signIn } = require("./database/authBDD");
-const { modify_myAccount } = require("./controllers/funct_user");
+const { req_modifyMyAccount, req_signUp} = require("./controllers/funct_user");
 const { list_books } = require("./database/listBooks");
-const { new_user } = require("./database/newUser");
+
 const { my_books } = require("./database/myEbooks");
 const { research } = require("./database/research");
 /*
@@ -39,13 +39,12 @@ app.post('*', (req, res) => {
 
     switch (req.originalUrl) {
         case '/modify_myAccount': // Récupérer les données envoyées par le composant MyAccount.vue
-            response_funct = modify_myAccount(datas);
+            response_funct = req_modifyMyAccount(datas);
             break;
 
-        case '/send_signIn':
+        case '/send_signUp':
             // Retourne une réponse JSON
-            res.header('Content-Type', 'application/json');
-            res.json([{ message: 'Données reçues avec succès for' + req.originalUrl + 'from test_serveur.php !' }, { donnees: req.body }]);
+            response_funct = req_signUp(datas);
             break;
 
         case '/send_login':
@@ -57,20 +56,6 @@ app.post('*', (req, res) => {
                 } else {
                     res.header('Content-Type', 'application/json');
                     res.json([{ message: 'Authentification échouée !' }, { donnees: req.body }]);
-                }
-            });
-
-            break;
-
-            case '/send_signUp':
-            // Retourne une réponse JSON
-            new_user(req.body.email, req.body.name, req.body.fname, req.body.password).then((result) => {
-                if (result) {
-                    res.header('Content-Type', 'application/json');
-                    res.json([{ message: 'Account created successfully !' }, { donnees: req.body }]);
-                } else {
-                    res.header('Content-Type', 'application/json');
-                    res.json([{ message: 'Account creation failed !' }, { donnees: req.body }]);
                 }
             });
 

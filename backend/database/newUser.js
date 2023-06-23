@@ -15,6 +15,7 @@ async function new_user(email, name, fname, password){
     const query = 'INSERT INTO clients (mail_client, nom_client, prenom_client, mdp_client) VALUES (?, ?, ?, ?)';
     const [result] = await connection.query(query, [email, name, fname, password]);
 
+    connection.end();
     return result.affectedRows > 0; /*{
       // Registration successful
       // Perform any necessary actions
@@ -28,11 +29,11 @@ async function new_user(email, name, fname, password){
       res.send('Registration failed');
     }*/
 
-    connection.end();
+
   } catch (error) {
     console.error('Error during registration:', error);
     return false;
   }
-};
+}
 
 module.exports = { new_user };

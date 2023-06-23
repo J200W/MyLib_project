@@ -1,6 +1,6 @@
 // =========================================================
 // FONCTION OUTILS DE CONTROLLERS POUR PREPARER REPONSE
-function prepare_response(condition, message, reqBody){
+function prepare_response(condition, messageSuccess, messageFail, reqBody){
     // Vérifier si des données ont été envoyées
     let response = {};
     if (condition) {
@@ -8,7 +8,7 @@ function prepare_response(condition, message, reqBody){
         // Exemple de réponse renvoyée au composant
         response = {
             status: 'success',
-            message: `Données traités avec succès !\n` + message,
+            message: `Données traités avec succès sur le serveur !\n` + messageSuccess,
             donnees: reqBody
         };
     }
@@ -16,7 +16,7 @@ function prepare_response(condition, message, reqBody){
         // Aucune donnée n'a été envoyée
         response = {
             status: 'error',
-            message: `Echec du traitement des données !\n` + message,
+            message: `Echec du traitement des données sur le serveur !\n` + messageFail,
             donnees: reqBody
         };
     }
