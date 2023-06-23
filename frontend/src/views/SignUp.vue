@@ -92,14 +92,14 @@ body {
     margin-bottom: 1rem;
     border-radius: 10px;
     border: #A8A787 2px solid;
-    background-color: #A8A787;
+    background-color: #D0AB77;
     color: #FFF;
     width: 50%;
     margin: auto;
 }
 
 .form-submit:hover {
-    background-color: #545444;
+    background-color: #D79262;
     border: #545444 2px solid;
     color: white;
     transition: all 0.3s ease 0s;
