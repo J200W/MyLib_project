@@ -9,12 +9,6 @@ const new_books = JSON.parse(sessionStorage.getItem('new_books'))
 const current_books = JSON.parse(sessionStorage.getItem('current_books'))
 const discover_books = JSON.parse(sessionStorage.getItem('discover_books'))
 
-        {
-            id: 3,
-            src: require("@/assets/onepiece98.png"),
-            title: "One Piece 98",
-        },
-
 var connected = true;
 
 
