@@ -11,6 +11,8 @@
 
 //AddComment
 //DeleteComment
+use classes\Ebook;
+
 ini_set('display_errors', 1);
 function listBooks() //list all Recipes + bonus = click on the text leads to the Recipe
 {

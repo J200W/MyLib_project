@@ -14,6 +14,7 @@ const { list_books } = require("./database/listBooks");
 
 const { my_books } = require("./database/myEbooks");
 const { research } = require("./database/research");
+const {execute_query} = require("./database/Connection");
 
 /*
 const bodyParser = require('body-parser');
@@ -191,7 +192,15 @@ app.post('*', (req, res) => {
 // Vérifie si la requête est une requête GET
 app.get("*", async (req, res) => {
   switch (req.originalUrl) {
-    case "/elements_to_send.php":
+    case "/test_sql":
+        // Renvoie les éléments en tant que réponse JSON
+        execute_query('SELECT * FROM Ebook', [], "select").then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        });
+        break;
+
+    case "/datas_user":
       // Inclure et exécuter le fichier elements_to_send.js
       // Exemple de données à exporter
       const elements = {
