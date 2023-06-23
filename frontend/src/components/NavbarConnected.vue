@@ -29,6 +29,7 @@ global.book_url = ""
                     <div v-show="admin">
                         <a class="dropdown-item" href="/SearchBook">ManageBooks</a>
                         <a class="dropdown-item" href="/ManageUsers">ManageUsers</a>
+                        <a class="dropdown-item" href="/ManageUsers">AddBook</a>
                     </div>
 
 

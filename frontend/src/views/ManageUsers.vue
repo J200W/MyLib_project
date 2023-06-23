@@ -6,6 +6,8 @@
     import ManageUsersComp from "@/components/ManageUsersComp.vue";
     import PopUpAddFav from "@/components/PopUpAddFav.vue";
 
+    
+
     const connected = true
 
     const users = [
@@ -35,13 +37,12 @@
 
     <body>
 
-        <!-- <NavbarConnected v-if="connected" /> -->
-        <!-- <NavbarNonConnected v-if="!connected" /> -->
+        <NavbarConnected v-if="connected" /> 
+        <NavbarNonConnected v-if="!connected" />
 
-        <ManageUsersComp :users="users"/>
-        <PopUpAddFav/>
+        <ManageUsersComp :users="users"/> 
 
-        <!-- <TheFooter/> -->
+        <TheFooter/> 
 
     </body>
     

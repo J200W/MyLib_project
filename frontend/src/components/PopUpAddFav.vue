@@ -1,196 +1,213 @@
 <template>
-    <div class="toast">
-        <div class="toast-content">
-            <!-- <i class="fas fa-solid fa-check check"></i> -->
 
-                <div class="message">
-                    <span class="text text-1">Sucess</span>
-                    <span class="text text-2">Your change has been saved</span>
-                </div>
-                
+    <body>
+        
+        <div class="toast">
+            <div class="toast-content">
+                <!-- <i class="fas fa-solid fa-check check"></i> -->
+
+                    <div class="message">
+                        <!-- <span class="text text-1"></span> -->
+                        <span class="text text-2">Book have been added to your favorite!</span>
+                    </div>
+                    
+            </div>
+            <!-- <i class="fa-solid fa-xmark close"></i> -->
+            
+            <div class="progress"></div>
         </div>
-        <!-- <i class="fa-solid fa-xmark close"></i> -->
-        
-        <div class="progress"></div>
-    </div>
 
-    <button>Show toast</button>
-        
+        <button class="trigger-popUp">Add To Fav</button>
+
+    </body>
+
 </template>
 
 
 <script>
-    export default {
-    name: 'PopUpAddFav',
-
+  export default {
     mounted() {
+        const button = document.querySelector(".trigger-popUp");
+        let toast = document.querySelector(".toast");
+        let closeIcons = document.querySelector(".close");
+        let progress = document.querySelector(".progress");
 
-        const button = document.querySelector("button");
-            const toast = document.querySelector(".toast");
-            // const closeIcon = document.querySelector(".close");
-            const progress = document.querySelector(".progress");
 
-            let timer1, timer2;
+        button.addEventListener("click", () =>{
+            toast.classList.add("active");
+            console.log(1456)
+            progress.classList.add("active");
 
-            button.addEventListener("click", () => {
-                toast.classList.add("active");
-                progress.classList.add("active");
+            setTimeout(() =>{
+                toast.classList.remove("active");
+            }, 2400);
 
-                console.log(button)
-
-                timer1 = setTimeout(() => {
-                    toast.classList.remove("active");
-                }, 2000); //1s = 1000 milliseconds
-
-                timer2 = setTimeout(() => {
+            setTimeout(() =>{
                 progress.classList.remove("active");
-                }, 2300);
-            });
+            }, 2700);
 
-    }
-    }
-
+        });
+        }
+  }
 
 </script>
 
 
+
 <style scoped>
 
-    .toast:not(.show) {
-        display: block;
-    }
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.toast:not(.show) {
+    display: block;
+}
+
+body{
+    /* height: 100vh;  */
+    /* display: flex;  */
+    /* align-items: center;  */
+    /* justify-content: center ;  */
+    /* background-color: #f2f2f2; */
+    z-index: 2;
+    overflow : hidden;
+    position: static;
+}
+
+.toast{
+    /* display: none; */
+    position: fixed;
+    top: 25px;
+    right: 35px;
+    border-radius: 12px;
+    background: #fff;
+    padding: 20px 35px 20px 25px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    border-left: 6px solid #cf974d;
+    overflow:  hidden;
+    transform: translateX(calc(100% + 60px));
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35)
+}
+
+.toast.active{
+    /* display: block; */
+    transform: translateX(0%);
+}
+
+.toast .toast-content{
+    display: flex;
+    align-items: center;
+
+}
+
+.toast-content .check{
 
 
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-    *{
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Poppins', sans-serif;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    body{
-        height: 100vh;
-        display: flex; 
-        align-items: center;
-        justify-content: center;
-        background-color: #f2f2f2;
-        overflow: hidden;
-    }
+    height: 35px;
+    width: 35px;
+    background-color:#cf974d ;
+    color: white;
+    font-size: 20px;
+    border-radius: 50%;
+}
 
-    .toast{
-        z-index: 3;
-        position: absolute;
-        top: 25px;
-        right: 30px;
-        border-radius: 12px;
-        background: #fff;
-        padding: 20px 35px 20px 25px;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-        border-left: 6px solid #4070f4;
-        overflow: hidden;
-        transform: translateX(calc(100% + 30px));
-        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35);
-    }
+.toast-content .message{
+    display: flex;
+    flex-direction: column;
+    margin: 0 20px;
 
-    .toast.active{
-        transform: translateX(0%);
-    }
+}
 
-    .toast .toast-content{
-        display: flex;
-        align-items: center;
-    }
 
-    .toast-content .check{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 35px;
-        width: 35px;
-        background-color: #4070f4;
-        color: #fff;
-        font-size: 20px;
-        border-radius: 50%;
-    }
+.message .text{
+    font-size: 20px;
+    font-weight: 600;
+    color: #666666;
+}
 
-    .toast-content .message{
-        display: flex;
-        flex-direction: column;
-        margin: 0 20px;
-    }
 
-    .message .text{
-        font-size: 20px;
-        font-weight: 400;;
-        color: #666666;
-    }
+.message .text.text-1{
+    font-weight: 600;
+    color: #333
+}
 
-    .message .text.text-1{
-        font-weight: 600;
-        color: #333;
-    }
 
-    .toast .close{
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        padding: 5px;
-        cursor: pointer;
-        opacity: 0.7;
-    }
+.toast .close{
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    padding: 5px;
+    cursor: pointer;
+    opacity: 0.7
 
-    .toast .close:hover{
-        opacity: 1;
-    }
+}
 
-    .toast .progress{
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        height: 3px;
-        width: 100%;
-        background: #ddd;
-    }
 
-    .toast .progress:before{
-        content: '';
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        height: 100%;
-        width: 100%;
-        background-color: #4070f4;
-    }
+.toast .close:hover{
+    opacity: 1;
+}
 
-    .progress.active:before{
-        animation: progress 2s linear forwards;
-    }
+.toast .progress{
 
-    @keyframes progress {
-        100%{
-            right: 100%;
-        }
-    }
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: #ddd
+}
 
-    button{
-        padding: 12px 20px;
-        font-size: 20px;
-        outline: none;
-        border: none;
-        background-color: #4070f4;
-        color: #fff;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
+.toast .progress:before{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: #cf974d;
+}
 
-    button:hover{
-        background-color: #0e4bf1;
-    }
+.progress.active:before{
+    animation: progress 2.4s linear forwards;
 
-    .toast.active ~ button{
-        pointer-events: none;
-    }
+
+}
+
+@keyframes progress{
+    100%{
+        right: 100%;
+    }    
+}
+
+
+button{
+    
+    padding: 10px 20px;
+    font-size: 20px;
+    outline: none;
+    width: 110px;
+    height: 80px;
+    color: white;
+    background-color: #cf974d;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+button:hover{
+    background-color: #d1b462
+}
 
 </style>

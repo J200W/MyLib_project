@@ -5,7 +5,7 @@ import BookDetailsComp from "@/components/BookDetailsComp.vue";
 import Comments from "@/components/Comments.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import Carousel from "@/components/Carousel.vue";
-import { ref, onMounted } from 'vue';
+
 
 const books = JSON.parse(sessionStorage.getItem('similar_books'));
 
@@ -19,7 +19,6 @@ var book_list = sessionStorage.getItem('book_list');
 book_list = JSON.parse(book_list);
 
 const book = book_list[book_id - 1];
-console.log(book)
 
 var connected = true;
 
@@ -36,7 +35,9 @@ if (previousUrl == "http://localhost:8080/BookDetails") {
     <NavbarNonConnected v-if="!connected" />
 
     <body>
+        
         <BookDetailsComp :book="book" />
+        
         <Carousel :books="books" name="Similar books" />
         <Comments />
     </body>

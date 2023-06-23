@@ -4,26 +4,29 @@ import PopUpAddFav from "@/components/PopUpAddFav.vue";
 
 const admin = false
 
-const test_array = [1,2,3,4]
-
 </script>
 
 
 <template>
     
     <div id="allPage">
-        <!-- <PopUpAddFav/> -->
+        
         <div id="left-section">
             <div id="left-left-section" >
                 <img id="bookImg" :src="book.src" alt="{{ book.title }}">
-                <router-link v-if="!admin" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
+                <router-link v-show="!admin" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
+                <PopUpAddFav v-show="!admin" />
 
-                <button v-else @click="save_book_information()" id="borrow-book">Save Information</button>
-                <PopUpAddFav/>
                 
-                <!-- add the popup -->
 
-            
+                <div class="file-selector">
+                    <label for="imageUpload" class="btn btn-primary">Click to load an image</label>
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none">
+                </div>
+                
+                
+        
+                <!-- add the popup -->
                     <p>Stock: 
                     <!-- <span>{{ book.stock }}</span> -->
                     <span v-if="!admin" >{{book.stock}}</span>
@@ -34,6 +37,7 @@ const test_array = [1,2,3,4]
                         <span v-if="!admin" >{{book.source}}</span>
                         <input v-else @click="console.log(book.source)" v-model="book.source" placeholder="Author" />
                     </p>
+                    
             </div>
             <div id="bookInfo">
                 <h2>Info</h2>
@@ -94,7 +98,11 @@ const test_array = [1,2,3,4]
                     <input v-else @click="console.log(book.page)" v-model="book.page" placeholder="Edition" />
                 </p>
             </div>
+            
+            
         </div>
+
+        
 
         <div id="right-section">
             <h2>Resume</h2>
@@ -103,25 +111,53 @@ const test_array = [1,2,3,4]
                     <p v-if="!admin">{{ book.description }}</p>
                     <textarea class="resume" v-else v-model="book.description" placeholder="resume"></textarea>
                 </div>
+                
             </div>
             
+            <button v-show="admin" @click="save_book_information()" id="button-save-info" class="save-button">Save Information</button>
         </div>
+        
+        
+        
+        
+        
     </div>
 </template>
 
 <script>
+
+
+let save = false
+
+const test_array = [1,2,3,4]
+
     export default {
         name: 'BookDetailComp',
         props: ['book'],
+
         methods: {
-            save_book_information(){
-                console.log("save info to bd")
-                // pop up ? 
-            },
-            add_to_fav(){
-                console.log("add to fav to bd")
-                //
-            }
+                confirm_action() {
+                    let test = confirm("Are you sure you want to erase the previous informations with the new ones ? ");
+                    
+                    if(test === true){
+                        console.log("new informations saved")
+                        // ajouter a la db
+                    }
+                    else{
+                        console.log("save cancel")
+                        // ne rien faire de plus
+                    }
+                },
+
+                save_book_information(){
+                    this.confirm_action()
+                },
+                add_to_fav(){
+                    console.log("add to fav to bd")
+                    
+                    //
+                }
+            
         }
     }
 
@@ -129,6 +165,23 @@ const test_array = [1,2,3,4]
 
 <style scoped>
 
+    .btn-primary{
+        margin-left: 82px;
+        margin-bottom: 0px;
+        font-size: 15px;
+        padding: 10px 10px;
+        color: white;
+        background-color: #A8A787;
+        border-radius: 0%;
+    }
+
+    .btn-primary:hover{
+        background-color: #D79262;
+    }
+
+    .file-selector{
+        margin-bottom: 20px;
+    }
 
     .resume{
         height: 200px;
@@ -136,12 +189,11 @@ const test_array = [1,2,3,4]
 
     #button-save-info{
         margin-top: 50px;
-        margin-left: 150px;
-        width: 110px;
-        height: 80px;
+        margin-left: 240px;
+        width: 200px;
+        height: 110px;
         color: white;
         background-color: #A8A787;
-        border: none;
         border-radius: 20px;
    
     }
