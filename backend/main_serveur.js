@@ -41,8 +41,10 @@ var books = [
     date: "2020-12-16",
     edition: "Glénat",
     language: "Français",
+    pdf: "onepiece96.pdf",
     pages: 192,
-    description: "Luffy et ses compagnons sont enfin arrivés sur Onigashima, où se déroule le plus grand festival du monde ! Mais pour infiltrer le pays des samouraïs, il leur faut un passeport, et pour l’obtenir, il leur faut affronter les gardiens de la porte des enfers !",
+    description:
+      "Luffy et ses compagnons sont enfin arrivés sur Onigashima, où se déroule le plus grand festival du monde ! Mais pour infiltrer le pays des samouraïs, il leur faut un passeport, et pour l’obtenir, il leur faut affronter les gardiens de la porte des enfers !",
   },
   {
     id: 2,
@@ -55,8 +57,10 @@ var books = [
     date: "2021-02-17",
     edition: "Glénat",
     language: "Français",
+    pdf: "onepiece97.pdf",
     pages: 192,
-    description: "Luffy et ses compagnons sont enfin arrivés sur Onigashima, où se déroule le plus grand festival du monde ! Mais pour infiltrer le pays des samouraïs, il leur faut un passeport, et pour l’obtenir, il leur faut affronter les gardiens de la porte des enfers !",
+    description:
+      "Luffy et ses compagnons sont enfin arrivés sur Onigashima, où se déroule le plus grand festival du monde ! Mais pour infiltrer le pays des samouraïs, il leur faut un passeport, et pour l’obtenir, il leur faut affronter les gardiens de la porte des enfers !",
   },
   {
     id: 3,
@@ -69,9 +73,10 @@ var books = [
     date: "2021-04-21",
     edition: "Glénat",
     language: "Français",
+    pdf: "onepiece98.pdf",
     pages: 192,
-    description: "Luffy et ses compagnons sont enfin arrivés sur Onigashima, où se déroule le plus grand festival du monde ! Mais pour infiltrer le pays des samouraïs, il leur faut un passeport, et pour l’obtenir, il leur faut affronter les gardiens de la porte des enfers !",
-
+    description:
+      "Luffy et ses compagnons sont enfin arrivés sur Onigashima, où se déroule le plus grand festival du monde ! Mais pour infiltrer le pays des samouraïs, il leur faut un passeport, et pour l’obtenir, il leur faut affronter les gardiens de la porte des enfers !",
   },
   {
     id: 4,
@@ -83,9 +88,11 @@ var books = [
     genre: "Shonen",
     date: "2021-06-16",
     edition: "Glénat",
+    pdf: "onepiece99.pdf",
     language: "Français",
     pages: 192,
-    description: "Luffy et ses compagnons sont enfin arrivés sur Onigashima, où se déroule le plus grand festival du monde ! Mais pour infiltrer le pays des samouraïs, il leur faut un passeport, et pour l’obtenir, il leur faut affronter les gardiens de la porte des enfers !",
+    description:
+      "Luffy et ses compagnons sont enfin arrivés sur Onigashima, où se déroule le plus grand festival du monde ! Mais pour infiltrer le pays des samouraïs, il leur faut un passeport, et pour l’obtenir, il leur faut affronter les gardiens de la porte des enfers !",
   },
 ];
 
@@ -210,7 +217,6 @@ app.get("*", async (req, res) => {
       // Utilisez les éléments importés ici selon vos besoins
       res.header("Content-Type", "application/json");
       res.json(req.body);
-      console.log("req.body : ", req.body);
       break;
     case "/get_books_url":
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
@@ -220,10 +226,17 @@ app.get("*", async (req, res) => {
       const imageUrls = await Promise.all(imagePromises);
       res.json(imageUrls);
       break;
-    case "/get_new_books":
+    case "/get_pdf_url":
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
       res.header("Content-Type", "application/json");
       console.log("books : ", books);
+      const pdfPromises = books.map((book) => retrieveImage(book));
+      const pdfUrls = await Promise.all(pdfPromises);
+      res.json(pdfUrls);
+      break;
+    case "/get_new_books":
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+      res.header("Content-Type", "application/json");
       const newImagePromises = books.map((book) => retrieveImage(book));
       const newImageUrls = await Promise.all(newImagePromises);
       res.json(newImageUrls);
@@ -231,7 +244,6 @@ app.get("*", async (req, res) => {
     case "/get_current_books":
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
       res.header("Content-Type", "application/json");
-      console.log("books : ", books);
       const currentImagePromises = books.map((book) => retrieveImage(book));
       const currentImageUrls = await Promise.all(currentImagePromises);
       res.json(currentImageUrls);
@@ -239,7 +251,6 @@ app.get("*", async (req, res) => {
     case "/get_discover_books":
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
       res.header("Content-Type", "application/json");
-      console.log("books : ", books);
       const discoverImagePromises = books.map((book) => retrieveImage(book));
       const discoverImageUrls = await Promise.all(discoverImagePromises);
       res.json(discoverImageUrls);

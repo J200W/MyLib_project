@@ -29,12 +29,29 @@ async function retrieveImage(book) {
         language: book.language,
         pages: book.pages,
         description: book.description,
+        pdf: book.pdf,
     };
 }
 
-async function retrievePDF(pdf) {
-    const pdf_ref = getDownloadURL(ref(storagePDF, pdf));
-    return pdf_ref;
+async function retrievePDF(book) {
+    var pdf_ref = "";
+    if (typeof book.pdf === "string")
+        pdf_ref = await getDownloadURL(ref(storagePDF, book.pdf));
+    return {
+        id: book.id,
+        title: book.title,
+        src: pdf_ref,
+        author: book.author,
+        library: book.library,
+        theme: book.theme,
+        genre: book.genre,
+        date: book.date, 
+        edition: book.edition,
+        language: book.language,
+        pages: book.pages,
+        description: book.description,
+        pdf: book.pdf,
+    };
 }
 
 module.exports = {
