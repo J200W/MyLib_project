@@ -1,7 +1,7 @@
 /*In this example, we use Express.js as the web framework to handle HTTP requests. 
 When a POST request is made to the /login endpoint, the server-side code executes the database query 
 to check the provided login and password against the clients table.*/
-const mysql = require('mysql2/promise');
+// const mysql = require('mysql2/promise');
 /*
 
 

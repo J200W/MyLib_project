@@ -1,6 +1,7 @@
 <script setup>
 
 import PopUpAddFav from "@/components/PopUpAddFav.vue";
+import ModalBox from "./ModalBox.vue";
 
 const admin = false
 
@@ -15,11 +16,8 @@ const admin = false
             <div id="left-left-section" >
                 <img id="bookImg" :src="book.src" alt="{{ book.title }}">
                 <router-link v-show="!admin" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
-                <PopUpAddFav v-show="!admin" />
-
                 
-
-                <div class="file-selector">
+                <div v-show="admin" class="file-selector">
                     <label for="imageUpload" class="btn btn-primary">Click to load an image</label>
                     <input type="file" id="imageUpload" accept="image/*" style="display: none">
                 </div>
@@ -27,40 +25,33 @@ const admin = false
                 
         
                 <!-- add the popup -->
-                    <p>Stock: 
-                    <!-- <span>{{ book.stock }}</span> -->
-                    <span v-if="!admin" >{{book.stock}}</span>
-                        <input v-else @click="console.log(book.stock)" v-model="book.stock" placeholder="Author" />
-                    </p>
-                    <p>Source: 
-                        <!-- <span>{{ book.source }}</span> -->
-                        <span v-if="!admin" >{{book.source}}</span>
-                        <input v-else @click="console.log(book.source)" v-model="book.source" placeholder="Author" />
-                    </p>
+                    
+
+                <PopUpAddFav v-show="!admin" @click="add_to_fav()"/>
                     
             </div>
             <div id="bookInfo">
-                <h2>Info</h2>
-                <button v-if="!admin" @click="add_to_fav()" id="button-add-fav">add fav</button>
-                <p>Author : 
+                <h2 id="information"><b>Information</b></h2>
+                <!-- <button v-if="!admin" @click="add_to_fav()" id="button-add-fav">add fav</button> -->
+                <p><b>Author:  </b> 
                     <span v-if="!admin" >{{book.author}}</span>
                     <input v-else @click="console.log(book.author)" v-model="book.author" placeholder="Author" />
                     
                 </p>
                 <hr>
-                <p>Edition : 
+                <p><b>Edition:  </b> 
                     <!-- <span>{{book.edition}}</span> -->
                     <span v-if="!admin" >{{book.edition}}</span>
                     <input v-else @click="console.log(book.edition)" v-model="book.edition" placeholder="Edition" />
                 </p>
                 <hr>
-                <p>Release : 
+                <p><b>Release:  </b> 
                     <!-- <span>{{ book.date }}</span> -->
                     <span v-if="!admin" >{{book.date}}</span>
                     <input v-else @click="console.log(book.date)" v-model="book.date" placeholder="Edition" />
                 </p>
                 <hr>
-                <p>Languages : 
+                <p><b>Languages:  </b> 
                     <span v-if="!admin" >{{ book.langue }}</span>
                     <!-- <span v-if="!admin" >{{book.langue}}</span> -->
 
@@ -71,7 +62,7 @@ const admin = false
                     
                 </p>
                 <hr>
-                <p>Genre : 
+                <p><b>Genre:  </b> 
                     <!-- <span>{{ book.genre }}</span> -->
                     <span v-if="!admin" >{{book.genre}}</span>
                     <!-- <input v-else @click="console.log(book.genre)" v-model="book.genre" placeholder="Edition" /> -->
@@ -82,7 +73,7 @@ const admin = false
                     
                 </p>
                 <hr>
-                <p>Theme : 
+                <p><b>Theme:  </b> 
                     <!-- <span>{{ book.theme }}</span> -->
                     <span v-if="!admin" >{{book.theme}}</span>
                     <!-- <input v-else @click="console.log(book.theme)" v-model="book.theme" placeholder="Edition" /> -->
@@ -92,20 +83,30 @@ const admin = false
                     </select>
                 </p>
                 <hr>
-                <p>Pages : 
+                <p><b>Pages:  </b> 
                     <!-- <span>{{ book.page }}</span> -->
                     <span v-if="!admin" >{{book.page}}</span>
-                    <input v-else @click="console.log(book.page)" v-model="book.page" placeholder="Edition" />
+                    <input v-else @click="console.log(book.page)" v-model="book.page" placeholder="Page" />
+                </p>
+                <hr>
+                <p><b>Stock:  </b> 
+                    <!-- <span>{{ book.stock }}</span> -->
+                    <span v-if="!admin" >{{book.stock}}</span>
+                    <input v-else @click="console.log(book.stock)" v-model="book.stock" placeholder="Stock" />
+                </p>
+                <p><b>Source:  </b> 
+                    <!-- <span>{{ book.source }}</span> -->
+                    <span v-if="!admin" >{{book.source}}</span>
+                    <input v-else @click="console.log(book.source)" v-model="book.source" placeholder="Source" />
                 </p>
             </div>
             
             
         </div>
 
-        
 
         <div id="right-section">
-            <h2>Resume</h2>
+            <h2>Resume :</h2>
             <div id="book-resume">
                 <div class="row">
                     <p v-if="!admin">{{ book.description }}</p>
@@ -114,14 +115,23 @@ const admin = false
                 
             </div>
             
-            <button v-show="admin" @click="save_book_information()" id="button-save-info" class="save-button">Save Information</button>
+            <!-- <button v-show="admin" @click="save_book_information()" id="button-save-info" class="save-button">Save Information</button> -->
+            
+
+            <ModalBox v-show="admin" @click="save_book_information()"></ModalBox>
+
         </div>
+
         
         
+
         
-        
-        
+
     </div>
+
+    
+
+    
 </template>
 
 <script>
@@ -150,7 +160,13 @@ const test_array = [1,2,3,4]
                 },
 
                 save_book_information(){
-                    this.confirm_action()
+                    // this.confirm_action()
+                    if(save === false){
+                        console.log("new informations saved")
+                        save = true
+
+                    }
+                    
                 },
                 add_to_fav(){
                     console.log("add to fav to bd")
@@ -166,8 +182,8 @@ const test_array = [1,2,3,4]
 <style scoped>
 
     .btn-primary{
-        margin-left: 82px;
-        margin-bottom: 0px;
+        margin-left: 40px;
+        margin-top: 25px;
         font-size: 15px;
         padding: 10px 10px;
         color: white;
@@ -226,7 +242,7 @@ const test_array = [1,2,3,4]
         justify-content: flex-start;
         align-items: flex-start;
         justify-content: left;
-        width: 50%;
+        width: 35%;
     }
 
     #left-left-section {
@@ -236,8 +252,8 @@ const test_array = [1,2,3,4]
         justify-content: space-between;
         align-items: left;
         justify-content: left;
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 45px;
+        padding-right: 80px;
     }
 
     #bookInfo {
@@ -257,11 +273,18 @@ const test_array = [1,2,3,4]
         max-height: 50vh;
         padding-left: 20px;
         padding-right: 20px;
+        margin-left:110px;
     }
 
     h2 {
         text-align: left;
         font-size: 1.5rem;
+        
+        
+    }
+
+    #information{
+        margin-bottom: 20px;
     }
 
     #book-resume {
@@ -269,7 +292,7 @@ const test_array = [1,2,3,4]
         justify-content: space-between;
         max-height: 50vh;
         background-color: white;
-        margin-top: 20px;
+        margin-top: 10px;
         padding: 20px;
         border-radius: 20px;
         font-size: 2vmin;

@@ -1,17 +1,17 @@
 <template>
-    <section>
+    <div class="sectionModal">
         <button class="show-modal">Save book info</button>
     
           <div class="modal-box">
-            <h2>Completed</h2>
-            <h3>Tne book have been  sucessfully saved !</h3>
+            <h2>Sucess!</h2>
+            <h3>Book informations have been  sucessfully saved.</h3>
     
             <div class="buttons">
               <button class="close-btn">Close</button>
             </div>
           </div>
 
-    </section>
+    </div>
           
 </template>
     
@@ -19,14 +19,15 @@
     <script>
       export default {
         mounted() {
-            const section = document.querySelector("section"),
+            const section = document.querySelector(".sectionModal"),
                 showBtn = document.querySelector(".show-modal"),
                 closeBtn = document.querySelector(".close-btn");
     
             showBtn.addEventListener("click", () => section.classList.add("active"));
 
             closeBtn.addEventListener("click", () =>
-                section.classList.remove("active")
+                section.classList.remove("active"),
+                
             );
             }
       }
@@ -43,45 +44,43 @@
 * {
   font-family: "Poppins", sans-serif;
 }
-section {
-  overflow-y: hidden;
+.sectionModal {
+
   z-index: 2;
-  position: static;
-  height: 100%;
-  width: 100%;
+  position: static  ;
+
+
+
 }
 
 button {
-  position: relative;
   font-size: 18px;
   font-weight: 400;
   color: #fff;
   padding: 14px 22px;
   border: none;
-  background: #4070f4;
+  background: #ecb41b;
   border-radius: 6px;
   cursor: pointer;
 }
 button:hover {
-  background-color: #265df2;
+  transition: 0.3s;
+  background-color: #b97b07;
 }
 button.show-modal,
 .modal-box {
-  position: relative;
-  left: 75%;
-  top: 65%;
+  position: absolute;
+  left: 65%;
+  top: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   
 }
-section.active .show-modal {
+.sectionModal.active .show-modal {
   display: none;
 }
 
-section.active .overlay {
-  opacity: 0;
-  pointer-events: auto;
-}
+
 .modal-box {
   display: flex;
   flex-direction: column;
@@ -94,16 +93,16 @@ section.active .overlay {
   opacity: 0;
   pointer-events: none;
   transition: all 0.3s ease;
-  transform: translate(-50%, -50%) scale(1.2);
+  transform: translate(-50%, -50%) scale(1.4);
 }
-section.active .modal-box {
+.sectionModal.active .modal-box {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(1.2);
 }
 .modal-box i {
   font-size: 70px;
-  color: #4070f4;
+  color: #ecb41b;
 }
 .modal-box h2 {
   margin-top: 20px;

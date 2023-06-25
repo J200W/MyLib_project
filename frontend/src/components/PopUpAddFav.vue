@@ -1,7 +1,7 @@
 <template>
 
-    <body>
-        
+        <div class="body">
+
         <div class="toast">
             <div class="toast-content">
                 <!-- <i class="fas fa-solid fa-check check"></i> -->
@@ -19,7 +19,9 @@
 
         <button class="trigger-popUp">Add To Fav</button>
 
-    </body>
+        </div>
+
+
 
 </template>
 
@@ -69,7 +71,7 @@
     display: block;
 }
 
-body{
+.body{
     /* height: 100vh;  */
     /* display: flex;  */
     /* align-items: center;  */
@@ -78,6 +80,7 @@ body{
     z-index: 2;
     overflow : hidden;
     position: static;
+    margin-left: 50px;
 }
 
 .toast{
@@ -192,22 +195,28 @@ body{
 
 button{
     
-    padding: 10px 20px;
-    font-size: 20px;
-    outline: none;
-    width: 110px;
-    height: 80px;
-    color: white;
-    background-color: #cf974d;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: 0.3s;
+        margin-bottom: 20px !important;
+        background-color: #d1b462;
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 1rem;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
 }
 
 
 button:hover{
-    background-color: #d1b462
+    background-color: #ac7433;
+    color: white;
+    transition: all 0.3s ease 0s;
+}
+
+.toast.active ~ button{
+    pointer-events: none;
 }
 
 </style>
