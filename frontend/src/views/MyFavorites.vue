@@ -3,68 +3,60 @@
     import NavbarConnected from "@/components/NavbarConnected.vue";
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
     import TheFooter from '@/components/TheFooter.vue'
+    import MyEbooksSort from "@/components/MyEbooksSort.vue";
+    import MyEbooksContent from "@/components/MyEbooksContent.vue";
     var connected = true
+    const books_fav = [
+      {
+        id: 1,
+        title: "One Piece Tome 96",
+        src: require("@/assets/onepiece96.png"),
+        author: "Eiichiro Oda",
+        date: "04/11/2020",
+        library: "Bibliothèque de l'Université de Lille",
+        time: "34d 12h 32m",
+      },
+
+      {
+        id: 2,
+        title: "One Piece Tome 97",
+        src: require("@/assets/onepiece97.png"),
+        author: "Eiichiro Oda",
+        date: "03/02/2021",
+        library: "Bibliothèque de l'Université de Paris 8",
+        time: "12d 23h 12m",
+      },
+      {
+        id: 3,
+        title: "One Piece Tome 98",
+        src: require("@/assets/onepiece98.png"),
+        author: "Eiichiro Oda",
+        date: "07/04/2021",
+        library: "Bibliothèque Municipale de Lyon",
+        time: "4d 12h 32m",
+      },
+
+    ]
 </script>
 
 <template>
-    <NavbarConnected v-if="connected" />
-    <NavbarNonConnected v-if="!connected" />
-    <p>Hi</p>
+  <NavbarConnected v-if="connected" />
+  <NavbarNonConnected v-if="!connected" />
+  <h1>Mes favoris</h1>
+  <body>
+     <MyEbooksSort pseudo="Username" />
+     <MyEbooksContent :books="books_fav" />
+  </body>
     <TheFooter />
 </template>
-  
-  
-  
+
 <style></style>
   
 <script>
-    import TheFooter from "@/components/TheFooter.vue";
     export default {
         name: 'MyFavorites',
         data() { return {} },
         methods: {
-            link_HomePage: function (event) {
-                this.$router.push({ path: '/' })
-            },
-            link_LogIn: function (event) {
-                this.$router.push({ path: '/LogIn' })
-            },
-            link_SignUp: function (event) {
-                this.$router.push({ path: '/SignUp' })
-            },
-            link_ForgottenPassword: function (event) {
-                this.$router.push({ path: '/ForgottenPassword' })
-            },
-            link_MyAccount: function (event) {
-                this.$router.push({ path: '/MyAccount' })
-            },
-            link_BookDetails: function (event) {
-                this.$router.push({ path: '/BookDetails' })
-            },
-            link_MyEbooks: function (event) {
-                this.$router.push({ path: '/MyEbooks' })
-            },
-            link_MyFavorites: function (event) {
-                this.$router.push({ path: '/MyFavorites' })
-            },
-            link_MyHistory: function (event) {
-                this.$router.push({ path: '/MyHistory' })
-            },
-            link_BorrowBook: function (event) {
-                this.$router.push({ path: '/BorrowBook' })
-            },
-            link_ReadBook: function (event) {
-                this.$router.push({ path: '/ReadBook' })
-            },
-            link_SearchBook: function (event) {
-                this.$router.push({ path: '/SearchBook' })
-            },
-            link_ShareBook: function (event) {
-                this.$router.push({ path: '/ShareBook' })
-            },
-            link_MainPage: function (event) {
-                this.$router.push({ path: '/MainPage' })
-            },
         }
     }
 </script>
