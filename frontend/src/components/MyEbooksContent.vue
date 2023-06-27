@@ -2,18 +2,39 @@
     <div id="myEbooksList">
         <div class="myEbooks" v-for="book in books" :key="book.id">
                 <router-link class="bookLongCard" :to="{ path: '/BookDetails', query: { name: book.title } }">
-                    <img :src="book.src" alt="{{book.title}}" />
-                    <p>{{ book.title }}</p>
-                    <p>{{ book.author }}</p>
-                    <p>{{ book.date }}</p>
-                    <p>{{ book.library }}</p>
-                    <p>{{ book.time }}</p>
+                  <div class = "picture"><img :src="book.src" alt="{{book.title}}"/></div>
+
+
+                  <div class = "datas">
+                    <div class = "to_line"><p class="titre">Titre</p> <p>{{ book.title }}</p></div>
+                    <div class="to_line"><p class="titre">Auteur</p><p>{{ book.author }}</p></div>
+                    <div class="to_line"><p class="titre">Librairie</p><p>{{ book.library }}</p></div>
+                    <div class="to_line"><p class="titre">Date de parution</p><p>{{ book.date }}</p></div>
+                  </div>
+                  <div class = "datas">
+                    <div class="to_line"><p class="titre">Duree d'emprunt restante</p><p>{{ book.time }}</p></div>
+                    <div class="to_line"><p class="titre">En cours d'emprunt</p><p>Oui</p></div>
+                  </div>
+
                 </router-link>
         </div>
     </div>
 </template>
 
 <style>
+.titre{
+  font-weight: bold;
+}
+.to_line p{
+  display: inline-block;
+}
+.datas{
+  flex : 1;
+}
+.picture{
+  flex : 0.5;
+}
+
     #myEbooksList {
         display: flex;
         flex-direction: column;
@@ -39,7 +60,6 @@
         width: 100%;
         height: 100%;
         margin: 10px;
-        padding: 10px;
         background-color: white;
         text-decoration: none;
         color: black;
@@ -54,7 +74,7 @@
     .bookLongCard img {
         width: auto;
         height: 100%;
-        max-width: 100px;
+        max-width: 150px;
         flex: 1;
     }
 
@@ -74,7 +94,7 @@
     .bookLongCard img {
         width: auto;
         height: 100%;
-        max-width: 50px;
+        max-width: 200px;
         flex: 1;
     }
 
