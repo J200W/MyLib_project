@@ -5,7 +5,7 @@ import BookDetailsComp from "@/components/BookDetailsComp.vue";
 import Comments from "@/components/Comments.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import Carousel from "@/components/Carousel.vue";
-
+import {port} from "../../../backend/controllers/Tools_controllers";
 
 const books = JSON.parse(sessionStorage.getItem('similar_books'));
 
@@ -42,6 +42,7 @@ var connected = true;
 <style></style>
   
 <script>
+
 export default {
     name: 'BookDetails',
     data() { return {} },
@@ -57,9 +58,10 @@ export default {
     },
     methods: {
         fetchSimilarBooks() {
-            fetch("http://localhost:80/get_similar_books")
+            fetch("http://localhost:"+ port + "/get_similar_books")
                 .then(response => response.json())
                 .then(data => {
+                  console.log(data)
                     sessionStorage.setItem('similar_books', JSON.stringify(data));
                 })
                 .catch((error) => {

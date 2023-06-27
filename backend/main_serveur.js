@@ -1,98 +1,32 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const port = 80;
+//const port = 80;
+const {port} = require('./controllers/Tools_controllers.js');
 
 const firebase = require("./scripts/firebase_function.js");
 // const new_user = require("./database/newUser.js");
 const retrieveImage = firebase.retrieveImage;
 const retrievePDF = firebase.retrievePDF;
-const {req_signIn, req_modifyMyAccount, req_signUp} = require("./controllers/funct_user.js");
+
+const {req_listEbooks, req_research, req_my_books} = require("./controllers/Post_ebooks.js");
+const {req_signIn, req_modifyMyAccount, req_signUp} = require("./controllers/Post_user.js");
+const {req_new_book} = require("./controllers/Post_admin.js");
 const {prepare_response} = require("./controllers/Tools_controllers");
+const {books, get_particular_books} = require("./controllers/Get_ebooks");
+const {get_user_datas} = require("./controllers/Get_user");
 
+const {execute_query} = require("./database/Connection");
 
+/*
 const requete = require("./database/requete.js");
-const verify_signIn = requete.verify_signIn; /*
+const verify_signIn = requete.verify_signIn;
 const list_books = requete.list_books;
 const my_books = requete.my_books;
 const research = requete.research;
 const new_book = requete.new_book;
 const sign_up = requete.sign_up;
 const connectToDatabase = requete.connectToDatabase; */
-
-
-// const connection = connectToDatabase();
-//const { my_books } = require("./database/myEbooks");
-//const { research } = require("./database/research");
-//const {execute_query} = require("./database/Connection");
-
-
-var books = [
-  {
-    id: 1,
-    title: "One Piece 96",
-    src: "onepiece96.png",
-    author: "Eiichiro Oda",
-    library: "Bibliothèque de l'Université de Lille",
-    theme: "Manga1",
-    genre: "Shonen",
-    date: "2020-12-16",
-    edition: "Glénat",
-    language: "Français",
-    pdf: "onepiece96.pdf",
-    pages: 192,
-    description:
-      "Luffy et ses compagnons sont enfin arrivés sur Onigashima, où se déroule le plus grand festival du monde ! Mais pour infiltrer le pays des samouraïs, il leur faut un passeport, et pour l’obtenir, il leur faut affronter les gardiens de la porte des enfers !",
-  },
-  {
-    id: 2,
-    title: "One Piece 97",
-    src: "onepiece97.png",
-    author: "Eiichiro Oda",
-    library: "Bibliothèque de l'Université de Lille",
-    theme: "Manga2",
-    genre: "Shonen",
-    date: "2021-02-17",
-    edition: "Glénat",
-    language: "Français",
-    pdf: "onepiece97.pdf",
-    pages: 192,
-    description:
-      "Luffy et ses compagnons sont enfin arrivés sur Onigashima, où se déroule le plus grand festival du monde ! Mais pour infiltrer le pays des samouraïs, il leur faut un passeport, et pour l’obtenir, il leur faut affronter les gardiens de la porte des enfers !",
-  },
-  {
-    id: 3,
-    title: "One Piece 98",
-    src: "onepiece98.png",
-    author: "Eiichiro Oda",
-    library: "Bibliothèque de l'Université de Lille",
-    theme: "Manga3",
-    genre: "Shonen",
-    date: "2021-04-21",
-    edition: "Glénat",
-    language: "Français",
-    pdf: "onepiece98.pdf",
-    pages: 192,
-    description:
-      "Luffy et ses compagnons sont enfin arrivés sur Onigashima, où se déroule le plus grand festival du monde ! Mais pour infiltrer le pays des samouraïs, il leur faut un passeport, et pour l’obtenir, il leur faut affronter les gardiens de la porte des enfers !",
-  },
-  {
-    id: 4,
-    title: "One Piece 99",
-    src: "onepiece99.png",
-    author: "Eiichiro Oda",
-    library: "Bibliothèque de l'Université de Lille",
-    theme: "Manga4",
-    genre: "Shonen",
-    date: "2021-06-16",
-    edition: "Glénat",
-    pdf: "onepiece99.pdf",
-    language: "Français",
-    pages: 192,
-    description:
-      "Luffy et ses compagnons sont enfin arrivés sur Onigashima, où se déroule le plus grand festival du monde ! Mais pour infiltrer le pays des samouraïs, il leur faut un passeport, et pour l’obtenir, il leur faut affronter les gardiens de la porte des enfers !",
-  },
-];
 
 /*
 const bodyParser = require('body-parser');
@@ -120,14 +54,36 @@ app.use(express.json()); // for parsing application/json
 app.post("*", async (req, res) => {
   const datas = req.body;
   var response_funct = prepare_response(false, datas, undefined, "Erreur de réponse du serveur");
-  console.log(datas, response_funct)
+  //console.log(datas, response_funct)
 
   switch (req.originalUrl) {
-    case "/modify_myAccount": // Récupérer les données envoyées par le composant MyAccount.vue
-      response_funct = req_modifyMyAccount(datas);
+    case "/modify_myAccount": // COMPONENT MyAccount.vue
+      req_modifyMyAccount(datas).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      })
       break;
 
-    case "/send_signUp":
+      case "/req_datas_user": // VIEW: MyAccount
+              /*
+        const elements = {
+          pseudo: "Ethor",
+          genre: "homme",
+          email: "ethansuissa@efrei.net",
+          birthdate: "2002-08-05",
+          books: 1,
+        };
+          res.header("Content-Type", "application/json");
+          res.json(prepare_response(true, elements, undefined, "Datas user found"));
+          */
+          // Renvoie les éléments en tant que réponse JSON
+          get_user_datas(datas.email).then((result) => {
+              res.header("Content-Type", "application/json");
+              res.json(result);
+          })
+          break;
+
+      case "/send_signUp": // VIEW: SignUp.vue
         req_signUp(datas.email, datas.pseudo, datas.password).then((result) => {
             res.header("Content-Type", "application/json");
             res.json(result);
@@ -153,7 +109,7 @@ app.post("*", async (req, res) => {
       );*/
     break;
 
-    case "/send_login":
+      case "/send_login": // VIEW: Login
 
         req_signIn(datas.email, datas.password).then((result) => {
             res.header("Content-Type", "application/json");
@@ -180,8 +136,14 @@ app.post("*", async (req, res) => {
 
     break;
 
-    case "/list_books":
+    case "/list_books": // VIEW: ?
 		// Retourne une réponse JSON
+        req_listEbooks(datas).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        });
+
+        /*
 		list_books().then((result) => {
 			if (result.length > 0) {
 				res.header("Content-Type", "application/json");
@@ -191,27 +153,35 @@ app.post("*", async (req, res) => {
 				res.header("Content-Type", "application/json");
 				res.json([{ message: "empty list" }]);
 			}
-		});
+		}); */
     break;
 
-	case "/add_book":
+	case "/add_book": // COMPONENT: AddBook.vue
 		// Retourne une réponse JSON
-		res.header("Content-Type", "application/json");
-		new_book(req.body.title, req.body.author, req.body.date, req.body.language, 
+		//res.header("Content-Type", "application/json");
+        req_new_book(req.body.title, req.body.author, req.body.date, req.body.language,
 			req.body.editor, req.body.page, req.body.category, req.body.theme, 
 			req.body.biblio, req.body.description, req.body.img, req.body.pdf).then((result) => {
+                res.header("Content-Type", "application/json");
+                res.json(result);
+            /*
 			if (result) {
 				res.json([{ message: "book added" }]);
 			}
 			else {
 				res.json([{ message: "book not added" }]);
-			}
+			}*/
 		});
         break;
 
-    case "/my_books":
+    case "/my_books": // COMPONENT: ?
       	// Retourne une réponse JSON
-		my_books(req.body.id_client).then((result) => {
+        req_my_books(datas.email).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        })
+        /*
+		my_books(req.body.mail_client).then((result) => {
 			if (result.length > 0) {
 				res.header("Content-Type", "application/json");
 				res.json([{ list: result }]);
@@ -219,12 +189,17 @@ app.post("*", async (req, res) => {
 				res.header("Content-Type", "application/json");
 				res.json([{ message: "empty list" }]);
 			}
-		});
+		});*/
 
 		break;
       
-    case "/search":
+      case "/send_research_fromNavBar": //  VIEW: SearchBook, COMPONENT: SearchBookComponent
+        req_research(req.body.title).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        });
       // Retourne une réponse JSON
+        /*
       research(req.body.title).then((result) => {
         if (result.length > 0) {
 			res.header("Content-Type", "application/json");
@@ -234,27 +209,19 @@ app.post("*", async (req, res) => {
 			res.header("Content-Type", "application/json");
 			res.json([{ message: "no book found matching research" }]);
         }
-      });
+      });*/
 
       break;
 
-    case "/send_login_forgotMdp":
+    case "/send_login_forgotMdp": // COMPONENT: ForgottenPassword
       // Retourne une réponse JSON
       res.header("Content-Type", "application/json");
-      res.json([
-        { message: "Données reçues avec succès from test_serveur.php !" },
-        { donnees: req.body },
-      ]);
+      res.json(prepare_response(false, datas, undefined, "Pas de forgotMdp géré pour le moment"))
       break;
-    case "/send_research_fromNavBar":
-      // Renvoie les éléments en tant que réponse JSON
-      // Utilisez les éléments importés ici selon vos besoins
-      res.header("Content-Type", "application/json");
-      res.json(req.body);
-      break;
+
   default:
-      response_funct = { message: "Erreur d'URL pour la méthode POST" };
-      res.status(404).json({ message: "Erreur d'URL pour la méthode POST" });
+      response_funct.messageFail = "Erreur d'URL pour la requête POST";
+      res.status(404).json(response_funct);
       break;
   }
     //res.header("Content-Type", "application/json");
@@ -263,71 +230,97 @@ app.post("*", async (req, res) => {
 
 // Vérifie si la requête est une requête GET
 app.get("*", async (req, res) => {
-  switch (req.originalUrl) {
-     case "/test_sql":
+    var datas = req.body;
+    var response_funct = prepare_response(false, datas, undefined, "Erreur de réponse du serveur pour GET");
+
+    switch (req.originalUrl) {
+        case "/test_sql": // VIEW: Nothing
         // Renvoie les éléments en tant que réponse JSON
         execute_query('SELECT * FROM Ebook', [], "select").then((result) => {
             res.header("Content-Type", "application/json");
-            res.json(result);
+            res.json(prepare_response(true, result, undefined, "Requête SQL réussie"));
         });
         break;
 
-    case "/datas_user":
-      // Inclure et exécuter le fichier elements_to_send.js
-      // Exemple de données à exporter
-      const elements = {
-        pseudo: "Ethor",
-        genre: "homme",
-        email: "ethansuissa@efrei.net",
-        birthdate: "2002-08-05",
-        books: 1,
-      };
-    case "/send_research_fromNavBar":
+    case "/send_research_fromNavBar": // VIEW: SearchBook, COMPONENT: SearchBookComponent
 		// Renvoie les éléments en tant que réponse JSON
-		// Utilisez les éléments importés ici selon vos besoins
 		res.header("Content-Type", "application/json");
-		res.json(req.body);
+		res.json(prepare_response(datas, datas, "datas posted found", "datas posted not found"));
 		break;
-    case "/get_books_url":
+
+    case "/get_books_url": // VIEW: SearchBook
 		// Renvoie les images des livres en tant que réponse JSON venant de firebase
+        get_particular_books(undefined, "url").then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result.donnees);
+        });
+        /*
 		res.header("Content-Type", "application/json");
 		console.log("books : ", books);
 		const imagePromises = books.map((book) => retrieveImage(book));
 		const imageUrls = await Promise.all(imagePromises);
-		res.json(imageUrls);
+		res.json(imageUrls);*/
 		break;
-    case "/get_pdf_url":
+
+    case "/get_pdf_url": // VIEW: ?
+        get_particular_books(undefined,"pdf").then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result.donnees);
+        });
 		// Renvoie les images des livres en tant que réponse JSON venant de firebase
+        /*
 		res.header("Content-Type", "application/json");
 		console.log("books : ", books);
 		const pdfPromises = books.map((book) => retrieveImage(book));
 		const pdfUrls = await Promise.all(pdfPromises);
-		res.json(pdfUrls);
+		res.json(pdfUrls);*/
 		break;
-    case "/get_new_books":
+    case "/get_new_books": // VIEW: MainPage
 		// Renvoie les images des livres en tant que réponse JSON venant de firebase
+        get_particular_books(undefined,"image").then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result.donnees);
+        });
+        /*
 		res.header("Content-Type", "application/json");
 		const newImagePromises = books.map((book) => retrieveImage(book));
 		const newImageUrls = await Promise.all(newImagePromises);
-		res.json(newImageUrls);
+		res.json(newImageUrls); */
 		break;
-    case "/get_current_books":
+    case "/get_current_books": // VIEW: MainPage
 		// Renvoie les images des livres en tant que réponse JSON venant de firebase
-		res.header("Content-Type", "application/json");
+        get_particular_books("current","image").then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result.donnees);
+        });
+        /*
+        res.header("Content-Type", "application/json");
 		const currentImagePromises = books.map((book) => retrieveImage(book));
 		const currentImageUrls = await Promise.all(currentImagePromises);
-		res.json(currentImageUrls);
+		res.json(currentImageUrls); */
 		break;
-    case "/get_discover_books":
+    case "/get_discover_books": // VIEW: MainPage
 		// Renvoie les images des livres en tant que réponse JSON venant de firebase
+        get_particular_books("discover","image").then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result.donnees);
+        });
+        /*
 		res.header("Content-Type", "application/json");
 		const discoverImagePromises = books.map((book) => retrieveImage(book));
 		const discoverImageUrls = await Promise.all(discoverImagePromises);
-		res.json(discoverImageUrls);
+		res.json(discoverImageUrls);*/
 		break;
 
-    case "/get_similar_books":
-		// Renvoie les images des livres en tant que réponse JSON venant de firebase
+    case "/get_similar_books": // VIEW: BookDetails
+    // Renvoie les images des livres en tant que réponse JSON venant de firebase
+        /*
+        get_particular_books("similar","image").then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result.donnees);
+        });*/
+
+
 		res.header("Content-Type", "application/json");
 		console.log("books : ", books);
 		const similarImagePromises = books.map((book) => retrieveImage(book));
@@ -336,8 +329,9 @@ app.get("*", async (req, res) => {
 		break;
 
     default:
-		res.status(404).json({ message: "Erreur d'URL pour la méthode GET" });
-		break;
+        response_funct.messageFail = "Erreur d'URL pour la requête GET";
+        res.status(404).json(response_funct);
+        break;
   }
 });
 

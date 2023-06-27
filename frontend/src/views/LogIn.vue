@@ -1,7 +1,8 @@
 <script setup>
 import NavbarSimple from "@/components/NavbarSimple.vue";
 import TheFooter from "@/components/TheFooter.vue";
-import {link_MyHistory } from "@/router/functions_nav";
+import {link_MainPage } from "@/router/functions_nav";
+import {port } from "../../../backend/controllers/Tools_controllers"
 </script>
 
 <template>
@@ -161,7 +162,8 @@ export default
                     password: this.password
                 };
 
-                fetch("http://localhost:80/send_login", {
+                let url = "http://localhost:" + port + "/send_login"
+                fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
@@ -177,11 +179,11 @@ export default
                         const status = data.status;
                         const message = data.message;
                         if (status === "success") {
+                            console.log("Enregistré dans le session storage: " + data.donnees.email)
                             alert(message);
-                            sessionStorage.setItem('user_email', data[1].donnees.email);
+                            sessionStorage.setItem('user_email', data.donnees.email);
                             sessionStorage.setItem('connected', true);
-                            link_MyHistory();
-                            //this.$router.push('/MainPage');
+                            link_MainPage.call(this);
                         } else {
                             alert(message);
                         }

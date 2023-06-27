@@ -4,6 +4,8 @@ import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
 import SearchBookSort from "@/components/SearchBookSort.vue";
 import SearchBookContent from "@/components/SearchBookContent.vue";
 import TheFooter from "@/components/TheFooter.vue";
+import functions_nav from "@/router/functions_nav";
+import {port} from "../../../backend/controllers/Tools_controllers";
 import { ref, onMounted } from 'vue';
 const image = ref(null);
 const isLoading = ref(false);
@@ -42,7 +44,7 @@ var connected = true;
   
 <script>
 
-import functions_nav from "@/router/functions_nav";
+
 
 export default {
     name: 'SearchBook',
@@ -57,7 +59,8 @@ export default {
     },
     methods: {
         fetchBooksUrl() {
-            fetch("http://localhost:80/get_books_url")
+
+            fetch("http://localhost:" + port + "/get_books_url")
                 .then(response => response.text())
                 .then(data => {
                     // Traiter la réponse du serveur

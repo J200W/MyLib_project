@@ -1,6 +1,7 @@
 <script setup>
 import NavbarSimple from "@/components/NavbarSimple.vue";
 import TheFooter from "@/components/TheFooter.vue";
+import {port} from "../../../backend/controllers/Tools_controllers";
 </script>
 
 <template>
@@ -112,6 +113,7 @@ body {
 <script>
 
 
+
 export default
 {
   name:'ForgottenPassword',
@@ -130,7 +132,7 @@ export default
         email: this.email,
       };
 
-      fetch("http://localhost:80/send_login_forgotMdp", {
+      fetch("http://localhost:"+ port +"/send_login_forgotMdp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête

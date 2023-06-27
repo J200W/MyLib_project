@@ -2,7 +2,7 @@
 import NavbarConnected from "@/components/NavbarConnected.vue";
 import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
 import TheFooter from "@/components/TheFooter.vue";
-
+import {port} from "../../../backend/controllers/Tools_controllers";
 var connected = true;
 </script>
 
@@ -85,12 +85,13 @@ button:hover {
 </style>
 
 <script >
+
 export default {
   name:'MyAccount',
   data() {
     return {
       pseudo: 'JohnDoe',
-      genre: 'homme',
+      genre: '',
       email: 'john@example.com',
       birthdate: '',
       books: 0
@@ -102,19 +103,31 @@ export default {
   methods: {
     fetchUserData() {
       // Effectuer une requête HTTP vers la page PHP pour récupérer les données utilisateur
-      fetch('http://localhost:80/datas_user')
-          .then(response => response.json())
-          .then(data => {
-            console.log('Données utilisateur reçues:', data);
-            this.pseudo = data.pseudo;
-            this.genre = data.genre;
-            this.email = data.email;
-            this.birthdate = data.birthdate;
-            this.books = data.books;
-          })
-          .catch(error => {
-            console.error('Erreur lors de la récupération des données utilisateur:', error);
-          });
+      let email_current_user = sessionStorage.getItem("user_email");
+      if (email_current_user != null){
+        fetch("http://localhost:" + port + "/req_datas_user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+            //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+          },
+          body: JSON.stringify({email: email_current_user})
+        })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Données utilisateur reçues:', data);
+              this.pseudo = data.donnees.pseudo;
+              this.email = data.donnees.email;
+            })
+            .catch(error => {
+              console.error('Erreur lors de la récupération des données utilisateur:', error);
+            });
+      }
+      else {
+        alert("no user connected in session storage")
+        console.log("no user connected in session storage")
+      }
+
     },
     submitForm(event) {
       // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
@@ -129,7 +142,7 @@ export default {
         books: this.books
       };
 
-      fetch("http://localhost:80/modify_myAccount", {
+      fetch("http://localhost:" + port + "/modify_myAccount", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête

@@ -1,6 +1,8 @@
 <script setup>
 import NavbarSimple from "@/components/NavbarSimple.vue";
 import TheFooter from "@/components/TheFooter.vue";
+import {port} from "../../../backend/controllers/Tools_controllers";
+import {link_MainPage} from "@/router/functions_nav";
 </script>
 
 
@@ -120,6 +122,9 @@ body {
 </style>
   
 <script>
+
+
+
 export default {
     name: 'SignUp',
     data() {
@@ -147,7 +152,7 @@ export default {
                 pseudo: this.pseudo,
             };
 
-            fetch("http://localhost:80/send_signUp", {
+            fetch("http://localhost:"+ port +"/send_signUp", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
@@ -163,7 +168,10 @@ export default {
                     console.log(data)
                     if (data.status) {
                         alert(message);
-                        this.$router.push('/LogIn');
+                        sessionStorage.setItem('user_email', data.donnees.email);
+                        sessionStorage.setItem('connected', true);
+                        link_MainPage.call(this)
+                        //this.$router.push('/LogIn');
                     } else {
                         alert(message);
                     }

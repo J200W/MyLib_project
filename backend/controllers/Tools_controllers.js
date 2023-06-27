@@ -24,6 +24,8 @@ function prepare_response(condition, reqBody, messageSuccess="", messageFail="")
     return response;
 }
 
+const port = process.env.PORT || 8090;
+
 // =========================================================
 // EXPORTATIONS
-module.exports = { prepare_response};
+module.exports = { prepare_response, port};

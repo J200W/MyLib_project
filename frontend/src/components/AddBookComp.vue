@@ -1,5 +1,6 @@
-<script>
-
+<script setup >
+import functions_nav from "@/router/functions_nav";
+import {port} from "../../../backend/controllers/Tools_controllers";
 </script>
 
 
@@ -379,7 +380,7 @@
 
 <script>
 
-import functions_nav from "@/router/functions_nav";
+
 
 export default
     {
@@ -435,16 +436,18 @@ export default
 
                 console.log(ebook);
 
-                fetch("http://localhost:80/add_book", {
+                fetch("http://localhost:"+ port + "/add_book", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
                         //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
                 },
-                body: JSON.stringify(ebook).
+                body: JSON.stringify(ebook)
+                }).
                 then(response => {
-                    console.log(response);
-                })
+                  console.log(response)
+                  alert(response);
+
 
             })
 

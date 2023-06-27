@@ -3,6 +3,7 @@ import NavbarConnected from "@/components/NavbarConnected.vue";
 import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
 import Carousel from "@/components/Carousel.vue";
 import TheFooter from "@/components/TheFooter.vue";
+import {port } from "../../../backend/controllers/Tools_controllers";
 
 
 const new_books = JSON.parse(sessionStorage.getItem('new_books'))
@@ -77,7 +78,7 @@ export default {
     },
     methods: {
         fetchMainPage() {
-            fetch("http://localhost:80/get_new_books")
+            fetch("http://localhost:" + port + "/get_new_books")
                 .then(response => response.json())
                 .then(data => {
                     sessionStorage.setItem('new_books', JSON.stringify(data));
@@ -86,7 +87,7 @@ export default {
                     console.log(error);
                 });
 
-            fetch("http://localhost:80/get_current_books")
+            fetch("http://localhost:" + port + "/get_current_books")
                 .then(response => response.json())
                 .then(data => {
                     sessionStorage.setItem('current_books', JSON.stringify(data));
@@ -94,7 +95,7 @@ export default {
                 .catch(error => {
                     console.log(error);
                 });
-            fetch("http://localhost:80/get_discover_books")
+            fetch("http://localhost:" + port + "/get_discover_books")
                 .then(response => response.json())
                 .then(data => {
                     sessionStorage.setItem('discover_books', JSON.stringify(data));

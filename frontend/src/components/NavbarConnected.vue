@@ -1,6 +1,7 @@
 <script setup>
 const admin = true
 global.book_url = ""
+import {port} from "../../../backend/controllers/Tools_controllers";
 </script>
 
 <template>
@@ -216,7 +217,7 @@ export default
                         researched_name: this.researched_name
                     };
 
-                    fetch("http://localhost:80/send_research_fromNavBar", {
+                    fetch("http://localhost:"+ port +"/send_research_fromNavBar", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête

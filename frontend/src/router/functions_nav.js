@@ -7,6 +7,10 @@ export function link_MyAccount(event){
 export function link_HomePage(event){
     this.$router.push({path: '/'})
 }
+
+export function link_MainPage(event){
+    this.$router.push({path: '/MainPage'})
+}
 export function link_LogIn(event){
     this.$router.push({path: '/LogIn'})
 }
@@ -49,6 +53,7 @@ export function link_ManageUsers(event){
 export default {
     link_MyAccount,
     link_HomePage,
+    link_MainPage,
     link_LogIn,
     link_SignUp,
     link_ForgottenPassword,
