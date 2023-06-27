@@ -72,13 +72,13 @@ body {
 }
 
 .tabs:hover {
-    background-color: #D79262;
+    background-color: #5C5C50;
     color: white;
     transition: all 0.3s ease 0s;
 }
 
 .selected {
-    background-color: #D79262;
+    background-color: #5C5C50;
     color: white;
 }
 
@@ -103,14 +103,14 @@ body {
     margin-bottom: 1rem;
     border-radius: 10px;
     border: #A8A787 2px solid;
-    background-color: #D0AB77;
+    background-color: #A8A787;
     color: #FFF;
     width: 50%;
     margin: auto;
 }
 
 .form-submit:hover {
-    background-color: #D79262;
+    background-color: #545444;
     border: #545444 2px solid;
     color: white;
     transition: all 0.3s ease 0s;

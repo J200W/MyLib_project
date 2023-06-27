@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "kreait/firebase-php": "^5.23.0",
+    "vendor/kreait/firebase-php": "^5.23.0",
     "ext-json": "*"
   }
 }

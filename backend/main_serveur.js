@@ -19,6 +19,10 @@ const sign_up = requete.sign_up;
 const connectToDatabase = requete.connectToDatabase;
 
 const connection = connectToDatabase();
+//const { my_books } = require("./database/myEbooks");
+//const { research } = require("./database/research");
+//const {execute_query} = require("./database/Connection");
+
 
 var books = [
   {
@@ -199,7 +203,7 @@ app.post("*", async (req, res) => {
 		});
 
 		break;
-
+      
     case "/search":
       // Retourne une réponse JSON
       research(req.body.title).then((result) => {
@@ -239,6 +243,24 @@ app.post("*", async (req, res) => {
 // Vérifie si la requête est une requête GET
 app.get("*", async (req, res) => {
   switch (req.originalUrl) {
+     case "/test_sql":
+        // Renvoie les éléments en tant que réponse JSON
+        execute_query('SELECT * FROM Ebook', [], "select").then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        });
+        break;
+
+    case "/datas_user":
+      // Inclure et exécuter le fichier elements_to_send.js
+      // Exemple de données à exporter
+      const elements = {
+        pseudo: "Ethor",
+        genre: "homme",
+        email: "ethansuissa@efrei.net",
+        birthdate: "2002-08-05",
+        books: 1,
+      };
     case "/send_research_fromNavBar":
 		// Renvoie les éléments en tant que réponse JSON
 		// Utilisez les éléments importés ici selon vos besoins
