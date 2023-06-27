@@ -16,8 +16,6 @@ import TheFooter from "@/components/TheFooter.vue";
         <form id="form-signup" @submit="submitForm">
             <label class="form-label" for="pseudo">Pseudo</label>
             <input class="form-input" type="text" id="pseudo" name="pseudo" v-model="pseudo" required>
-            <label class="form-label" for="date">Date of birth</label>
-            <input class="form-input" type="date" id="date" name="date" v-model="birthdate" required>
             <label class="form-label" for="email">Email Address</label>
             <input class="form-input" type="email" id="email" name="email" v-model="email" required>
             <label class="form-label" for="password">Password</label>
@@ -123,52 +121,59 @@ body {
   
 <script>
 export default {
-  name:'SignUp',
-  data() {
-    return {
-      pseudo: '',
-      birthdate: '',
-      email: 'john@example.com',
-      password: ''
-    };
-  },
-  mounted() {
-    this.fetchUserData();
-  },
-  methods: {
-    fetchUserData() {
+    name: 'SignUp',
+    data() {
+        return {
+            pseudo: '',
+            birthdate: '',
+            email: '',
+            password: ''
+        };
     },
-    submitForm(event) {
-      // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
-      console.log('Formulaire soumis !', this.email, this.password, this.pseudo, this.birthdate);
-      event.preventDefault();
-
-      var datas = {
-        email: this.email,
-        password: this.password,
-        pseudo: this.pseudo,
-        birthdate: this.birthdate
-      };
-
-      fetch("http://localhost:80/send_signUp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
-          //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+    mounted() {
+        this.fetchUserData();
+    },
+    methods: {
+        fetchUserData() {
         },
-        body: JSON.stringify(datas)
-      })
-          .then(response => response.text())
-          .then(data => {
-            // Traiter la réponse du serveur
-            console.log("Send by serveur: ", data);
+        submitForm(event) {
+            // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+            console.log('Formulaire soumis !', this.email, this.password, this.pseudo);
+            event.preventDefault();
 
-          })  .catch(error => {
-        // Gérer les erreurs
-        console.error("Erreur lors de l'envoi du formulaire :", error);
-      });
+            var datas = {
+                email: this.email,
+                password: this.password,
+                pseudo: this.pseudo,
+            };
 
+            fetch("http://localhost:80/send_signUp", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                    //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => response.text())
+                .then(data => {
+                    // Traiter la réponse du serveur
+                    data = JSON.parse(data);
+                    const message = data[0].message;
+                    console.log(data)
+                    if (message == "Inscription réussie !") {
+                        alert(message);
+                        this.$router.push('/LogIn');
+                    } else {
+                        alert(message);
+                    }
+
+                }).catch(error => {
+                    // Gérer les erreurs
+                    console.error("Erreur lors de l'envoi du formulaire :", error);
+                });
+
+        }
     }
-  }
 }
 </script>

@@ -136,49 +136,58 @@ body {
 <script>
 
 
-  export default
-  {
-    name:'LogIn',
-    data() {
-      return {
-        email: 'john@example.com',
-        password: ''
-      };
-    },
-    mounted() {
-      this.fetchUserData();
-    },
-    methods: {
-      fetchUserData() {
-      },
-      submitForm(event) {
-        // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
-        console.log('Formulaire soumis !', this.email, this.password);
-        event.preventDefault();
+export default
+    {
+        name: 'LogIn',
+        data() {
+            return {
+                email: '',
+                password: ''
+            };
+        },
+        mounted() {
+            this.fetchUserData();
+        },
+        methods: {
+            fetchUserData() {
+            },
+            submitForm(event) {
+                // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+                console.log('Formulaire soumis !', this.email, this.password);
+                event.preventDefault();
 
-        var datas = {
-          email: this.email,
-          password: this.password
-        };
+                var datas = {
+                    email: this.email,
+                    password: this.password
+                };
 
-        fetch("http://localhost:80/send_login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
-            //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
-          },
-          body: JSON.stringify(datas)
-        })
-            .then(response => response.text())
-            .then(data => {
-              // Traiter la réponse du serveur
-              console.log("Connexion on serveur", data);
-            })  .catch(error => {
-          // Gérer les erreurs
-          console.error("Erreur lors de l'envoi du formulaire :", error);
-        });
+                fetch("http://localhost:80/send_login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                        //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                    },
+                    body: JSON.stringify(datas)
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        // Traiter la réponse du serveur
+                        data = JSON.parse(data);
+                        const message = data[0].message;
+                        if (message == "Authentification réussie !") {
+                            alert(message);
+                            sessionStorage.setItem('user_email', data[1].donnees.email);
+                            sessionStorage.setItem('connected', true);
+                            this.$router.push('/MainPage');
+                        } else {
+                            alert(message);
+                        }
+                    }).catch(error => {
+                        // Gérer les erreurs
+                        console.error("Erreur lors de l'envoi du formulaire :", error);
+                    });
 
-      }
+            }
+        }
     }
-  }
 </script>

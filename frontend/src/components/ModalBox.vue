@@ -46,11 +46,7 @@
 }
 .sectionModal {
 
-  z-index: 2;
-  position: static  ;
-
-
-
+  z-index: 1;
 }
 
 button {

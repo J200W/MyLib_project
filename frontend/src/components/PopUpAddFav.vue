@@ -120,7 +120,7 @@
     width: 35px;
     background-color:#cf974d ;
     color: white;
-    font-size: 20px;
+    font-size: 3vmin;
     border-radius: 50%;
 }
 
@@ -133,7 +133,7 @@
 
 
 .message .text{
-    font-size: 20px;
+    font-size: 2.5vmin;
     font-weight: 600;
     color: #666666;
 }
@@ -202,7 +202,7 @@ button{
         padding: 15px 30px;
         text-align: center;
         text-decoration: none;
-        font-size: 1rem;
+        font-size: 2vmin;
         margin: 4px 2px;
         cursor: pointer;
         border-radius: 5px;
