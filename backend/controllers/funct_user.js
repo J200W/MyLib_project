@@ -5,19 +5,8 @@ const mysql = require("mysql2/promise");
 const {execute_query} = require("../database/Connection");
 
 async function sign_up(email, pseudo, password) {
-    const connection = await mysql.createConnection({
-        host: "sql7.freesqldatabase.com",
-        user: "sql7624887",
-        password: "5YcetTXFDf",
-        database: "sql7624887",
-    });
 
-    if (connection.state === "disconnected") {
-        await connection.connect();
-    }
 
-    const query =
-        "INSERT INTO Clients (mail_Clients, pseudo_Clients, mdp_Clients) VALUES (?, ?, ?)";
 
     try {
         const [result] = await connection.query(query, [email, pseudo, password]);
@@ -28,13 +17,17 @@ async function sign_up(email, pseudo, password) {
         return result;
     }
 }
-async function req_signUp(reqBody){
+async function req_signUp(email, pseudo, password){
     // Retourne une réponse JSON
-    //let result = await new_user(reqBody.email, reqBody.pseudo, reqBody.password);
-
-
-
-    return prepare_response(result, 'SignUp réussi', 'SignUp échoué', reqBody)
+    const query =
+        "INSERT INTO Clients (mail_Clients, pseudo_Clients, mdp_Clients) VALUES (?, ?, ?)";
+    try {
+        const result = await execute_query(query, [email, pseudo, password], "insert");
+        return prepare_response(result, [email, pseudo, password], 'SignUp réussi', 'SignUp échoué');
+    } catch (error) {
+        console.error("Error during registration:", error);
+        return prepare_response(false, [email, pseudo, password], undefined, 'Erreur du serveur pour SignUp' );
+    }
 }
 
 async function req_signIn(email, password) {

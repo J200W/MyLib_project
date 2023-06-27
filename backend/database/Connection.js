@@ -24,7 +24,6 @@ async function execute_query(query, params, mode) {
   try {
     const connection = await connectToDatabase();
     const [rows] = await connection.query(query, params);
-    var a = rows.length;
     connection.end();
     if (mode === 'select') {
         return [rows];
@@ -33,9 +32,22 @@ async function execute_query(query, params, mode) {
         return rows.affectedRows > 0;
     }
   } catch (error) {
+    if (checkDuplicateEntryMessage(error.message)) {
+        return false;
+    }
     console.error('Error executing query:', error);
     throw error;
   }
+}
+
+function checkDuplicateEntryMessage(string) {
+  const regex = /Duplicate entry '([^']+@[^']+)' for key 'PRIMARY'/;
+  const match = string.match(regex);
+  if (match) {
+    const email = match[1];
+    return email;
+  }
+  return null;
 }
 
 module.exports = { execute_query };

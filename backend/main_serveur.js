@@ -128,9 +128,13 @@ app.post("*", async (req, res) => {
       break;
 
     case "/send_signUp":
-        response_funct = req_signIn(datas);
+        req_signUp(datas.email, datas.pseudo, datas.password).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        });
 
       // Retourne une réponse JSON
+        /*
       res.header("Content-Type", "application/json");
       await sign_up(req.body.email, req.body.pseudo, req.body.password).then(
         (result) => {
@@ -146,7 +150,7 @@ app.post("*", async (req, res) => {
             ]);
           }
         }
-      );
+      );*/
     break;
 
     case "/send_login":

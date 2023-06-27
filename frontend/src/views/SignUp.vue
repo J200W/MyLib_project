@@ -159,9 +159,9 @@ export default {
                 .then(data => {
                     // Traiter la réponse du serveur
                     data = JSON.parse(data);
-                    const message = data[0].message;
+                    const message = data.message;
                     console.log(data)
-                    if (message === "Inscription réussie !") {
+                    if (data.status) {
                         alert(message);
                         this.$router.push('/LogIn');
                     } else {
