@@ -31,7 +31,7 @@ import NavbarConnected from "@/components/NavbarConnected.vue";
           <div class="form-container">
             <h2 class ="titre">Entrez la date de fin d'emprunt</h2>
             <div class = "form-group">
-            <form onsubmit="validateDate()">
+            <form>
               <input type="date" id="dateInput" required>
             </form>
             </div>
