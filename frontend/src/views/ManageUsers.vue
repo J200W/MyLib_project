@@ -4,6 +4,9 @@
     import TheFooter from "@/components/TheFooter.vue";
 
     import ManageUsersComp from "@/components/ManageUsersComp.vue";
+    import PopUpAddFav from "@/components/PopUpAddFav.vue";
+
+    
 
     const connected = true
 
@@ -34,12 +37,12 @@
 
     <body>
 
-        <NavbarConnected v-if="connected" />
+        <NavbarConnected v-if="connected" /> 
         <NavbarNonConnected v-if="!connected" />
 
-        <ManageUsersComp :users="users"/>
+        <ManageUsersComp :users="users"/> 
 
-        <TheFooter/>
+        <TheFooter/> 
 
     </body>
     

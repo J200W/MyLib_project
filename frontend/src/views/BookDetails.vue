@@ -5,7 +5,7 @@ import BookDetailsComp from "@/components/BookDetailsComp.vue";
 import Comments from "@/components/Comments.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import Carousel from "@/components/Carousel.vue";
-import { ref, onMounted } from 'vue';
+
 
 const books = JSON.parse(sessionStorage.getItem('similar_books'));
 
@@ -22,12 +22,6 @@ const book = book_list[book_id - 1];
 
 var connected = true;
 
-var previousUrl = document.referrer;
-previousUrl = previousUrl.split("?id=")[0]
-if (previousUrl == "http://localhost:8080/BookDetails") {
-
-}
-
 </script>
 
 <template>
@@ -35,7 +29,9 @@ if (previousUrl == "http://localhost:8080/BookDetails") {
     <NavbarNonConnected v-if="!connected" />
 
     <body>
+        
         <BookDetailsComp :book="book" />
+        
         <Carousel :books="books" name="Similar books" />
         <Comments />
     </body>

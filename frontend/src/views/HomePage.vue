@@ -12,19 +12,10 @@ import TheFooter from "@/components/TheFooter.vue";
     </div>
 
     <body>
-        This is the Home Page !<br><br>
-        <p v-on:click=function_nav.link_MyEbooks.call(this)>MyEbooks</p>
-        <p v-on:click=function_nav.link_LogIn.call(this)>LogIn</p>
-        <p v-on:click=function_nav.link_SignUp.call(this)>SignUp</p>
-        <p v-on:click=function_nav.link_ForgottenPassword.call(this)>ForgottenPassword</p>
-        <p v-on:click=function_nav.link_MyAccount.call(this)>MyAccount</p>
-        <p v-on:click=function_nav.link_BookDetails.call(this)>BookDetails</p>
-        <p v-on:click=function_nav.link_MyFavorites.call(this)>MyFavorites</p>
     </body>
 
     <TheFooter />
 </template>
-
 
 
 

@@ -1,8 +1,58 @@
 <script setup>
 
+import PopUpAddFav from "@/components/PopUpAddFav.vue";
+import ModalBox from "./ModalBox.vue";
+
 const admin = true
 
-const test_array = [1, 2, 3, 4]
+var category = [
+    { value: "None", text: "None" },
+    { value: "adventure", text: "Adventure" },
+    { value: "romance", text: "Romance" },
+    { value: "mystery", text: "Mystery" },
+    { value: "fantasy", text: "Fantasy" },
+    { value: "horror", text: "Horror" },
+    { value: "thriller", text: "Thriller" },
+    { value: "historical-fiction", text: "Historical Fiction" },
+    { value: "self-help", text: "Self-Help" },
+    { value: "science", text: "Science" },
+    { value: "dystopian", text: "Dystopian" },
+    { value: "humor", text: "Humor" },
+    { value: "crime", text: "Crime" },
+    { value: "young-adult", text: "Young Adult" },
+    { value: "philosophy", text: "Philosophy" },
+    { value: "business", text: "Business" },
+    { value: "travel", text: "Travel" },
+    { value: "memoir", text: "Memoir" },
+    { value: "historical", text: "Historical" },
+    { value: "children", text: "Children" },
+    { value: "graphic-novel", text: "Graphic Novel" }
+];
+
+var theme = [
+    { value: "None", text: "None" },
+    { value: "adventure", text: "Adventure" },
+    { value: "romance", text: "Romance" },
+    { value: "mystery", text: "Mystery" },
+    { value: "fantasy", text: "Fantasy" },
+    { value: "horror", text: "Horror" },
+    { value: "thriller", text: "Thriller" },
+    { value: "historical-fiction", text: "Historical Fiction" },
+    { value: "self-help", text: "Self-Help" },
+    { value: "science", text: "Science" },
+    { value: "dystopian", text: "Dystopian" },
+    { value: "humor", text: "Humor" },
+    { value: "crime", text: "Crime" },
+    { value: "young-adult", text: "Young Adult" },
+    { value: "philosophy", text: "Philosophy" },
+    { value: "business", text: "Business" },
+    { value: "travel", text: "Travel" },
+    { value: "memoir", text: "Memoir" },
+    { value: "historical", text: "Historical" },
+    { value: "children", text: "Children" },
+    { value: "graphic-novel", text: "Graphic Novel" }
+];
+
 
 </script>
 
@@ -72,16 +122,17 @@ const test_array = [1, 2, 3, 4]
                     <!-- <span>{{ book.genre }}</span> -->
                     <span v-if="!admin">{{ book.genre }}</span>
                     <!-- <input v-else @click="console.log(book.genre)" v-model="book.genre" placeholder="Edition" /> -->
-
+                <div class="bookAdminCompSelector">
                     <select v-if="admin">
-                        <option v-for="num in test_array" :key="num">{{ book.genre }}</option>
+                        <option v-for="c in category" :key="c">{{ c.text }}</option>
                     </select>
                     <select v-if="admin">
-                        <option v-for="num in test_array" :key="num">{{ book.genre }}</option>
+                        <option v-for="c in category" :key="c">{{ c.text }}</option>
                     </select>
                     <select v-if="admin">
-                        <option v-for="num in test_array" :key="num">{{ book.genre }}</option>
+                        <option v-for="c in category" :key="c">{{ c.text }}</option>
                     </select>
+                </div>
 
                 </p>
                 <hr>
@@ -89,18 +140,20 @@ const test_array = [1, 2, 3, 4]
                     <!-- <span>{{ book.theme }}</span> -->
                     <span v-if="!admin">{{ book.theme }}</span>
                     <!-- <input v-else @click="console.log(book.theme)" v-model="book.theme" placeholder="Edition" /> -->
+                <div class="bookAdminCompSelector">
                     <select v-if="admin" v-model="book.theme">
-                        <option v-for="num in test_array" :key="num">{{ book.theme }}</option>
+                        <option v-for="t in theme" :key="t">{{ t.text }}</option>
                         <!-- <option>Romance</option> -->
                     </select>
                     <select v-if="admin" v-model="book.theme">
-                        <option v-for="num in test_array" :key="num">{{ book.theme }}</option>
+                        <option v-for="t in theme" :key="t">{{ t.text }}</option>
                         <!-- <option>Romance</option> -->
                     </select>
                     <select v-if="admin" v-model="book.theme">
-                        <option v-for="num in test_array" :key="num">{{ book.theme }}</option>
+                        <option v-for="t in theme" :key="t">{{ t.text }}</option>
                         <!-- <option>Romance</option> -->
                     </select>
+                </div>
                 </p>
                 <hr>
                 <p>Pages :
@@ -124,8 +177,99 @@ const test_array = [1, 2, 3, 4]
     </div>
 </template>
 
+<script>
 
-<style>
+
+let save = false
+
+const test_array = [1, 2, 3, 4]
+
+export default {
+    name: 'BookDetailComp',
+    props: ['book'],
+
+    methods: {
+        confirm_action() {
+            let test = confirm("Are you sure you want to erase the previous informations with the new ones ? ");
+
+            if (test === true) {
+                console.log("new informations saved")
+                // ajouter a la db
+            }
+            else {
+                console.log("save cancel")
+                // ne rien faire de plus
+            }
+        },
+
+        save_book_information() {
+            // this.confirm_action()
+            if (save === false) {
+                console.log("new informations saved")
+                save = true
+
+            }
+
+        },
+        add_to_fav() {
+            console.log("add to fav to bd")
+
+            //
+        }
+
+    }
+}
+
+</script>
+
+<style scoped>
+.btn-primary {
+    margin-left: 40px;
+    margin-top: 25px;
+    font-size: 15px;
+    padding: 10px 10px;
+    color: white;
+    background-color: #A8A787;
+    border-radius: 0%;
+}
+
+.btn-primary:hover {
+    background-color: #D79262;
+}
+
+.file-selector {
+    margin-bottom: 20px;
+}
+
+.resume {
+    height: 200px;
+}
+
+#button-save-info {
+    margin-top: 50px;
+    margin-left: 240px;
+    width: 200px;
+    height: 110px;
+    color: white;
+    background-color: #A8A787;
+    border-radius: 20px;
+    z-index: 1;
+}
+
+.bookAdminCompSelector {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    justify-content: left;
+    flex: 1;
+}
+
+#button-save-info:hover {
+    background-color: #D79262;
+    color: white;
+    transition: all 0.3s ease 0s;
+}
+
 hr {
     border: 0;
     height: 1px;
@@ -143,104 +287,14 @@ hr {
     margin-top: 0.6rem;
 }
 
-
-.resume {
-    height: 200px;
-}
-
-
-/* Popup container - can be anything you want */
-.popup {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-/* The actual popup */
-.popup .popuptext {
-    visibility: hidden;
-    width: 160px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 8px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -80px;
-}
-
-/* Popup arrow */
-.popup .popuptext::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-}
-
-/* Toggle this class - hide and show the popup */
-.popup .show {
-    visibility: visible;
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s;
-}
-
-/* Add animation (fade in the popup) */
-@-webkit-keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-#button-save-info {
-    margin-top: 50px;
-    margin-left: 150px;
-    width: 110px;
-    height: 80px;
-    color: white;
-    background-color: #A8A787;
-    border: none;
-    border-radius: 20px;
-
-}
-
-#button-save-info:hover {
-    background-color: #D79262;
-    color: white;
-    transition: all 0.3s ease 0s;
-}
-
 #left-section {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
     justify-content: left;
-    width: 50%;
+    width: 35%;
+    flex: 1;
 }
 
 #left-left-section {
@@ -250,19 +304,12 @@ hr {
     justify-content: space-between;
     align-items: left;
     justify-content: left;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-#bookTitle {
-    font-size: 3vmin;
-    font-weight: bold;
-    margin: auto;
-    margin-bottom: 1vmin;
+    padding-left: 45px;
+    padding-right: 80px;
 }
 
 #bookInfo {
-    flex: 1;
+    flex: 1.5;
     flex-direction: column;
     justify-content: flex-start;
     /* Aligner le contenu en haut */
@@ -271,20 +318,10 @@ hr {
     justify-content: top;
 }
 
-#bookInfo p,
-#left-left-section p {
+#bookInfo p {
+    margin: 0;
+    padding: 0;
     font-size: 2vmin;
-}
-
-#bookInfo select {
-    width: 100%;
-    height: 30px;
-    border-radius: 5px;
-    border: 1px solid black;
-    background-color: white;
-    color: black;
-    font-size: 2vmin;
-    margin: 0.5vmin;
 }
 
 #right-section {
@@ -297,39 +334,27 @@ hr {
     max-height: 50vh;
     padding-left: 20px;
     padding-right: 20px;
+    margin-left: 3vmin;
+    flex: 0.75;
 }
 
 h2 {
     text-align: left;
     font-size: 1.5rem;
+
+
 }
 
-#bookFav {
-    display: flex;
-    flex-direction: row;
-    /* Aligner les éléments en haut */
-    align-items: flex-start;
-    width: 100%;
+#information {
+    margin-bottom: 20px;
 }
-
-#button-add-fav {
-    justify-content: right;
-    margin-left: auto;
-    margin-right: 3vmin;
-    font-size: 2vmin;
-    background-color: #D0AB77;
-    border: none;
-    border-radius: 20px;
-    color: white;
-    padding: 0.5vmin;
-}   
 
 #book-resume {
     flex: 1;
     justify-content: space-between;
     max-height: 50vh;
     background-color: white;
-    margin-top: 20px;
+    margin-top: 10px;
     padding: 20px;
     border-radius: 20px;
     font-size: 2vmin;
@@ -345,7 +370,7 @@ h2 {
 #borrow-book {
     margin-top: 20px !important;
     margin-bottom: 20px !important;
-    background-color: #D0AB77;
+    background-color: #A8A787;
     border: none;
     color: white;
     padding: 15px 32px;
@@ -355,6 +380,14 @@ h2 {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 5px;
+}
+
+#popupAddFav {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    cursor: pointer;
 }
 
 #borrow-book:hover {
@@ -372,12 +405,6 @@ h2 {
         height: max-content;
         width: 100%;
         margin-top: 0.6rem;
-    }
-
-    #bookImg {
-        margin: auto;
-        display: block;
-        max-width: 200px;
     }
 
     #left-section {
@@ -404,25 +431,11 @@ h2 {
         margin-top: 20px;
     }
 
+    #bookImg {
+        margin: auto;
+        display: block;
+        max-width: 200px;
+    }
+
 }
 </style>
-
-
-<script>
-export default {
-    name: 'BookDetailComp',
-    props: ['book'],
-    methods: {
-        save_book_information() {
-            console.log("save info to bd")
-            // pop up ? 
-        },
-        add_to_fav() {
-            console.log("add to fav to bd")
-            //
-        }
-    }
-}
-
-
-</script>
