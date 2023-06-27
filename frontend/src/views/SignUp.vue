@@ -161,7 +161,7 @@ export default {
                     data = JSON.parse(data);
                     const message = data[0].message;
                     console.log(data)
-                    if (message == "Inscription réussie !") {
+                    if (message === "Inscription réussie !") {
                         alert(message);
                         this.$router.push('/LogIn');
                     } else {

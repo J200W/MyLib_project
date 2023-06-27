@@ -1,6 +1,7 @@
 <script setup>
 import NavbarSimple from "@/components/NavbarSimple.vue";
 import TheFooter from "@/components/TheFooter.vue";
+import {link_MyHistory } from "@/router/functions_nav";
 </script>
 
 <template>
@@ -135,7 +136,6 @@ body {
 
 <script>
 
-
 export default
     {
         name: 'LogIn',
@@ -172,19 +172,22 @@ export default
                     .then(response => response.text())
                     .then(data => {
                         // Traiter la réponse du serveur
+                        console.log(data)
                         data = JSON.parse(data);
-                        const message = data[0].message;
-                        if (message == "Authentification réussie !") {
+                        const status = data.status;
+                        const message = data.message;
+                        if (status === "success") {
                             alert(message);
                             sessionStorage.setItem('user_email', data[1].donnees.email);
                             sessionStorage.setItem('connected', true);
-                            this.$router.push('/MainPage');
+                            link_MyHistory();
+                            //this.$router.push('/MainPage');
                         } else {
                             alert(message);
                         }
                     }).catch(error => {
                         // Gérer les erreurs
-                        console.error("Erreur lors de l'envoi du formulaire :", error);
+                        console.error("Erreur lors de la réception du formulaire du formulaire :", error);
                     });
 
             }

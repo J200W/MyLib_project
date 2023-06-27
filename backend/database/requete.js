@@ -59,7 +59,7 @@ async function verify_signIn(email, password) {
     //res.status(500).send('Internal server error');
     return false;
   }
-} //); 
+} //);
 
 async function new_user(email, pseudo, password) {
   try { 

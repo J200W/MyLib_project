@@ -1,6 +1,6 @@
 // =========================================================
 // FONCTION OUTILS DE CONTROLLERS POUR PREPARER REPONSE
-function prepare_response(condition, messageSuccess, messageFail, reqBody){
+function prepare_response(condition, reqBody, messageSuccess="", messageFail=""){
     // Vérifier si des données ont été envoyées
     let response = {};
     if (condition) {

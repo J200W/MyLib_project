@@ -1,12 +1,53 @@
 
 const { prepare_response } = require('./Tools_controllers');
 const {new_user} = require("../database/newUser");
-function req_signUp(reqBody){
-    // Retourne une réponse JSON
-    new_user(reqBody.email, reqBody.name, reqBody.fname, reqBody.password).then((result) => {
-        return prepare_response(result, 'SignUp réussi', 'SignUp échoué', reqBody);
+const mysql = require("mysql2/promise");
+const {execute_query} = require("../database/Connection");
+
+async function sign_up(email, pseudo, password) {
+    const connection = await mysql.createConnection({
+        host: "sql7.freesqldatabase.com",
+        user: "sql7624887",
+        password: "5YcetTXFDf",
+        database: "sql7624887",
     });
 
+    if (connection.state === "disconnected") {
+        await connection.connect();
+    }
+
+    const query =
+        "INSERT INTO Clients (mail_Clients, pseudo_Clients, mdp_Clients) VALUES (?, ?, ?)";
+
+    try {
+        const [result] = await connection.query(query, [email, pseudo, password]);
+        return result.affectedRows > 0;
+    } catch (error) {
+        console.error("Error during registration:", error);
+        const result = false;
+        return result;
+    }
+}
+async function req_signUp(reqBody){
+    // Retourne une réponse JSON
+    //let result = await new_user(reqBody.email, reqBody.pseudo, reqBody.password);
+
+
+
+    return prepare_response(result, 'SignUp réussi', 'SignUp échoué', reqBody)
+}
+
+async function req_signIn(email, password) {
+    try {
+        const query = "SELECT * FROM Clients WHERE mail_Clients = ? AND mdp_Clients = ?";
+        const [rows] = await execute_query(query, [email, password], "select")
+        console.log(rows.length);
+        return prepare_response(rows.length > 0,[email, password], 'SignIn réussi', 'SignIn échoué');
+    } catch (error) {
+        console.error("Error during authentication:", error);
+        //res.status(500).send('Internal server error');
+        return prepare_response(false, [email, password], undefined, 'Erreur du serveur pour SignIn' );
+    }
 }
 
 function req_modifyMyAccount(reqBody){
@@ -29,4 +70,4 @@ function req_modifyMyAccount(reqBody){
 
 // =========================================================
 // EXPORTATIONS
-module.exports = { req_modifyMyAccount, req_signUp};
+module.exports = { req_modifyMyAccount, req_signIn, req_signUp};

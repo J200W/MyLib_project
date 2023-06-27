@@ -4,21 +4,24 @@ const cors = require("cors");
 const port = 80;
 
 const firebase = require("./scripts/firebase_function.js");
-const new_user = require("./database/newUser.js");
+// const new_user = require("./database/newUser.js");
 const retrieveImage = firebase.retrieveImage;
 const retrievePDF = firebase.retrievePDF;
-//import { verify_signIn } from './database/authBDD.js';
-//require('./database/authBDD.js')
+const {req_signIn, req_modifyMyAccount, req_signUp} = require("./controllers/funct_user.js");
+const {prepare_response} = require("./controllers/Tools_controllers");
+
+
 const requete = require("./database/requete.js");
-const verify_signIn = requete.verify_signIn;
+const verify_signIn = requete.verify_signIn; /*
 const list_books = requete.list_books;
 const my_books = requete.my_books;
 const research = requete.research;
 const new_book = requete.new_book;
 const sign_up = requete.sign_up;
-const connectToDatabase = requete.connectToDatabase;
+const connectToDatabase = requete.connectToDatabase; */
 
-const connection = connectToDatabase();
+
+// const connection = connectToDatabase();
 //const { my_books } = require("./database/myEbooks");
 //const { research } = require("./database/research");
 //const {execute_query} = require("./database/Connection");
@@ -116,7 +119,8 @@ app.use(express.json()); // for parsing application/json
 
 app.post("*", async (req, res) => {
   const datas = req.body;
-  var response_funct = {};
+  var response_funct = prepare_response(false, datas, undefined, "Erreur de réponse du serveur");
+  console.log(datas, response_funct)
 
   switch (req.originalUrl) {
     case "/modify_myAccount": // Récupérer les données envoyées par le composant MyAccount.vue
@@ -124,6 +128,8 @@ app.post("*", async (req, res) => {
       break;
 
     case "/send_signUp":
+        response_funct = req_signIn(datas);
+
       // Retourne une réponse JSON
       res.header("Content-Type", "application/json");
       await sign_up(req.body.email, req.body.pseudo, req.body.password).then(
@@ -144,21 +150,29 @@ app.post("*", async (req, res) => {
     break;
 
     case "/send_login":
+
+        req_signIn(datas.email, datas.password).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        });
       // Retourne une réponse JSON
+        /*
       res.header("Content-Type", "application/json");
       verify_signIn(req.body.email, req.body.password).then((result) => {
         if (result) {
           res.json([
+              {status: "success"},
             { message: "Authentification réussie !" },
             { donnees: req.body },
           ]);
         } else {
           res.json([
+              {status: "error"},
             { message: "Authentification échouée !" },
             { donnees: req.body },
           ]);
         }
-      });
+      }); */
 
     break;
 
@@ -189,6 +203,7 @@ app.post("*", async (req, res) => {
 				res.json([{ message: "book not added" }]);
 			}
 		});
+        break;
 
     case "/my_books":
       	// Retourne une réponse JSON
@@ -233,11 +248,13 @@ app.post("*", async (req, res) => {
       res.header("Content-Type", "application/json");
       res.json(req.body);
       break;
-    default:
+  default:
       response_funct = { message: "Erreur d'URL pour la méthode POST" };
       res.status(404).json({ message: "Erreur d'URL pour la méthode POST" });
       break;
   }
+    //res.header("Content-Type", "application/json");
+    //res.json(response_funct);
 });
 
 // Vérifie si la requête est une requête GET

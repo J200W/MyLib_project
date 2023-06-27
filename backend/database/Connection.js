@@ -8,6 +8,9 @@ async function connectToDatabase() {
       password: '5YcetTXFDf',
       database: 'sql7624887',
     });
+    if (connection.state === "disconnected") {
+      await connection.connect();
+    }
     console.log('Connected to the database!');
     return connection;
   } catch (error) {
@@ -21,9 +24,10 @@ async function execute_query(query, params, mode) {
   try {
     const connection = await connectToDatabase();
     const [rows] = await connection.query(query, params);
+    var a = rows.length;
     connection.end();
     if (mode === 'select') {
-        return rows;
+        return [rows];
     }
     else{
         return rows.affectedRows > 0;

@@ -1,0 +1,10 @@
+Endroit;Page;Données;Actions;Résultats;Statut;Commentaires
+Front;Login;mdp, email;envoi, actions à réponse;Message de résultats, Transition;En cours;""
+Front;SignIn;Login + pseudo et birthdate;envoi, actions à réponse;Message de résultats, Transition;En cours
+Front;ForgottenPassword;email;envoi, actions à réponse;Message de résultats, envoiMail;Terminé
+Front;MyAccount;...;réception, envoi, actions à réponse;...;Terminé;
+Front;Search;recherche, critères, ebooks;réception externe, envoi, actions à réponse;Affichage des ebooks;En cours;
+Front;MyEbooks;ebooks, critères;réception, envoi, actions à réponse;Affichage des ebooks, partage, rendu;Pas commencé;
+Front;MyFavorites;ebooks, critères;réception, envoi, actions à réponse;Affichage des ebooks;Pas commencé;
+Front;MyHistory;ebooks;envoi, actions à réponse;Affichage des ebooks;Pas commencé;
+Front;BookInDetail;data of ebook;réception, actions à réponse;Affichage des ebooks;Pas commencé;

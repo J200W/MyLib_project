@@ -143,7 +143,7 @@ export default {
             console.log("now on serveur", data);
           })  .catch(error => {
         // Gérer les erreurs
-        console.error("Erreur lors de l'envoi du formulaire :", error);
+        console.error("Erreur lors de la réception du formulaire :", error);
       });
 
     }
