@@ -144,29 +144,32 @@ export default {
                 pseudo: this.pseudo,
             };
 
-            fetch("http://localhost:"+port+"/send_signUp", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
-                    //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
-                },
-                body: JSON.stringify(datas)
-            })
-                .then(response => response.text())
-                .then(data => {
-                    // Traiter la réponse du serveur
-                    data = JSON.parse(data);
-                    if (data.status == "success") {
-                        alert(data.message);
-                        this.$router.push('/LogIn');
-                    } else {
-                        alert(data.message);
-                    }
+          fetch("http://localhost:"+ port +"/send_signUp", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+              //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+            },
+            body: JSON.stringify(datas)
+          })
+              .then(response => response.text())
+              .then(data => {
+                // Traiter la réponse du serveur
+                data = JSON.parse(data);
+                const message = data.message;
+                console.log(data)
+                alert(message);
+                if (data.status === "success") {
+                  sessionStorage.setItem('user_email', data.donnees.email);
+                  sessionStorage.setItem('connected', true);
+                  link_MainPage.call(this)
+                  //this.$router.push('/LogIn');
+                }
 
-                }).catch(error => {
-                    // Gérer les erreurs
-                    console.error("Erreur lors de l'envoi du formulaire :", error);
-                });
+              }).catch(error => {
+            // Gérer les erreurs
+            console.error("Erreur lors de l'envoi du formulaire :", error);
+          });
 
         }
     }
