@@ -29,13 +29,13 @@ import NavbarConnected from "@/components/NavbarConnected.vue";
     <body>
     <img id="bookImg" :src="book.src" alt="{{ book.title }}" >
           <div class="form-container">
-            <h2 class ="titre">Entrez la date de fin d'emprunt</h2>
+            <h2 class ="titre">Enter the loan end date</h2>
             <div class = "form-group">
             <form>
               <input type="date" id="dateInput" required>
             </form>
             </div>
-            <input type="submit" value="Soumettre" id="bouton" onclick="
+            <input type="submit" value="Confirm" id="bouton" onclick="
 
             var selectedDate = new Date(document.getElementById('dateInput').value);
             var maxDate = new Date();
@@ -70,7 +70,7 @@ export default {
 }
 .titre{
   position: center;
-  margin-left: 460px;
+  margin-left: 510px;
 }
 .form-container {
   max-width: 1400px;
