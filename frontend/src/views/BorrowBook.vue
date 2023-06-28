@@ -35,7 +35,7 @@ import NavbarConnected from "@/components/NavbarConnected.vue";
               <input type="date" id="dateInput" required>
             </form>
             </div>
-            <input type="submit" value="Confirm" id="bouton" onclick="
+            <input type="submit" value="Confirm" class="bouton" onclick="
 
             var selectedDate = new Date(document.getElementById('dateInput').value);
             var maxDate = new Date();
@@ -62,7 +62,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #bookImg {
   margin: auto;
   display: block;
@@ -96,19 +96,5 @@ select {
   border-radius: 4px;
 }
 
-button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background-color: #d5c040;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #ccaa1f;
-}
 
 </style>
