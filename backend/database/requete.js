@@ -17,12 +17,7 @@ async function connectToDatabase() {
 }
 
 async function sign_up(email, pseudo, password) {
-  const connection = await mysql.createConnection({
-    host: "sql7.freesqldatabase.com",
-    user: "sql7624887",
-    password: "5YcetTXFDf",
-    database: "sql7624887",
-  });
+  const connection = await connectToDatabase();
 
   if (connection.state === "disconnected") {
     await connection.connect();
@@ -41,98 +36,142 @@ async function sign_up(email, pseudo, password) {
   }
 }
 
-async function verify_signIn(email, password) {
-  try {
-    const connection = await mysql.createConnection({
-      host: "sql7.freesqldatabase.com",
-      user: "sql7624887",
-      password: "5YcetTXFDf",
-      database: "sql7624887",
-    });
-
-    const query =
-      "SELECT * FROM Clients WHERE mail_Clients = ? AND mdp_Clients = ?";
-    const [rows] = await connection.query(query, [email, password]);
-    return rows.length > 0;
-  } catch (error) {
-    console.error("Error during authentication:", error);
-    //res.status(500).send('Internal server error');
-    return false;
-  }
-} //); 
+async function verify_signIn(email, password, admin) {
+    try {
+        const connection = await connectToDatabase();
+        var query;
+        if (admin == false) {
+            query = "SELECT * FROM Clients WHERE mail_Clients = ? AND mdp_Clients = ?";
+            const [rows] = await connection.query(query, [email, password])
+            return {
+                status: rows.length > 0,
+                pseudo: rows[0].pseudo_Clients,
+            };
+        } 
+        else {
+            query = "SELECT * FROM Admin_biblio WHERE mail_admin = ? AND mdp_admin = ?"; 
+            const [rows] = await connection.query(query, [email, password])
+            return {
+                status: rows.length > 0,
+                pseudo: rows[0].pseudo_admin,
+            };
+        }
+    }
+    catch (error) {
+        console.error("Error during authentication:", error);
+        //res.status(500).send('Internal server error');
+        return {
+            status: false,
+            pseudo: "",
+        };
+    }
+}
 
 async function new_user(email, pseudo, password) {
-  try { 
-    const connection = await mysql.createConnection({
-        host: "sql7.freesqldatabase.com",
-        user: "sql7624887",
-        password: "5YcetTXFDf",
-        database: "sql7624887",
-    });
+  try {
+    const connection = await connectToDatabase();
     const query =
-    "INSERT INTO Clients (mail_Clients, pseudo_Clients, mdp_Clients) VALUES (?, ?, ?)";
+      "INSERT INTO Clients (mail_Clients, pseudo_Clients, mdp_Clients) VALUES (?, ?, ?)";
     const [result] = await connection.query(query, [email, pseudo, password]);
 
     connection.end();
     return result.affectedRows > 0;
   } catch (error) {
-        console.error("Error during registration:", error);
-        return false;
+    console.error("Error during registration:", error);
+    return false;
   }
 }
 
-async function new_book(title, author, date, language, editor, page, category, theme, biblio, description, img) {
-    console.log(title, author, date, language, editor, page, category, theme, biblio, description, img, pdf)
-    try {
-        const connection = await mysql.createConnection({
-            host: "sql7.freesqldatabase.com",
-            user: "sql7624887",
-            password: "5YcetTXFDf",
-            database: "sql7624887",
-        });
-
-        const id_biblio = await get_biblio_id(biblio);
-
-        const query =
-        "INSERT INTO ebook (titre, auteur, date_parution, langue, editeur, nb_pages, description, name_img, name_pdf, id_Biblio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        const [result] = await connection.query(query, [title, author, date, language, editor, page, description, img, pdf, id_biblio]);
-  
+async function modify_myAccount(email, pseudo, admin) {
+  try {
+    const connection = await connectToDatabase();
+    var query;
+    if (admin == "false") {
+        const query = "UPDATE Clients SET pseudo_Clients = ? WHERE mail_Clients = ?"; 
+        const [result] = await connection.query(query, [pseudo, email]);
         connection.end();
         return result.affectedRows > 0;
-      }
-    catch (error) {
-        console.error("Error during registration:", error);
-        return false;
     }
+    else {
+        const query = "UPDATE Admin_biblio SET pseudo_admin = ? WHERE mail_admin = ?"; 
+        const [result] = await connection.query(query, [pseudo, email]);
+        connection.end();
+        return result.affectedRows > 0;
+    }
+
+  } catch (error) {
+    console.error("Error during registration:", error);
+    return false;
+  }
 }
 
-async function get_biblio_id(biblio) {
-    try {
-        const connection = await mysql.createConnection({
-            host: "sql7.freesqldatabase.com",
-            user: "sql7624887",
-            password: "5YcetTXFDf",
-            database: "sql7624887",
-        });
-        const query =
-        "SELECT id_biblio FROM bibliotheque WHERE nom_biblio = ?";
-        const [rows] = await connection.query(query, [biblio]);
-        return rows[0].id_biblio;
-    }
-    catch (error) {
-        console.error("Error during registration:", error);
+async function new_book(title,author,date,language,editor,page,category,theme,biblio,description,img,pdf,admin) {
+  try {
+    const connection = await connectToDatabase();
+
+    var query =
+      "REPLACE INTO Ebook (titre, auteur, date_parution, langue, editeur, nb_pages, description, name_img, name_pdf, id_Biblio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const [resultNewBook] = await connection.query(query, [
+        title,
+        author,
+        date,
+        language,
+        editor,
+        page,
+        description,
+        img,
+        pdf,
+        admin,
+    ]);
+
+    if (resultNewBook.affectedRows < 1) {
         return false;
     }
+    
+    query = "SELECT MAX(id_Ebook) FROM Ebook";
+    var [resultIdBook] = await connection.query(query);
+
+    if (resultIdBook.length < 1) {
+        return false;
+    }
+
+    query = "REPLACE INTO est_un (id_ebook, name_category) VALUES (?, ?)";
+
+    var final_result = true;
+
+    for (var i = 0; i < category.length; i++) {
+        if (category[i] != "None") {
+            [result] = await connection.query(query, [
+                resultIdBook[0]["MAX(id_Ebook)"],
+                category[i],
+            ])
+            final_result = final_result && result.affectedRows > 0;
+        }
+    }
+
+    query = "REPLACE INTO parle_de (id_ebook, name_theme) VALUES (?, ?)";
+
+    for (var i = 0; i < theme.length; i++) {
+        if (theme[i] != "None") {
+            [result] = await connection.query(query, [
+                resultIdBook[0]["MAX(id_Ebook)"],
+                theme[i],
+            ])
+            final_result = final_result && result.affectedRows > 0;
+        }
+    }
+
+    connection.end();
+    return resultNewBook.affectedRows > 0 && final_result && resultIdBook.length > 0;
+  } catch (error) {
+    console.error("Error during registration:", error);
+    return false;
+  }
 }
 
 async function research(title) {
   try {
-    const connection = await mysql.createConnection({
-      host: "sql7.freesqldatabase.com",
-      user: "sql7624887",
-      password: "5YcetTXFDf",
-      database: "sql7624887",
-    });
+    const connection = await connectToDatabase();
 
     const query = "SELECT * FROM ebook WHERE titre LIKE '%" + title + "%'";
     const [result] = await connection.query(query);
@@ -159,12 +198,7 @@ async function research(title) {
 
 async function list_books() {
   try {
-    const connection = await mysql.createConnection({
-      host: "sql7.freesqldatabase.com",
-      user: "sql7624887",
-      password: "5YcetTXFDf",
-      database: "sql7624887",
-    });
+    const connection = await connectToDatabase();
 
     const query = "SELECT * FROM ebook";
     const [rows] = await connection.query(query);
@@ -181,14 +215,9 @@ async function list_books() {
 
 async function my_books(id_client) {
   try {
-    const connection = await mysql.createConnection({
-      host: "sql7.freesqldatabase.com",
-      user: "sql7624887",
-      password: "5YcetTXFDf",
-      database: "sql7624887",
-    });
+    const connection = await connectToDatabase();
 
-    const query = "SELECT * FROM emprunter WHERE Id_Client=?";
+    const query = "SELECT * FROM emprunter WHERE mail_Clients=?";
     const [rows] = await connection.query(query, [id_client]);
 
     // Perform additional operations on the retrieved rows as needed
@@ -209,4 +238,6 @@ module.exports = {
   list_books,
   my_books,
   sign_up,
+  modify_myAccount,
+  new_book,
 };

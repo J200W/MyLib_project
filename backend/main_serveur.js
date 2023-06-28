@@ -16,13 +16,7 @@ const my_books = requete.my_books;
 const research = requete.research;
 const new_book = requete.new_book;
 const sign_up = requete.sign_up;
-const connectToDatabase = requete.connectToDatabase;
-
-const connection = connectToDatabase();
-//const { my_books } = require("./database/myEbooks");
-//const { research } = require("./database/research");
-//const {execute_query} = require("./database/Connection");
-
+const modify_myAccount = requete.modify_myAccount;
 
 var books = [
   {
@@ -117,15 +111,35 @@ app.use(express.json()); // for parsing application/json
 app.post("*", async (req, res) => {
   const datas = req.body;
   var response_funct = {};
+  res.header("Content-Type", "application/json");
 
   switch (req.originalUrl) {
     case "/modify_myAccount": // Récupérer les données envoyées par le composant MyAccount.vue
-      response_funct = req_modifyMyAccount(datas);
+        // Retourne une réponse JSON
+  
+        await modify_myAccount(
+            req.body.email,
+            req.body.pseudo,
+            req.body.admin
+        ).then((result) => {
+        if (result) {
+            res.json([
+                { message: "Modification réussie !" },
+                { donnees: req.body },
+            ]);
+        } else {
+            res.json([
+                { message: "Modification échouée !" },
+                { donnees: req.body },
+            ]);
+        }
+      });
+
       break;
 
     case "/send_signUp":
       // Retourne une réponse JSON
-      res.header("Content-Type", "application/json");
+
       await sign_up(req.body.email, req.body.pseudo, req.body.password).then(
         (result) => {
           if (result) {
@@ -141,16 +155,17 @@ app.post("*", async (req, res) => {
           }
         }
       );
-    break;
+      break;
 
     case "/send_login":
       // Retourne une réponse JSON
-      res.header("Content-Type", "application/json");
-      verify_signIn(req.body.email, req.body.password).then((result) => {
-        if (result) {
+
+      verify_signIn(req.body.email, req.body.password, req.body.admin).then((result) => {
+        if (result.status != false) {
           res.json([
             { message: "Authentification réussie !" },
             { donnees: req.body },
+            { pseudo: result.pseudo },
           ]);
         } else {
           res.json([
@@ -160,60 +175,56 @@ app.post("*", async (req, res) => {
         }
       });
 
-    break;
+      break;
 
     case "/list_books":
-		// Retourne une réponse JSON
-		list_books().then((result) => {
-			if (result.length > 0) {
-				res.header("Content-Type", "application/json");
-				res.json([{ list: result }]);
-			} 
-			else {
-				res.header("Content-Type", "application/json");
-				res.json([{ message: "empty list" }]);
-			}
-		});
-    break;
+      // Retourne une réponse JSON
+      list_books().then((result) => {
+        if (result.length > 0) {
+    
+          res.json([{ list: result }]);
+        } else {
+    
+          res.json([{ message: "empty list" }]);
+        }
+      });
+      break;
 
-	case "/add_book":
-		// Retourne une réponse JSON
-		res.header("Content-Type", "application/json");
-		new_book(req.body.title, req.body.author, req.body.date, req.body.language, 
-			req.body.editor, req.body.page, req.body.category, req.body.theme, 
-			req.body.biblio, req.body.description, req.body.img, req.body.pdf).then((result) => {
-			if (result) {
-				res.json([{ message: "book added" }]);
-			}
-			else {
-				res.json([{ message: "book not added" }]);
-			}
-		});
+    case "/add_book":
+      // Retourne une réponse JSON
 
-    case "/my_books":
-      	// Retourne une réponse JSON
-		my_books(req.body.id_client).then((result) => {
-			if (result.length > 0) {
-				res.header("Content-Type", "application/json");
-				res.json([{ list: result }]);
-			} else {
-				res.header("Content-Type", "application/json");
-				res.json([{ message: "empty list" }]);
-			}
-		});
+      await new_book(
+        req.body.title,
+        req.body.author,
+        req.body.date,
+        req.body.language,
+        req.body.editor,
+        req.body.page,
+        req.body.category,
+        req.body.theme,
+        req.body.biblio,
+        req.body.description,
+        req.body.img,
+        req.body.pdf,
+        req.body.admin
+      ).then((result) => {
+        if (result == true) {
+          
+        } else {
+          res.json([{ message: "book not added" }]);
+        }
+      });
+      break;
 
-		break;
-      
     case "/search":
       // Retourne une réponse JSON
       research(req.body.title).then((result) => {
         if (result.length > 0) {
-			res.header("Content-Type", "application/json");
-			res.json([{ list: result }]);
-        } 
-		else {
-			res.header("Content-Type", "application/json");
-			res.json([{ message: "no book found matching research" }]);
+    
+          res.json([{ list: result }]);
+        } else {
+    
+          res.json([{ message: "no book found matching research" }]);
         }
       });
 
@@ -221,7 +232,7 @@ app.post("*", async (req, res) => {
 
     case "/send_login_forgotMdp":
       // Retourne une réponse JSON
-      res.header("Content-Type", "application/json");
+
       res.json([
         { message: "Données reçues avec succès from test_serveur.php !" },
         { donnees: req.body },
@@ -230,7 +241,7 @@ app.post("*", async (req, res) => {
     case "/send_research_fromNavBar":
       // Renvoie les éléments en tant que réponse JSON
       // Utilisez les éléments importés ici selon vos besoins
-      res.header("Content-Type", "application/json");
+
       res.json(req.body);
       break;
     default:
@@ -242,81 +253,64 @@ app.post("*", async (req, res) => {
 
 // Vérifie si la requête est une requête GET
 app.get("*", async (req, res) => {
+  res.header("Content-Type", "application/json");
   switch (req.originalUrl) {
-     case "/test_sql":
-        // Renvoie les éléments en tant que réponse JSON
-        execute_query('SELECT * FROM Ebook', [], "select").then((result) => {
-            res.header("Content-Type", "application/json");
-            res.json(result);
-        });
-        break;
-
-    case "/datas_user":
-      // Inclure et exécuter le fichier elements_to_send.js
-      // Exemple de données à exporter
-      const elements = {
-        pseudo: "Ethor",
-        genre: "homme",
-        email: "ethansuissa@efrei.net",
-        birthdate: "2002-08-05",
-        books: 1,
-      };
     case "/send_research_fromNavBar":
-		// Renvoie les éléments en tant que réponse JSON
-		// Utilisez les éléments importés ici selon vos besoins
-		res.header("Content-Type", "application/json");
-		res.json(req.body);
-		break;
+      // Renvoie les éléments en tant que réponse JSON
+      // Utilisez les éléments importés ici selon vos besoins
+
+      res.json(req.body);
+      break;
     case "/get_books_url":
-		// Renvoie les images des livres en tant que réponse JSON venant de firebase
-		res.header("Content-Type", "application/json");
-		console.log("books : ", books);
-		const imagePromises = books.map((book) => retrieveImage(book));
-		const imageUrls = await Promise.all(imagePromises);
-		res.json(imageUrls);
-		break;
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+
+      console.log("books : ", books);
+      const imagePromises = books.map((book) => retrieveImage(book));
+      const imageUrls = await Promise.all(imagePromises);
+      res.json(imageUrls);
+      break;
     case "/get_pdf_url":
-		// Renvoie les images des livres en tant que réponse JSON venant de firebase
-		res.header("Content-Type", "application/json");
-		console.log("books : ", books);
-		const pdfPromises = books.map((book) => retrieveImage(book));
-		const pdfUrls = await Promise.all(pdfPromises);
-		res.json(pdfUrls);
-		break;
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+
+      console.log("books : ", books);
+      const pdfPromises = books.map((book) => retrieveImage(book));
+      const pdfUrls = await Promise.all(pdfPromises);
+      res.json(pdfUrls);
+      break;
     case "/get_new_books":
-		// Renvoie les images des livres en tant que réponse JSON venant de firebase
-		res.header("Content-Type", "application/json");
-		const newImagePromises = books.map((book) => retrieveImage(book));
-		const newImageUrls = await Promise.all(newImagePromises);
-		res.json(newImageUrls);
-		break;
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+
+      const newImagePromises = books.map((book) => retrieveImage(book));
+      const newImageUrls = await Promise.all(newImagePromises);
+      res.json(newImageUrls);
+      break;
     case "/get_current_books":
-		// Renvoie les images des livres en tant que réponse JSON venant de firebase
-		res.header("Content-Type", "application/json");
-		const currentImagePromises = books.map((book) => retrieveImage(book));
-		const currentImageUrls = await Promise.all(currentImagePromises);
-		res.json(currentImageUrls);
-		break;
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+
+      const currentImagePromises = books.map((book) => retrieveImage(book));
+      const currentImageUrls = await Promise.all(currentImagePromises);
+      res.json(currentImageUrls);
+      break;
     case "/get_discover_books":
-		// Renvoie les images des livres en tant que réponse JSON venant de firebase
-		res.header("Content-Type", "application/json");
-		const discoverImagePromises = books.map((book) => retrieveImage(book));
-		const discoverImageUrls = await Promise.all(discoverImagePromises);
-		res.json(discoverImageUrls);
-		break;
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+
+      const discoverImagePromises = books.map((book) => retrieveImage(book));
+      const discoverImageUrls = await Promise.all(discoverImagePromises);
+      res.json(discoverImageUrls);
+      break;
 
     case "/get_similar_books":
-		// Renvoie les images des livres en tant que réponse JSON venant de firebase
-		res.header("Content-Type", "application/json");
-		console.log("books : ", books);
-		const similarImagePromises = books.map((book) => retrieveImage(book));
-		const similarImageUrls = await Promise.all(similarImagePromises);
-		res.json(similarImageUrls);
-		break;
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+
+      console.log("books : ", books);
+      const similarImagePromises = books.map((book) => retrieveImage(book));
+      const similarImageUrls = await Promise.all(similarImagePromises);
+      res.json(similarImageUrls);
+      break;
 
     default:
-		res.status(404).json({ message: "Erreur d'URL pour la méthode GET" });
-		break;
+      res.status(404).json({ message: "Erreur d'URL pour la méthode GET" });
+      break;
   }
 });
 
