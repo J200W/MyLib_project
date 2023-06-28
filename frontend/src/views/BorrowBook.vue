@@ -47,6 +47,7 @@ var connected = true;
         </div>
         <MyEbooksContent :books="book" />
     </body>
+
     <TheFooter />
 </template>
   
@@ -78,7 +79,25 @@ body {
 
 .form-container {
     margin-top: 3vmin;
+
+/*
+#bookImg {
+  margin: auto;
+  display: block;
+  max-width: 250px;
 }
+
+.form-container {
+  position: absolute;
+  top : 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color : #FFFFFF; */
+} 
 
 .form-group {
     margin-bottom: 10px;
@@ -97,6 +116,7 @@ select {
     border-radius: 4px;
 }
 
+
 #bouton {
     display: block;
     width: 100%;
@@ -114,4 +134,5 @@ select {
     background-color: #D79262;
     transition: all 0.3s ease 0s;
 }
+
 </style>

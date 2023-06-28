@@ -9,6 +9,7 @@ const firebase = require("./scripts/firebase_function.js");
 const retrieveImage = firebase.retrieveImage;
 const retrievePDF = firebase.retrievePDF;
 
+// , req_book_details_show
 const {
   req_listEbooks,
   req_research,
@@ -25,6 +26,7 @@ const { books, get_particular_books } = require("./controllers/Get_ebooks");
 const { get_user_datas } = require("./controllers/Get_user");
 
 const { execute_query } = require("./database/Connection");
+
 
 /*
 const requete = require("./database/requete.js");
@@ -99,11 +101,12 @@ app.post("*", async (req, res) => {
       break;
 
     case "/list_books": // VIEW: ?
-      // Retourne une réponse JSON
-      req_listEbooks(datas).then((result) => {
-        res.header("Content-Type", "application/json");
-        res.json(result);
-      });
+		  // Retourne une réponse JSON
+        req_listEbooks(datas.title, datas.category, datas.theme).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        });
+
 
       /*
 		list_books().then((result) => {
@@ -164,13 +167,39 @@ app.post("*", async (req, res) => {
 			}
 		});*/
 
-      break;
 
-    case "/send_research_fromNavBar": //  VIEW: SearchBook, COMPONENT: SearchBookComponent
-      req_research(req.body.title).then((result) => {
-        res.header("Content-Type", "application/json");
-        res.json(result);
-      });
+		break;
+
+    case "/read_book": // COMPONENT: ?
+      	// Retourne une réponse JSON
+        req_read_book(datas.email, datas.idBook).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+            if(result.status == 'success'){
+              funct_to_read_PDF(result.donnees)
+            }
+        })
+
+		break;
+
+    case "/book_details": // COMPONENT: ?
+      	// Retourne une réponse JSON
+        req_book_details_show(datas.idBook).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+            /*if(result.status == 'success' && sessionStorage.getItem('connected')==true){
+              funct_to_read_PDF(result.donnees)
+            }*/
+        })
+
+		break;
+      
+      case "/send_research_fromNavBar": //  VIEW: SearchBook, COMPONENT: SearchBookComponent
+        req_research(req.body.title).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        });
+
       // Retourne une réponse JSON
       /*
       research(req.body.title).then((result) => {
