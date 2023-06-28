@@ -3,7 +3,7 @@ import NavbarConnected from "@/components/NavbarConnected.vue";
 import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
 import Carousel from "@/components/Carousel.vue";
 import TheFooter from "@/components/TheFooter.vue";
-import {port } from "../../../backend/controllers/Tools_controllers";
+import { port } from "../../../backend/controllers/Tools_controllers";
 
 
 const new_books = JSON.parse(sessionStorage.getItem('new_books'))

@@ -36,11 +36,6 @@ import {link_MainPage} from "@/router/functions_nav";
     font-family: Arial, Helvetica, sans-serif;
 }
 
-body {
-    background-color: #F7EDE2;
-}
-
-
 .links {
     text-decoration: none;
     color: white;
@@ -98,6 +93,7 @@ body {
     margin: auto;
 }
 
+
 .form-submit:hover {
     background-color: #D79262;
     border: #545444 2px solid;
@@ -122,15 +118,11 @@ body {
 </style>
   
 <script>
-
-
-
 export default {
     name: 'SignUp',
     data() {
         return {
             pseudo: '',
-            birthdate: '',
             email: '',
             password: ''
         };
@@ -152,7 +144,7 @@ export default {
                 pseudo: this.pseudo,
             };
 
-            fetch("http://localhost:"+ port +"/send_signUp", {
+            fetch("http://localhost:"+port+"/send_signUp", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
@@ -164,16 +156,11 @@ export default {
                 .then(data => {
                     // Traiter la réponse du serveur
                     data = JSON.parse(data);
-                    const message = data.message;
-                    console.log(data)
-                    if (data.status) {
-                        alert(message);
-                        sessionStorage.setItem('user_email', data.donnees.email);
-                        sessionStorage.setItem('connected', true);
-                        link_MainPage.call(this)
-                        //this.$router.push('/LogIn');
+                    if (data.status == "success") {
+                        alert(data.message);
+                        this.$router.push('/LogIn');
                     } else {
-                        alert(message);
+                        alert(data.message);
                     }
 
                 }).catch(error => {

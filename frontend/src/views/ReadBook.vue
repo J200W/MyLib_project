@@ -2,7 +2,11 @@
     import NavbarConnected from "@/components/NavbarConnected.vue";
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
     import BookReader from "@/components/BookReader.vue";
-    var connected = true;
+    var connected = sessionStorage.getItem('connected');
+
+    if (connected == null) {
+        connected = false;
+    }
 
     const source3 = "https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
 

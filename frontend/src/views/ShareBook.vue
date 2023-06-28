@@ -3,7 +3,11 @@
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
     import TheFooter from "@/components/TheFooter.vue";
 
-    var connected = true;
+    var connected = sessionStorage.getItem('connected');
+
+    if (connected == null) {
+        connected = false;
+    }
 </script>
 
 <template>

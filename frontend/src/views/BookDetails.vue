@@ -20,7 +20,11 @@ book_list = JSON.parse(book_list);
 
 const book = book_list[book_id - 1];
 
-var connected = true;
+var connected = sessionStorage.getItem('connected');
+
+if (connected == null) {
+    connected = false;
+}
 
 </script>
 

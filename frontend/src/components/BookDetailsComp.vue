@@ -3,7 +3,16 @@
 import PopUpAddFav from "@/components/PopUpAddFav.vue";
 import ModalBox from "./ModalBox.vue";
 
-const admin = true
+var admin = sessionStorage.getItem("admin");
+
+if (admin == null) {
+    admin = false;
+}
+else if (admin == "true") {
+    admin = true;
+} else {
+    admin = false;
+}
 
 var category = [
     { value: "None", text: "None" },
@@ -61,10 +70,13 @@ var theme = [
     <div id="allPage">
         <div id="left-section">
             <div id="left-left-section">
-                <p id="bookTitle">Title:
+                <p v-if="admin" id="bookTitle">Title:
                     <!-- <span>{{ book.title }}</span> -->
                     <span v-if="!admin">{{ book.title }}</span>
                     <input v-else @click="console.log(book.title)" v-model="book.title" placeholder="Author" />
+                </p>
+                <p id="bookTitle" v-else>
+                    <span>{{ book.title }}</span>
                 </p>
                 <img id="bookImg" :src="book.src" alt="{{ book.title }}">
                 <router-link v-if="!admin" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
@@ -76,12 +88,12 @@ var theme = [
                 <p>Stock:
                     <!-- <span>{{ book.stock }}</span> -->
                     <span v-if="!admin">{{ book.stock }}</span>
-                    <input v-else @click="console.log(book.stock)" v-model="book.stock" placeholder="Author" />
+                    <input v-else @click="console.log(book.stock)" v-model="book.stock" type="number" min="0" />
                 </p>
                 <p>Source:
                     <!-- <span>{{ book.source }}</span> -->
                     <span v-if="!admin">{{ book.source }}</span>
-                    <input v-else @click="console.log(book.source)" v-model="book.source" placeholder="Author" />
+                    <input v-else @click="console.log(book.source)" v-model="book.source" />
                 </p>
             </div>
             <div id="bookInfo">
@@ -110,12 +122,7 @@ var theme = [
                 <p>Languages :
                     <span v-if="!admin">{{ book.language }}</span>
                     <!-- <span v-if="!admin" >{{book.language}}</span> -->
-
-                    <select v-else v-model="book.language">
-                        <option v-for="num in test_array" :key="num">{{ book.language }}</option>
-                    </select>
-                    <!-- <input v-else @click="console.log(book.language)" v-model="book.language" placeholder="Edition" /> -->
-
+                    <input v-else v-model="book.language" placeholder="Edition" />
                 </p>
                 <hr>
                 <p>Genre :
@@ -159,7 +166,7 @@ var theme = [
                 <p>Pages :
                     <!-- <span>{{ book.pages }}</span> -->
                     <span v-if="!admin">{{ book.pages }}</span>
-                    <input v-else @click="console.log(book.pages)" v-model="book.pages" placeholder="Edition" />
+                    <input type="number" min="0" v-else @click="console.log(book.pages)" v-model="book.pages" placeholder="Edition" />
                 </p>
             </div>
         </div>
@@ -241,8 +248,36 @@ export default {
     margin-bottom: 20px;
 }
 
+#bookTitle {
+    margin:auto;
+    font-size: 2vmin;
+    margin-bottom: 1vmin;
+}
+
 .resume {
     height: 200px;
+}
+
+#bookFav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#button-add-fav {
+    padding: 1vmin;
+    font-size: 2vmin;
+    color: white;
+    background-color: #D0AB77;
+    border-radius: 20px;
+    border: none;
+}
+
+#button-add-fav:hover {
+    background-color: #D79262;
+    color: white;
+    transition: all 0.3s ease 0s;
 }
 
 #button-save-info {
@@ -264,6 +299,11 @@ export default {
     flex: 1;
 }
 
+.bookAdminCompSelector > select {
+    padding: 1vmin;
+    margin: 0.2vmin;
+}
+
 #button-save-info:hover {
     background-color: #D79262;
     color: white;
@@ -274,6 +314,14 @@ hr {
     border: 0;
     height: 1px;
     background: black;
+}
+
+input {
+    width: 100%;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #000;
+    padding-left: 1vmin;
 }
 
 #allPage {

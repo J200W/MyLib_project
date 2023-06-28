@@ -6,14 +6,14 @@
 
 
                   <div class = "datas">
-                    <div class = "to_line"><p class="titre">Titre</p> <p>{{ book.title }}</p></div>
-                    <div class="to_line"><p class="titre">Auteur</p><p>{{ book.author }}</p></div>
-                    <div class="to_line"><p class="titre">Librairie</p><p>{{ book.library }}</p></div>
-                    <div class="to_line"><p class="titre">Date de parution</p><p>{{ book.date }}</p></div>
+                    <div class = "to_line"><p class="titre">Title :</p> <p>{{ book.title }}</p></div>
+                    <div class="to_line"><p class="titre">Author :</p><p>{{ book.author }}</p></div>
+                    <div class="to_line"><p class="titre">Library :</p><p>{{ book.library }}</p></div>
+                    <div class="to_line"><p class="titre">Release date :</p><p>{{ book.date }}</p></div>
                   </div>
                   <div class = "datas">
-                    <div class="to_line"><p class="titre">Duree d'emprunt restante</p><p>{{ book.time }}</p></div>
-                    <div class="to_line"><p class="titre">En cours d'emprunt</p><p>Oui</p></div>
+                    <div class="to_line"><p class="titre">Remaining loan time : </p><p>{{ book.time }}</p></div>
+                    <div class="to_line"><p class="titre">On loan</p><p>Yes</p></div>
                   </div>
 
                 </router-link>

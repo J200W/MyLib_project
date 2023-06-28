@@ -7,9 +7,10 @@
     * {
         text-decoration: none !important;
     }
+    
     body {
         background-color: #F7EDE2;
-        min-height: 100vh !important;
+        min-height: 78vh !important;
     }
 
     #titlePage {
