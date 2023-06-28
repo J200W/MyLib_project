@@ -29,7 +29,8 @@ import NavbarConnected from "@/components/NavbarConnected.vue";
     <body>
     <img id="bookImg" :src="book.src" alt="{{ book.title }}" >
           <div class="form-container">
-            <h2 class ="titre">Enter the loan end date</h2>
+            <div><h2 class ="titre">Enter the loan end date</h2></div>
+
             <div class = "form-group">
             <form>
               <input type="date" id="dateInput" required>
@@ -48,7 +49,7 @@ import NavbarConnected from "@/components/NavbarConnected.vue";
 
           </div>
 
-    </body>>
+    </body>
     
     <TheFooter />
 </template>
@@ -63,20 +64,23 @@ export default {
 </script>
 
 <style scoped>
+
 #bookImg {
   margin: auto;
   display: block;
-  max-width: 300px;
+  max-width: 250px;
 }
-.titre{
-  position: center;
-  margin-left: 510px;
-}
+
 .form-container {
-  max-width: 1400px;
+  position: absolute;
+  top : 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 400px;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ccc;
+  background-color : #FFFFFF;
 }
 
 .form-group {
