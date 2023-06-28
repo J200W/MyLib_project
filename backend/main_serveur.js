@@ -9,7 +9,7 @@ const firebase = require("./scripts/firebase_function.js");
 const retrieveImage = firebase.retrieveImage;
 const retrievePDF = firebase.retrievePDF;
 
-const {req_listEbooks, req_research, req_my_books} = require("./controllers/Post_ebooks.js");
+const {req_listEbooks, req_my_books, req_read_book, req_book_details_show} = require("./controllers/Post_ebooks.js");
 const {req_signIn, req_modifyMyAccount, req_signUp} = require("./controllers/Post_user.js");
 const {req_new_book} = require("./controllers/Post_admin.js");
 const {prepare_response} = require("./controllers/Tools_controllers");
@@ -138,7 +138,7 @@ app.post("*", async (req, res) => {
 
     case "/list_books": // VIEW: ?
 		// Retourne une réponse JSON
-        req_listEbooks(datas).then((result) => {
+        req_listEbooks(datas.title, datas.category, datas.theme).then((result) => {
             res.header("Content-Type", "application/json");
             res.json(result);
         });
@@ -190,6 +190,30 @@ app.post("*", async (req, res) => {
 				res.json([{ message: "empty list" }]);
 			}
 		});*/
+
+		break;
+
+    case "/read_book": // COMPONENT: ?
+      	// Retourne une réponse JSON
+        req_read_book(datas.email, datas.idBook).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+            if(result.status == 'success'){
+              funct_to_read_PDF(result.donnees)
+            }
+        })
+
+		break;
+
+    case "/book_details": // COMPONENT: ?
+      	// Retourne une réponse JSON
+        req_book_details_show(datas.idBook).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+            /*if(result.status == 'success' && sessionStorage.getItem('connected')==true){
+              funct_to_read_PDF(result.donnees)
+            }*/
+        })
 
 		break;
       
