@@ -23,12 +23,12 @@ async function req_signIn(email, password, admin) {
         if (admin) {
             const query = "SELECT * FROM Admin_biblio WHERE mail_admin = ? AND mdp_admin = ?";
             const [rows] = await execute_query(query, [email, password], "select")
-            return prepare_response(rows.length > 0,{email: email, pseudo : rows[0].pseudo_admin}, 'SignIn successful', 'SignIn fail');
+            return prepare_response(rows.length > 0,{email: email, pseudo : rows.pseudo_admin}, 'SignIn successful', 'SignIn fail');
         }
         else {
             const query = "SELECT * FROM Clients WHERE mail_Clients = ? AND mdp_Clients = ?";
             const [rows] = await execute_query(query, [email, password], "select")
-            return prepare_response(rows.length > 0,{email: email, pseudo : rows[0].pseudo_Clients}, 'LogIn successful', 'LogIn failed');
+            return prepare_response(rows.length > 0,{email: email, pseudo : rows.pseudo_Clients}, 'LogIn successful', 'LogIn failed');
         }
     } 
     catch (error) {
@@ -43,11 +43,11 @@ async function req_modifyMyAccount(reqBody) {
     try {
         let query = "UPDATE Clients SET pseudo_Clients = ? WHERE mail_Clients = ?";
         const result = await execute_query(query, [reqBody.pseudo, reqBody.email], "update");
-        return prepare_response(result, reqBody,  `Data has been modified for ${reqBody.pseudo}.`, `Fail modifying data for ${reqBody.pseudo}.`);
+        return prepare_response(result, {pseudo: reqBody.pseudo, email: reqBody.email},  `Data has been modified for ${reqBody.pseudo}.`, `Fail modifying data for ${reqBody.pseudo}.`);
     } catch (error) {
         console.error("Error during modify account:", error);
         //res.status(500).send('Internal server error');
-        return prepare_response(false, [reqBody.email, reqBody.pseudo], undefined, 'Error of server to modify your account');
+        return prepare_response(false, reqBody, undefined, 'Error of server to modify your account');
     }
 
 }

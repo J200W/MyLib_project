@@ -11,9 +11,8 @@ const retrievePDF = firebase.retrievePDF;
 
 // , req_book_details_show
 const {
-  req_listEbooks,
-  req_research,
-  req_my_books,
+  req_listEbooks, req_book_details_show, req_book_details_mod,
+  req_read_book, req_my_books,
 } = require("./controllers/Post_ebooks.js");
 const {
   req_signIn,
@@ -195,7 +194,7 @@ app.post("*", async (req, res) => {
 		break;
       
       case "/send_research_fromNavBar": //  VIEW: SearchBook, COMPONENT: SearchBookComponent
-        req_research(req.body.title).then((result) => {
+        req_listEbooks(datas.title).then((result) => {
             res.header("Content-Type", "application/json");
             res.json(result);
         });

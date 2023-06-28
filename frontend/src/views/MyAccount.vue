@@ -7,6 +7,7 @@ MyAccount
 import NavbarConnected from "@/components/NavbarConnected.vue";
 import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
 import TheFooter from "@/components/TheFooter.vue";
+import {port} from "../../../backend/controllers/Tools_controllers";
 
 var connected = sessionStorage.getItem('connected');
 
@@ -145,6 +146,7 @@ if (connected == null) {
 </style>
 
 <script >
+
 export default {
     name: 'MyAccount',
     data() {
@@ -157,7 +159,9 @@ export default {
         this.fetchUserData();
     },
     methods: {
-        fetchUserData(){},
+        fetchUserData(){
+          // RECUPERER NUMBER BORROWED BOOKS
+        },
         submitForm(event) {
             // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
             const admin = sessionStorage.getItem('admin')
@@ -170,7 +174,7 @@ export default {
                 admin: admin,
             };
 
-            fetch("http://localhost:80/modify_myAccount", {
+            fetch("http://localhost:"+ port +"/modify_myAccount", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
@@ -183,12 +187,11 @@ export default {
                     // Traiter la réponse du serveur
                     data = JSON.parse(data);
                     console.log(data);
-                    if (data[0].message == "Modification réussie !") {
-                        alert("Modification réussie !");
-                        sessionStorage.setItem('user_pseudo', this.pseudo);
-                    } else {
-                        alert("Erreur lors de la modification !");
+                    alert(data.message);
+                    if(data.status){
+                      sessionStorage.setItem('user_pseudo', data.donnees.pseudo);
                     }
+
                 }).catch(error => {
                     // Gérer les erreurs
                     console.error("Erreur lors de l'envoi du formulaire :", error);
