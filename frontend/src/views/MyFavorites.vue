@@ -5,7 +5,7 @@
     import TheFooter from '@/components/TheFooter.vue'
     import MyEbooksSort from "@/components/MyEbooksSort.vue";
     import MyEbooksContent from "@/components/MyEbooksContent.vue";
-    var connected = true
+    
     const books_fav = [
       {
         id: 1,
@@ -35,8 +35,14 @@
         library: "Bibliothèque Municipale de Lyon",
         time: "4d 12h 32m",
       },
-
     ]
+
+    var connected = sessionStorage.getItem('connected');
+
+    if (connected == null) {
+        connected = false;
+    }
+
 </script>
 
 <template>

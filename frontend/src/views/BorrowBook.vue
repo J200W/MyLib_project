@@ -1,6 +1,6 @@
 <script setup>
 
-import NavbarConnected from "@/components/NavbarConnected.vue";
+    import NavbarConnected from "@/components/NavbarConnected.vue";
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
     import TheFooter from '@/components/TheFooter.vue'
 
@@ -18,7 +18,12 @@ import NavbarConnected from "@/components/NavbarConnected.vue";
     const book = book_list[book_id - 1];
 
 
-    var connected = true;
+    var connected = sessionStorage.getItem('connected');
+
+    if (connected == null) {
+        connected = false;
+    }
+    
     var previousUrl = document.referrer;
     previousUrl = previousUrl.split("?id=")[0]
 </script>
@@ -62,7 +67,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 .titre{
   position: center;
@@ -77,11 +82,6 @@ export default {
 
 .form-group {
   margin-bottom: 10px;
-}
-
-label {
-  display: block;
-  font-weight: bold;
 }
 
 input,

@@ -3,7 +3,16 @@
 import PopUpAddFav from "@/components/PopUpAddFav.vue";
 import ModalBox from "./ModalBox.vue";
 
-const admin = true
+var admin = sessionStorage.getItem("admin");
+
+if (admin == null) {
+    admin = false;
+}
+else if (admin == "true") {
+    admin = true;
+} else {
+    admin = false;
+}
 
 var category = [
     { value: "None", text: "None" },
@@ -76,12 +85,12 @@ var theme = [
                 <p>Stock:
                     <!-- <span>{{ book.stock }}</span> -->
                     <span v-if="!admin">{{ book.stock }}</span>
-                    <input v-else @click="console.log(book.stock)" v-model="book.stock" placeholder="Author" />
+                    <input v-else @click="console.log(book.stock)" v-model="book.stock" type="number" min="0" />
                 </p>
                 <p>Source:
                     <!-- <span>{{ book.source }}</span> -->
                     <span v-if="!admin">{{ book.source }}</span>
-                    <input v-else @click="console.log(book.source)" v-model="book.source" placeholder="Author" />
+                    <input v-else @click="console.log(book.source)" v-model="book.source" />
                 </p>
             </div>
             <div id="bookInfo">
@@ -110,12 +119,7 @@ var theme = [
                 <p>Languages :
                     <span v-if="!admin">{{ book.language }}</span>
                     <!-- <span v-if="!admin" >{{book.language}}</span> -->
-
-                    <select v-else v-model="book.language">
-                        <option v-for="num in test_array" :key="num">{{ book.language }}</option>
-                    </select>
-                    <!-- <input v-else @click="console.log(book.language)" v-model="book.language" placeholder="Edition" /> -->
-
+                    <input v-else v-model="book.language" placeholder="Edition" />
                 </p>
                 <hr>
                 <p>Genre :
@@ -159,7 +163,7 @@ var theme = [
                 <p>Pages :
                     <!-- <span>{{ book.pages }}</span> -->
                     <span v-if="!admin">{{ book.pages }}</span>
-                    <input v-else @click="console.log(book.pages)" v-model="book.pages" placeholder="Edition" />
+                    <input type="number" min="0" v-else @click="console.log(book.pages)" v-model="book.pages" placeholder="Edition" />
                 </p>
             </div>
         </div>
@@ -264,6 +268,11 @@ export default {
     flex: 1;
 }
 
+.bookAdminCompSelector > select {
+    padding: 1vmin;
+    margin: 0.2vmin;
+}
+
 #button-save-info:hover {
     background-color: #D79262;
     color: white;
@@ -274,6 +283,14 @@ hr {
     border: 0;
     height: 1px;
     background: black;
+}
+
+input {
+    width: 100%;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #000;
+    padding-left: 1vmin;
 }
 
 #allPage {

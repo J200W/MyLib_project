@@ -1,7 +1,19 @@
 <script setup>
-const admin = true
-global.book_url = ""
-import {port} from "../../../backend/controllers/Tools_controllers";
+var admin = sessionStorage.getItem('admin');
+
+if (admin == null) {
+    admin = false;
+}
+else if (admin == "true") {
+    admin = true;
+}
+else {
+    admin = false;
+}
+
+
+
+
 </script>
 
 <template>
@@ -27,7 +39,7 @@ import {port} from "../../../backend/controllers/Tools_controllers";
                     <a class="dropdown-item" href="/MyFavorites">My Favorites</a>
                     <a class="dropdown-item" href="/MyHistory">History</a>
 
-                    <div v-show="admin">
+                    <div v-if="admin">
                         <a class="dropdown-item" href="/SearchBook">Manage books</a>
                         <a class="dropdown-item" href="/ManageUsers">Manage users</a>
                         <a class="dropdown-item" href="/AddBook">Add an ebook</a>
@@ -192,6 +204,7 @@ import {port} from "../../../backend/controllers/Tools_controllers";
 <script>
 
 import functions_nav from "@/router/functions_nav";
+import { port } from "../../../backend/controllers/Tools_controllers";
 
 export default
     {
