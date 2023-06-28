@@ -70,10 +70,13 @@ var theme = [
     <div id="allPage">
         <div id="left-section">
             <div id="left-left-section">
-                <p id="bookTitle">Title:
+                <p v-if="admin" id="bookTitle">Title:
                     <!-- <span>{{ book.title }}</span> -->
                     <span v-if="!admin">{{ book.title }}</span>
                     <input v-else @click="console.log(book.title)" v-model="book.title" placeholder="Author" />
+                </p>
+                <p id="bookTitle" v-else>
+                    <span>{{ book.title }}</span>
                 </p>
                 <img id="bookImg" :src="book.src" alt="{{ book.title }}">
                 <router-link v-if="!admin" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
@@ -245,8 +248,36 @@ export default {
     margin-bottom: 20px;
 }
 
+#bookTitle {
+    margin:auto;
+    font-size: 2vmin;
+    margin-bottom: 1vmin;
+}
+
 .resume {
     height: 200px;
+}
+
+#bookFav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#button-add-fav {
+    padding: 1vmin;
+    font-size: 2vmin;
+    color: white;
+    background-color: #D0AB77;
+    border-radius: 20px;
+    border: none;
+}
+
+#button-add-fav:hover {
+    background-color: #D79262;
+    color: white;
+    transition: all 0.3s ease 0s;
 }
 
 #button-save-info {

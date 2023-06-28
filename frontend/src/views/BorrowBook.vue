@@ -1,63 +1,57 @@
 <script setup>
+import NavbarConnected from "@/components/NavbarConnected.vue";
+import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
+import TheFooter from '@/components/TheFooter.vue'
+import MyEbooksContent from "@/components/MyEbooksContent.vue";
 
-    import NavbarConnected from "@/components/NavbarConnected.vue";
-    import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
-    import TheFooter from '@/components/TheFooter.vue'
+const book = [
+    {
+        id: 1,
+        title: "One Piece Tome 96",
+        src: require("@/assets/onepiece96.png"),
+        author: "Eiichiro Oda",
+        date: "04/11/2020",
+        library: "Bibliothèque de l'Université de Lille",
+        time: "34d 12h 32m",
+    },
+]
 
-    const books = JSON.parse(sessionStorage.getItem('similar_books'));
+function validateDate() {
+    var selectedDate = new Date(document.getElementById('dateInput').value);
+    var maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 21); // Ajoute 21 jours à la date actuelle
 
-    var link = window.location.href;
-    // Get the id of the book from the url
-
-    var book_id = link.split("?id=").pop();
-
-    var book_list = sessionStorage.getItem('book_list');
-
-    book_list = JSON.parse(book_list);
-
-    const book = book_list[book_id - 1];
-
-
-    var connected = sessionStorage.getItem('connected');
-
-    if (connected == null) {
-        connected = false;
+    if (selectedDate > maxDate) {
+        alert("La date saisie doit être postérieure de moins de 3 semaines à la date actuelle.");
+        return false;
     }
-    
-    var previousUrl = document.referrer;
-    previousUrl = previousUrl.split("?id=")[0]
+
+    return true;
+}
+var connected = true;
 </script>
 
 <template>
     <NavbarConnected v-if="connected" />
     <NavbarNonConnected v-if="!connected" />
+
     <body>
-    <img id="bookImg" :src="book.src" alt="{{ book.title }}" >
-          <div class="form-container">
-            <h2 class ="titre">Entrez la date de fin d'emprunt</h2>
-            <div class = "form-group">
-            <form>
-              <input type="date" id="dateInput" required>
-            </form>
+        <div class="form-container">
+            <h2>Enter the loan end date</h2>
+            <div class="form-group">
+                <form onsubmit="return validateDate()">
+                    <input type="date" id="dateInput" required>
+                </form>
             </div>
-            <input type="submit" value="Soumettre" id="bouton" onclick="
-
-            var selectedDate = new Date(document.getElementById('dateInput').value);
-            var maxDate = new Date();
-            maxDate.setDate(maxDate.getDate() + 21);
-            if (selectedDate > maxDate || selectedDate < new Date()) {
-               alert('La date saisie doit être postérieure de moins de 3 semaines à la date actuelle.');
-               return false;
-            }
-            return true;">
-
-          </div>
-
-    </body>>
-    
+            <input type="submit" value="Borrow !" id="bouton">
+        </div>
+        <MyEbooksContent :books="book" />
+    </body>
     <TheFooter />
 </template>
-
+  
+  
+  
 <script>
 
 export default {
@@ -69,42 +63,55 @@ export default {
 
 <style scoped>
 
-.titre{
-  position: center;
-  margin-left: 525px;
+h2 {
+    font-size: 5vmin;
 }
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    max-width: 90%;
+}
+
 .form-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
+    margin-top: 3vmin;
 }
 
 .form-group {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
 }
 
 input,
 select {
-  width: 100%;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background-color: #d5c040;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+#bouton {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #D0AB77;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    margin: auto;
 }
 
-button:hover {
-  background-color: #ccaa1f;
+#bouton:hover {
+    background-color: #D79262;
+    transition: all 0.3s ease 0s;
 }
-
 </style>
