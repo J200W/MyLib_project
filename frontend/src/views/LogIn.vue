@@ -2,6 +2,7 @@
 import NavbarSimple from "@/components/NavbarSimple.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import {port} from "../../../backend/controllers/Tools_controllers";
+import { link_MainPage } from "@/router/functions_nav";
 </script>
 
 <template>
@@ -149,6 +150,8 @@ body {
 <script>
 
 
+import {link_MainPage} from "@/router/functions_nav";
+
 export default
     {
         name: 'LogIn',
@@ -192,9 +195,9 @@ export default
                         // Traiter la réponse du serveur
                         console.log(data);
                         data = JSON.parse(data);
-                        if (data.status == "success") {
-                            alert(data.message);
-                            if (this.admin == true) {
+                      alert(data.message);
+                        if (data.status === "success") {
+                            if (this.admin === true) {
                                 sessionStorage.setItem('admin', "true");
                             } else {
                                 sessionStorage.setItem('admin', "false");
@@ -202,9 +205,7 @@ export default
                             sessionStorage.setItem('user_email', data.donnees.email);
                             sessionStorage.setItem('user_pseudo', data.donnees.pseudo);
                             sessionStorage.setItem('connected', true);
-                            this.$router.push('/MainPage');
-                        } else {
-                            alert(data.message);
+                            link_MainPage.call(this);
                         }
                     }).catch(error => {
                         // Gérer les erreurs
