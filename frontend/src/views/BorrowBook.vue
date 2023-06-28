@@ -63,10 +63,14 @@ export default {
 </script>
 
 <style>
-
+#bookImg {
+  margin: auto;
+  display: block;
+  max-width: 300px;
+}
 .titre{
   position: center;
-  margin-left: 525px;
+  margin-left: 460px;
 }
 .form-container {
   max-width: 1400px;
