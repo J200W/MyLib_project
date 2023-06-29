@@ -176,7 +176,7 @@ app.post("*", async (req, res) => {
 
     case "/my_books": // COMPONENT: ?
       	// Retourne une réponse JSON
-        req_my_books(datas.email).then((result) => {
+        req_my_books(email).then((result) => {
             res.header("Content-Type", "application/json");
             res.json(result);
         })

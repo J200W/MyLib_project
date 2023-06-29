@@ -71,6 +71,29 @@ export default {
     name: 'MyEbooks',
     data() { return {} },
     methods: {
+        fetchUserData() {
+            },
+            fetchMyBooksPage() {            
+                let url = "http://localhost:" + port + "/my_books"
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                        //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                    },
+                    body: JSON.stringify(sessionStorage.getItem('user_email'))
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        // Traiter la réponse du serveur
+                        data = JSON.parse(data);
+ //                       //FETCH BOOKS THAT ARE SPECIFIED IN DATA//////////////////////
+                    }).catch(error => {
+                        // Gérer les erreurs
+                        console.error("Erreur lors de la réception du formulaire du formulaire :", error);
+                    });
+
+            }
     }
 }
 </script>

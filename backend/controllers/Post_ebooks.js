@@ -9,6 +9,11 @@ async function req_listEbooks(title, category, theme){
     categoryList = category
     themeList = theme
     query = 'SELECT * FROM Ebook'
+    if(categoryList.length>0 ){
+        query = query + ' JOIN est_un on est_un.id_ebook=Ebook.id_ebook'
+    }if(themeList.length>0){
+        query = query + ' JOIN parle_de on parle_des.id_ebook=Ebook.id_ebook'
+    }
     if(title.length>0){
         query = query + " WHERE titre LIKE CONCAT('%', ?, '%')"
     }
