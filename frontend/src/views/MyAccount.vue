@@ -188,7 +188,7 @@ export default {
                     data = JSON.parse(data);
                     console.log(data);
                     alert(data.message);
-                    if(data.status){
+                    if(data.status === "success"){
                       sessionStorage.setItem('user_pseudo', data.donnees.pseudo);
                     }
 

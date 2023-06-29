@@ -2,7 +2,7 @@
 import NavbarSimple from "@/components/NavbarSimple.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import {port} from "../../../backend/controllers/Tools_controllers";
-import {link_MainPage} from "@/router/functions_nav";
+import {link_LogIn } from "@/router/functions_nav";
 </script>
 
 
@@ -118,6 +118,8 @@ import {link_MainPage} from "@/router/functions_nav";
 </style>
   
 <script>
+import {link_LogIn} from "@/router/functions_nav";
+
 export default {
     name: 'SignUp',
     data() {
@@ -162,7 +164,7 @@ export default {
                 if (data.status === "success") {
                   sessionStorage.setItem('user_email', data.donnees.email);
                   sessionStorage.setItem('connected', true);
-                  link_MainPage.call(this)
+                  link_LogIn.call(this)
                   //this.$router.push('/LogIn');
                 }
 
