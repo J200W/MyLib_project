@@ -8,7 +8,7 @@ function prepare_response(condition, reqBody, messageSuccess="", messageFail="")
         // Exemple de réponse renvoyée au composant
         response = {
             status: 'success',
-            message: `Données traités avec succès sur le serveur !\n` + messageSuccess,
+            message: `Data has been handled successfully !\n` + messageSuccess,
             donnees: reqBody
         };
     }
@@ -16,7 +16,7 @@ function prepare_response(condition, reqBody, messageSuccess="", messageFail="")
         // Aucune donnée n'a été envoyée
         response = {
             status: 'error',
-            message: `Echec du traitement des données sur le serveur !\n` + messageFail,
+            message: `Failed handling the given data !\n` + messageFail,
             donnees: reqBody
         };
     }

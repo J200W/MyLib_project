@@ -45,7 +45,11 @@
         },
     ]
 
-    var connected = true;
+    var connected = sessionStorage.getItem('connected');
+
+    if (connected == null) {
+        connected = false;
+    }
 </script>
 
 <template>

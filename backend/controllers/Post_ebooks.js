@@ -4,7 +4,7 @@ const {list_books} = require("../database/listBooks");
 const {execute_query} = require("../database/Connection");
 const mysql = require("mysql2/promise");
 
-async function req_listEbooks(title, category, theme){
+async function req_listEbooks(title, category=[], theme=[]){
     // Retourne une réponse JSON
     categoryList = category
     themeList = theme
@@ -17,18 +17,18 @@ async function req_listEbooks(title, category, theme){
     if(title.length>0){
         query = query + " WHERE titre LIKE CONCAT('%', ?, '%')"
     }
-    else if(categoryList.length>0 ){
+    else if(categoryList ){
         query = query + ' WHERE category = ?'
         categoryList.pop()
-    }else if(themeList.length>0){
+    }else if(themeList){
         query = query + ' WHERE theme = ?'
         themeList.pop()
     }
-    while (categoryList.length > 0){
+    while (categoryList.length>0){
         query = query + ' AND category = ?'
         categoryList.pop()
     }
-    while (themeList.length > 0){
+    while (themeList.length>0){
         query = query + ' AND theme = ?'
         themeList.pop()
     }
@@ -37,7 +37,8 @@ async function req_listEbooks(title, category, theme){
 
 }
 
-/*async function req_research(title) {
+/*
+async function req_research(title) {
     try {
         const query = "SELECT * FROM Ebook WHERE titre LIKE CONCAT('%', ?, '%')" //"SELECT * FROM Ebook WHERE titre LIKE '%" + title + %'";
         const [result] = await execute_query(query, [title], "select");

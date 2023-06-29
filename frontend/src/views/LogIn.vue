@@ -1,8 +1,8 @@
 <script setup>
 import NavbarSimple from "@/components/NavbarSimple.vue";
 import TheFooter from "@/components/TheFooter.vue";
-import {link_MainPage } from "@/router/functions_nav";
-import {port } from "../../../backend/controllers/Tools_controllers"
+import {port} from "../../../backend/controllers/Tools_controllers";
+import { link_MainPage } from "@/router/functions_nav";
 </script>
 
 <template>
@@ -19,10 +19,15 @@ import {port } from "../../../backend/controllers/Tools_controllers"
             <label class="form-label" for="username">Email Address</label>
             <input class="form-input" type="email" id="username" name="username" v-model="email" required>
             <label class="form-label" for="password">Password</label>
-            <input class="form-input" type="password" id="password" name="password" v-model="password" required><br><br>
+            <input class="form-input" type="password" id="password" name="password" v-model="password" required>
+            <label class="form-label" for="admin">Adminstrator</label>
+            <input class="form-checkbox" type="checkbox" id="admin" name="admin" v-model="admin"><br><br>
             <input class="form-submit" type="submit" value="Submit">
-            <p id="pwdforgotten">Password forgotten ? <span><router-link to="/ForgottenPassword">Reset
-                        password</router-link></span></p>
+            <p id="pwdforgotten">Password forgotten ? 
+                <span>
+                    <router-link to="/ForgottenPassword">Reset password</router-link>
+                </span>
+            </p>
         </form>
 
     </body>
@@ -74,13 +79,13 @@ body {
 }
 
 .tabs:hover {
-    background-color: #5C5C50;
+    background-color: #D79262;
     color: white;
     transition: all 0.3s ease 0s;
 }
 
 .selected {
-    background-color: #5C5C50;
+    background-color: #D79262;
     color: white;
 }
 
@@ -105,14 +110,14 @@ body {
     margin-bottom: 1rem;
     border-radius: 10px;
     border: #A8A787 2px solid;
-    background-color: #A8A787;
+    background-color: #D0AB77;
     color: #FFF;
     width: 50%;
     margin: auto;
 }
 
 .form-submit:hover {
-    background-color: #545444;
+    background-color: #D79262;
     border: #545444 2px solid;
     color: white;
     transition: all 0.3s ease 0s;
@@ -121,6 +126,13 @@ body {
 #pwdforgotten {
     font-size: 1.5vmin;
     margin-top: 1rem;
+}
+
+.form-checkbox {
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 3vmin;
+    height: 3vmin;
 }
 
 @media (max-width: 1100px) {
@@ -136,6 +148,9 @@ body {
 </style>
 
 <script>
+
+
+import {link_MainPage} from "@/router/functions_nav";
 
 export default
     {
@@ -154,16 +169,20 @@ export default
             },
             submitForm(event) {
                 // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
-                console.log('Formulaire soumis !', this.email, this.password);
+                console.log('Formulaire soumis !', this.email, this.password, this.admin);
                 event.preventDefault();
+
+                if (this.admin == null) {
+                    this.admin = false;
+                }
 
                 var datas = {
                     email: this.email,
-                    password: this.password
+                    password: this.password,
+                    admin: this.admin
                 };
 
-                let url = "http://localhost:" + port + "/send_login"
-                fetch(url, {
+                fetch("http://localhost:"+port+"/send_login", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
@@ -174,22 +193,23 @@ export default
                     .then(response => response.text())
                     .then(data => {
                         // Traiter la réponse du serveur
-                        console.log(data)
+                        console.log(data);
                         data = JSON.parse(data);
-                        const status = data.status;
-                        const message = data.message;
-                        if (status === "success") {
-                            console.log("Enregistré dans le session storage: " + data.donnees.email)
-                            alert(message);
+                      alert(data.message);
+                        if (data.status === "success") {
+                            if (this.admin === true) {
+                                sessionStorage.setItem('admin', "true");
+                            } else {
+                                sessionStorage.setItem('admin', "false");
+                            }
                             sessionStorage.setItem('user_email', data.donnees.email);
+                            sessionStorage.setItem('user_pseudo', data.donnees.pseudo);
                             sessionStorage.setItem('connected', true);
                             link_MainPage.call(this);
-                        } else {
-                            alert(message);
                         }
                     }).catch(error => {
                         // Gérer les erreurs
-                        console.error("Erreur lors de la réception du formulaire du formulaire :", error);
+                        console.error("Erreur lors de l'envoi du formulaire :", error);
                     });
 
             }

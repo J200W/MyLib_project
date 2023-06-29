@@ -11,7 +11,11 @@ const image = ref(null);
 const isLoading = ref(false);
 var research_data = sessionStorage.getItem('research');
 
-var connected = true;
+var connected = sessionStorage.getItem('connected');
+
+if (connected == null) {
+    connected = false;
+}
 
 </script>
 

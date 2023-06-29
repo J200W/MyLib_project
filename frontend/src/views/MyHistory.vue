@@ -4,7 +4,11 @@
     import MyEbooksContent from "@/components/MyEbooksContent.vue";
     import TheFooter from "@/components/TheFooter.vue";
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
-    var connected = true;
+    var connected = sessionStorage.getItem('connected');
+
+    if (connected == null) {
+        connected = false;
+    }
 
     const books_act = [
       {

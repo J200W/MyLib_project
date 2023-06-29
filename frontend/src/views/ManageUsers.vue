@@ -6,9 +6,11 @@
     import ManageUsersComp from "@/components/ManageUsersComp.vue";
     import PopUpAddFav from "@/components/PopUpAddFav.vue";
 
-    
+    const connected = sessionStorage.getItem('connected');
 
-    const connected = true
+    if (connected == null) {
+        connected = false;
+    }
 
     const users = [
         {

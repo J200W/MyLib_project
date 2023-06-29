@@ -10,36 +10,52 @@ async function req_signUp(email, pseudo, password){
         "INSERT INTO Clients (mail_Clients, pseudo_Clients, mdp_Clients) VALUES (?, ?, ?)";
     try {
         const result = await execute_query(query, [email, pseudo, password], "insert");
-        return prepare_response(result, [email, pseudo, password], 'SignUp réussi', 'SignUp échoué');
+        return prepare_response(result, [email, pseudo, password], 'SignUp successful', 'Failed SignUp');
     } catch (error) {
         console.error("Error during registration:", error);
-        return prepare_response(false, [email, pseudo, password], undefined, 'Erreur du serveur pour SignUp' );
+        console.log(error);
+        return prepare_response(false, [email, pseudo, password], undefined, 'Server error during SignUp' );
     }
 }
 
-async function req_signIn(email, password) {
+async function req_signIn(email, password, admin) {
     try {
-        const query = "SELECT * FROM Clients WHERE mail_Clients = ? AND mdp_Clients = ?";
-        const [rows] = await execute_query(query, [email, password], "select")
-        console.log(rows.length);
-        return prepare_response(rows.length > 0,{email: email}, 'SignIn réussi', 'SignIn échoué');
-    } catch (error) {
+        if (admin) {
+            const query = "SELECT * FROM Admin_biblio WHERE mail_admin = ? AND mdp_admin = ?";
+            const [rows] = await execute_query(query, [email, password], "select")
+            return prepare_response(rows.length > 0,{email: email, pseudo : rows[0] ? rows[0].pseudo_admin : rows}
+                , 'SignIn successful', 'SignIn fail');
+        }
+        else {
+            const query = "SELECT * FROM Clients WHERE mail_Clients = ? AND mdp_Clients = ?";
+            const [rows] = await execute_query(query, [email, password], "select")
+            return prepare_response(rows.length > 0,{email: email, pseudo : rows[0] ? rows[0].pseudo_Clients : rows}, 'LogIn successful', 'LogIn failed');
+        }
+    } 
+    catch (error) {
         console.error("Error during authentication:", error);
         //res.status(500).send('Internal server error');
-        return prepare_response(false, {email: email}, undefined, 'Erreur du serveur pour SignIn' );
+        return prepare_response(false, {email: email}, undefined, 'Server error during SignIn' );
     }
 }
 
 async function req_modifyMyAccount(reqBody) {
     // Vérifier si des données ont été envoyées
     try {
-        let query = "UPDATE Clients SET pseudo_Clients = ? WHERE mail_Clients = ?";
+        let query ;
+        if (reqBody.admin === "false") {
+            query = "UPDATE Clients SET pseudo_Clients = ? WHERE mail_Clients = ?";
+        }
+        else {
+            query = "UPDATE Admin_biblio SET pseudo_admin = ? WHERE mail_admin = ?";
+        }
         const result = await execute_query(query, [reqBody.pseudo, reqBody.email], "update");
-        return prepare_response(result, reqBody,  `Données modifiées pour ${reqBody.pseudo}`, `Données non modifiées pour ${reqBody.pseudo}`);
+        return prepare_response(result, reqBody,  `Data has been modified for ${reqBody.pseudo}.`,
+            `Fail modifying data for ${reqBody.pseudo}.`);
     } catch (error) {
         console.error("Error during modify account:", error);
         //res.status(500).send('Internal server error');
-        return prepare_response(false, [reqBody.email, reqBody.pseudo], undefined, 'Error of server to modify your account');
+        return prepare_response(false, reqBody, undefined, 'Error of server to modify your account');
     }
 
 }
