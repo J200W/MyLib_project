@@ -41,9 +41,16 @@ async function req_signIn(email, password, admin) {
 async function req_modifyMyAccount(reqBody) {
     // Vérifier si des données ont été envoyées
     try {
-        let query = "UPDATE Clients SET pseudo_Clients = ? WHERE mail_Clients = ?";
-        const result = await execute_query(query, [reqBody.pseudo, reqBody.email], "update");
-        return prepare_response(result, reqBody,  `Data has been modified for ${reqBody.pseudo}.`, `Fail modifying data for ${reqBody.pseudo}.`);
+        if (reqBody.admin == "false") {
+            const query = "UPDATE Clients SET pseudo_Clients = ? WHERE mail_Clients = ?"; 
+            const result = await execute_query(query, [reqBody.pseudo, reqBody.email], "update");
+            return prepare_response(result, reqBody,  `Data has been modified for ${reqBody.pseudo}.`, `Fail modifying data for ${reqBody.pseudo}.`);
+        }
+        else {
+            const query = "UPDATE Admin_biblio SET pseudo_admin = ? WHERE mail_admin = ?"; 
+            const result = await execute_query(query, [reqBody.pseudo, reqBody.email], "update");
+            return prepare_response(result, reqBody,  `Data has been modified for ${reqBody.pseudo}.`, `Fail modifying data for ${reqBody.pseudo}.`);
+        }
     } catch (error) {
         console.error("Error during modify account:", error);
         //res.status(500).send('Internal server error');

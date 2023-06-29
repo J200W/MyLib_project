@@ -1,19 +1,15 @@
-MyAccount
-
-
-
-
 <script setup>
-import NavbarConnected from "@/components/NavbarConnected.vue";
-import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
-import TheFooter from "@/components/TheFooter.vue";
+    import NavbarConnected from "@/components/NavbarConnected.vue";
+    import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
+    import TheFooter from "@/components/TheFooter.vue";
 
-var connected = sessionStorage.getItem('connected');
+    import {port} from "../../../backend/controllers/Tools_controllers";
 
-if (connected == null) {
-    connected = false;
-}
+    var connected = sessionStorage.getItem('connected');
 
+    if (connected == null) {
+        connected = false;
+    }
 </script>
 
 <template>
@@ -170,7 +166,7 @@ export default {
                 admin: admin,
             };
 
-            fetch("http://localhost:80/modify_myAccount", {
+            fetch("http://localhost:"+port+"/modify_myAccount", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
@@ -183,8 +179,8 @@ export default {
                     // Traiter la réponse du serveur
                     data = JSON.parse(data);
                     console.log(data);
-                    if (data[0].message == "Modification réussie !") {
-                        alert("Modification réussie !");
+                    if (data.status == "success") {
+                        alert(data.message);
                         sessionStorage.setItem('user_pseudo', this.pseudo);
                     } else {
                         alert("Erreur lors de la modification !");

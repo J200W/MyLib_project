@@ -19,12 +19,14 @@ const {
   req_modifyMyAccount,
   req_signUp,
 } = require("./controllers/Post_user.js");
-const { req_new_book } = require("./controllers/Post_admin.js");
+const { req_new_book, req_upload_book_pdf, req_upload_book_img} = require("./controllers/Post_admin.js");
 const { prepare_response } = require("./controllers/Tools_controllers");
 const { books, get_particular_books } = require("./controllers/Get_ebooks");
 const { get_user_datas } = require("./controllers/Get_user");
 
 const { execute_query } = require("./database/Connection");
+
+// Create the Multer middleware using the MemoryStorage
 
 /*
 const requete = require("./database/requete.js");
@@ -56,8 +58,14 @@ app.use(
     allowedHeaders: ["Authorization", "Content-Type"], // Ajoutez vos en-têtes personnalisés
   })
 );
+
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 // Vérifie à chaque requête si le dossier public contient le fichier demandé
 app.use(express.json()); // for parsing application/json
+// for parsing files
 
 app.post("*", async (req, res) => {
   const datas = req.body;
@@ -130,24 +138,35 @@ app.post("*", async (req, res) => {
         req.body.page,
         req.body.category,
         req.body.theme,
-        req.body.biblio,
         req.body.description,
         req.body.img,
-        req.body.pdf
+        req.body.pdf,
+        req.body.admin
       ).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
-        /*
-			if (result) {
-				res.json([{ message: "book added" }]);
-			}
-			else {
-				res.json([{ message: "book not added" }]);
-			}*/
       });
       break;
 
-    case "/my_books": // COMPONENT: ?
+    case "/upload_book_pdf": // COMPONENT: AddBookComp.vue
+      // Retourne une réponse JSON
+      // For uploading pdf files only
+      req_upload_book_pdf(datas.pdf, datas.name).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/upload_book_img": // COMPONENT: AddBookComp.vue
+      // Retourne une réponse JSON
+      // For uploading images files only
+      req_upload_book_img(datas.img, datas.name).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/my_books": // COMPONENT: MyBooks.vue
       // Retourne une réponse JSON
       req_my_books(datas.email).then((result) => {
         res.header("Content-Type", "application/json");

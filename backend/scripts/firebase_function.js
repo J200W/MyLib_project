@@ -11,6 +11,7 @@ const app = firebase.app;
 const storageImages = firebase.storageImages;
 const storagePDF = firebase.storagePDF;
 const ref = firebase.ref;
+const uploadBytes = firebase.uploadBytes;
 
 async function retrieveImage(book) {
     var image_ref = "";
@@ -54,7 +55,33 @@ async function retrievePDF(book) {
     };
 }
 
+async function upload_book_pdf(pdfFile, name, metadata) {
+    try {
+        const byteArrayPDF = Object.values(pdfFile).map(Number);
+        const filePDF = new Uint8Array(byteArrayPDF);
+        const uploadTask = await uploadBytes(ref(storagePDF, name), filePDF, metadata);
+        return uploadTask;
+    } catch (error) {
+        console.error("Error during upload book in firebase:", error);
+        return null;
+    }
+}
+
+async function upload_book_img(imgFile, name, metadata) {
+    try {
+        const byteArrayIMG = Object.values(imgFile).map(Number);
+        const fileIMG = new Uint8Array(byteArrayIMG);
+        const uploadTask = await uploadBytes(ref(storageImages, name), fileIMG, metadata);
+        return uploadTask;
+    } catch (error) {
+        console.error("Error during upload book in firebase:", error);
+        return null;
+    }
+}
+
 module.exports = {
     retrieveImage,
     retrievePDF,
+    upload_book_pdf,
+    upload_book_img
 };
