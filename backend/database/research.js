@@ -12,7 +12,7 @@ async function research(title){
         database: 'sql7624887',
     });
 
-    const query = 'SELECT * FROM ebook WHERE titre LIKE \'%'+title+'%\'';
+    const query = "SELECT * FROM ebook WHERE titre LIKE \'%'+title+'%\'";
     const [result] = await connection.query(query);
 
     return rows; /*{

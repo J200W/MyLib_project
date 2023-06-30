@@ -22,12 +22,6 @@ const book = book_list[book_id - 1];
 
 var connected = true;
 
-var previousUrl = document.referrer;
-previousUrl = previousUrl.split("?id=")[0]
-if (previousUrl == "http://localhost:8080/BookDetails") {
-
-}
-
 </script>
 
 <template>

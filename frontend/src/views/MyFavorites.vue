@@ -26,7 +26,7 @@ var connected = true;
         <TheFooter />
     </div>
 </template>
-  
+
 
 <style>
 #loading {
@@ -40,7 +40,7 @@ var connected = true;
     margin-top: 20%;
 }
 </style>
-  
+
 <script>
 
 import functions_nav from "@/router/functions_nav";

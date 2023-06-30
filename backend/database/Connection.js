@@ -1,4 +1,4 @@
-// const mysql = require('mysql2/promise');
+const mysql = require('mysql2/promise');
 
 async function connectToDatabase() {
   try {
@@ -15,3 +15,23 @@ async function connectToDatabase() {
     throw error;
   }
 }
+
+
+async function execute_query(query, params, mode) {
+  try {
+    const connection = await connectToDatabase();
+    const [rows] = await connection.query(query, params);
+    connection.end();
+    if (mode === 'select') {
+        return rows;
+    }
+    else{
+        return rows.affectedRows > 0;
+    }
+  } catch (error) {
+    console.error('Error executing query:', error);
+    throw error;
+  }
+}
+
+module.exports = { execute_query };

@@ -1,39 +1,39 @@
 <template>
     <div class="sectionModal">
         <button class="show-modal">Save book info</button>
-    
+
           <div class="modal-box">
             <h2>Sucess!</h2>
             <h3>Book informations have been  sucessfully saved.</h3>
-    
+
             <div class="buttons">
               <button class="close-btn">Close</button>
             </div>
           </div>
 
     </div>
-          
+
 </template>
-    
-    
+
+
     <script>
       export default {
         mounted() {
             const section = document.querySelector(".sectionModal"),
                 showBtn = document.querySelector(".show-modal"),
                 closeBtn = document.querySelector(".close-btn");
-    
+
             showBtn.addEventListener("click", () => section.classList.add("active"));
 
             closeBtn.addEventListener("click", () =>
                 section.classList.remove("active"),
-                
+
             );
             }
       }
     </script>
-    
-    
+
+
 
 <style scoped>
 
@@ -74,7 +74,7 @@ button.show-modal,
   top: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  
+
 }
 .sectionModal.active .show-modal {
   display: none;

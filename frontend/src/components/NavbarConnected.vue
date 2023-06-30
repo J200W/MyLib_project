@@ -27,9 +27,9 @@ global.book_url = ""
                     <a class="dropdown-item" href="/MyHistory">History</a>
 
                     <div v-show="admin">
-                        <a class="dropdown-item" href="/SearchBook">ManageBooks</a>
-                        <a class="dropdown-item" href="/ManageUsers">ManageUsers</a>
-                        <a class="dropdown-item" href="/ManageUsers">AddBook</a>
+                        <a class="dropdown-item" href="/SearchBook">Manage books</a>
+                        <a class="dropdown-item" href="/ManageUsers">Manage users</a>
+                        <a class="dropdown-item" href="/AddBook">Add an ebook</a>
                     </div>
 
 
@@ -75,7 +75,7 @@ global.book_url = ""
     height: auto;
     background-color: #D0AB77;
     width: 100%;
-    z-index: 2;
+    z-index: 4;
     padding-left: 20px;
 }
 
@@ -194,7 +194,7 @@ import functions_nav from "@/router/functions_nav";
 
 export default
     {
-        name: 'NavBar',
+        name: 'NavbarConnected',
         data() {
             return {
                 researched_name: ''

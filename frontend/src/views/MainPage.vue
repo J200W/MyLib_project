@@ -9,8 +9,12 @@ const new_books = JSON.parse(sessionStorage.getItem('new_books'))
 const current_books = JSON.parse(sessionStorage.getItem('current_books'))
 const discover_books = JSON.parse(sessionStorage.getItem('discover_books'))
 
-var connected = true;
 
+var connected = sessionStorage.getItem('connected');
+
+if (connected == null) {
+    connected = false;
+}
 
 </script>
 
@@ -21,8 +25,8 @@ var connected = true;
 
 
 
-    <h1 id="titleMainPage">Unleash your imagination with an extensive eBook collection</h1>
-    <hr id="hr">
+    <h1 class="titlePage">Unleash your imagination with an extensive eBook collection</h1>
+    <hr class="hr">
     <div id="carousels">
         <Carousel :books="current_books" :name="'Continue to read'" />
         <Carousel :books="new_books" :name="'New'" />
@@ -36,7 +40,7 @@ var connected = true;
 
 
 <style>
-#hr {
+.hr {
     width: 80%;
     margin: auto;
 }
@@ -51,13 +55,13 @@ var connected = true;
     margin-top: 20px;
 }
 
-#titleMainPage {
+.titlePage {
     margin: auto;
     width: 100%;
     display: block;
     text-align: center;
     font-weight: bolder;
-    font-size: 5vmin;
+    font-size: 4vmin;
     margin-bottom: 20px;
 }
 </style>
