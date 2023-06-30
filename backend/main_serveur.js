@@ -12,7 +12,7 @@ const retrievePDF = firebase.retrievePDF;
 // , req_book_details_show
 const {
   req_listEbooks, req_book_details_show, req_book_details_mod,
-  req_read_book, req_my_books,
+  req_read_book, req_my_books, req_emprunt_dates, req_share_book
 } = require("./controllers/Post_ebooks.js");
 const {
   req_signIn,
@@ -102,6 +102,19 @@ app.post("*", async (req, res) => {
       });
       break;
 
+    case "/send_login_forgotMdp": // COMPONENT: ForgottenPassword
+      // Retourne une réponse JSON
+      res.header("Content-Type", "application/json");
+      res.json(
+          prepare_response(
+              false,
+              datas,
+              undefined,
+              "Pas de forgotMdp géré pour le moment"
+          )
+      );
+      break;
+
     case "/list_books": // VIEW: ?
 		  // Retourne une réponse JSON
         req_listEbooks(datas.title, datas.category, datas.theme).then((result) => {
@@ -152,6 +165,22 @@ app.post("*", async (req, res) => {
       });
       break;
 
+    case "/send_share_book": // COMPONENT: ShareBook.vue
+        // Retourne une réponse JSON
+      req_share_book(datas).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      })
+      break;
+
+    case '/share_book': // COMPONENT: ShareBook
+      req_emprunt_dates(datas.email, datas.idBook).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      })
+      break;
+
+
     case "/my_books": // COMPONENT: ?
       	// Retourne une réponse JSON
         console.log(req.body)
@@ -180,6 +209,7 @@ app.post("*", async (req, res) => {
         req_read_book(datas.email, datas.idBook).then((result) => {
             res.header("Content-Type", "application/json");
             res.json(result);
+
             if(result.status == 'success'){
               funct_to_read_PDF(result.donnees)
             }
@@ -218,19 +248,6 @@ app.post("*", async (req, res) => {
         }
       });*/
 
-      break;
-
-    case "/send_login_forgotMdp": // COMPONENT: ForgottenPassword
-      // Retourne une réponse JSON
-      res.header("Content-Type", "application/json");
-      res.json(
-        prepare_response(
-          false,
-          datas,
-          undefined,
-          "Pas de forgotMdp géré pour le moment"
-        )
-      );
       break;
 
     default:
