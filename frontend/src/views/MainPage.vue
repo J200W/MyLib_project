@@ -6,9 +6,12 @@ import TheFooter from "@/components/TheFooter.vue";
 import { port } from "../../../backend/controllers/Tools_controllers";
 
 
-const new_books = JSON.parse(sessionStorage.getItem('new_books'))
-const current_books = JSON.parse(sessionStorage.getItem('current_books'))
-const discover_books = JSON.parse(sessionStorage.getItem('discover_books'))
+var new_books = JSON.parse(sessionStorage.getItem('new_books'))
+var current_books = JSON.parse(sessionStorage.getItem('current_books'))
+if (current_books == null) {
+    current_books = []
+}
+var discover_books = JSON.parse(sessionStorage.getItem('discover_books'))
 
 
 var connected = sessionStorage.getItem('connected');
@@ -29,9 +32,9 @@ if (connected == null) {
     <h1 class="titlePage">Unleash your imagination with an extensive eBook collection</h1>
     <hr class="hr">
     <div id="carousels">
-        <Carousel :books="current_books" :name="'Continue to read'" />
-        <Carousel :books="new_books" :name="'New'" />
-        <Carousel :books="discover_books" :name="'Discover'" />
+        <Carousel v-if="current_books.length>0" :books="current_books" :name="'Continue to read'" />
+        <Carousel v-if="new_books.length>0" :books="new_books" :name="'New'" />
+        <Carousel v-if="discover_books.length>0" :books="discover_books" :name="'Discover'" />
     </div>
 
     <TheFooter />
@@ -74,36 +77,9 @@ export default {
     name: 'MainPage',
     data() { return {} },
     mounted() {
-        this.fetchMainPage();
+
     },
     methods: {
-        fetchMainPage() {
-            fetch("http://localhost:" + port + "/get_new_books")
-                .then(response => response.json())
-                .then(data => {
-                    sessionStorage.setItem('new_books', JSON.stringify(data));
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-
-            fetch("http://localhost:" + port + "/get_current_books")
-                .then(response => response.json())
-                .then(data => {
-                    sessionStorage.setItem('current_books', JSON.stringify(data));
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-            fetch("http://localhost:" + port + "/get_discover_books")
-                .then(response => response.json())
-                .then(data => {
-                    sessionStorage.setItem('discover_books', JSON.stringify(data));
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        }
     }
 }
 </script>

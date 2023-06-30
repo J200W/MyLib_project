@@ -19,7 +19,11 @@ const {
   req_modifyMyAccount,
   req_signUp,
 } = require("./controllers/Post_user.js");
-const { req_new_book, req_upload_book_pdf, req_upload_book_img} = require("./controllers/Post_admin.js");
+const {
+  req_new_book,
+  req_upload_book_pdf,
+  req_upload_book_img,
+} = require("./controllers/Post_admin.js");
 const { prepare_response } = require("./controllers/Tools_controllers");
 const { books, get_particular_books } = require("./controllers/Get_ebooks");
 const { get_user_datas } = require("./controllers/Get_user");
@@ -172,7 +176,7 @@ app.post("*", async (req, res) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });
-      /*
+    /*
 		my_books(req.body.mail_client).then((result) => {
 			if (result.length > 0) {
 				res.header("Content-Type", "application/json");
@@ -182,6 +186,58 @@ app.post("*", async (req, res) => {
 				res.json([{ message: "empty list" }]);
 			}
 		});*/
+
+    case "/new_books": // VIEW: MainPage
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+      get_particular_books("new", datas.email).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result.donnees);
+      });
+      /*
+  res.header("Content-Type", "application/json");
+  const newImagePromises = books.map((book) => retrieveImage(book));
+  const newImageUrls = await Promise.all(newImagePromises);
+  res.json(newImageUrls); */
+      break;
+    case "/current_books": // VIEW: MainPage
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+      get_particular_books("current", datas.email).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result.donnees);
+      });
+      /*
+      res.header("Content-Type", "application/json");
+  const currentImagePromises = books.map((book) => retrieveImage(book));
+  const currentImageUrls = await Promise.all(currentImagePromises);
+  res.json(currentImageUrls); */
+      break;
+    case "/discover_books": // VIEW: MainPage
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+      get_particular_books("discover", datas.email).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result.donnees);
+      });
+      /*
+  res.header("Content-Type", "application/json");
+  const discoverImagePromises = books.map((book) => retrieveImage(book));
+  const discoverImageUrls = await Promise.all(discoverImagePromises);
+  res.json(discoverImageUrls);*/
+      break;
+
+    case "/similar_books": // VIEW: BookDetails
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+      /*
+      get_particular_books("similar","image").then((result) => {
+          res.header("Content-Type", "application/json");
+          res.json(result.donnees);
+      });*/
+
+      res.header("Content-Type", "application/json");
+      console.log("books : ", books);
+      const similarImagePromises = books.map((book) => retrieveImage(book));
+      const similarImageUrls = await Promise.all(similarImagePromises);
+      res.json(similarImageUrls);
+      break;
 
       break;
 
@@ -275,8 +331,8 @@ app.get("*", async (req, res) => {
 		res.json(imageUrls);*/
       break;
 
-    case "/get_pdf_url": // VIEW: ?
-      get_particular_books(undefined, "pdf").then((result) => {
+    case "/get_pdf_url": // VIEW: MainPage
+      get_particular_books("undefined", "pdf").then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result.donnees);
       });
@@ -287,57 +343,6 @@ app.get("*", async (req, res) => {
 		const pdfPromises = books.map((book) => retrieveImage(book));
 		const pdfUrls = await Promise.all(pdfPromises);
 		res.json(pdfUrls);*/
-      break;
-    case "/get_new_books": // VIEW: MainPage
-      // Renvoie les images des livres en tant que réponse JSON venant de firebase
-      get_particular_books(undefined, "image").then((result) => {
-        res.header("Content-Type", "application/json");
-        res.json(result.donnees);
-      });
-      /*
-		res.header("Content-Type", "application/json");
-		const newImagePromises = books.map((book) => retrieveImage(book));
-		const newImageUrls = await Promise.all(newImagePromises);
-		res.json(newImageUrls); */
-      break;
-    case "/get_current_books": // VIEW: MainPage
-      // Renvoie les images des livres en tant que réponse JSON venant de firebase
-      get_particular_books("current", "image").then((result) => {
-        res.header("Content-Type", "application/json");
-        res.json(result.donnees);
-      });
-      /*
-        res.header("Content-Type", "application/json");
-		const currentImagePromises = books.map((book) => retrieveImage(book));
-		const currentImageUrls = await Promise.all(currentImagePromises);
-		res.json(currentImageUrls); */
-      break;
-    case "/get_discover_books": // VIEW: MainPage
-      // Renvoie les images des livres en tant que réponse JSON venant de firebase
-      get_particular_books("discover", "image").then((result) => {
-        res.header("Content-Type", "application/json");
-        res.json(result.donnees);
-      });
-      /*
-		res.header("Content-Type", "application/json");
-		const discoverImagePromises = books.map((book) => retrieveImage(book));
-		const discoverImageUrls = await Promise.all(discoverImagePromises);
-		res.json(discoverImageUrls);*/
-      break;
-
-    case "/get_similar_books": // VIEW: BookDetails
-      // Renvoie les images des livres en tant que réponse JSON venant de firebase
-      /*
-        get_particular_books("similar","image").then((result) => {
-            res.header("Content-Type", "application/json");
-            res.json(result.donnees);
-        });*/
-
-      res.header("Content-Type", "application/json");
-      console.log("books : ", books);
-      const similarImagePromises = books.map((book) => retrieveImage(book));
-      const similarImageUrls = await Promise.all(similarImagePromises);
-      res.json(similarImageUrls);
       break;
 
     default:

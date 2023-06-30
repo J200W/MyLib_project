@@ -1,3 +1,9 @@
+<script setup>
+
+
+
+</script>
+
 <template>
     <hr>
     <div id="carousel">
@@ -8,7 +14,7 @@
                     <div v-for="book in books" :key="book.id">
                         <router-link :to="{ path: '/BookDetails', query: { id: book.id } }" exact>
                             <img :src="book.src" alt="image" />
-                            <p>{{ book.title }}</p>
+                            <p>{{ book.titre }}</p>
                         </router-link>
                     </div>
                 </div>

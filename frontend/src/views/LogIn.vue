@@ -1,7 +1,7 @@
 <script setup>
 import NavbarSimple from "@/components/NavbarSimple.vue";
 import TheFooter from "@/components/TheFooter.vue";
-import {port} from "../../../backend/controllers/Tools_controllers";
+import { port } from "../../../backend/controllers/Tools_controllers";
 </script>
 
 <template>
@@ -22,7 +22,7 @@ import {port} from "../../../backend/controllers/Tools_controllers";
             <label class="form-label" for="admin">Adminstrator</label>
             <input class="form-checkbox" type="checkbox" id="admin" name="admin" v-model="admin"><br><br>
             <input class="form-submit" type="submit" value="Submit">
-            <p id="pwdforgotten">Password forgotten ? 
+            <p id="pwdforgotten">Password forgotten ?
                 <span>
                     <router-link to="/ForgottenPassword">Reset password</router-link>
                 </span>
@@ -155,7 +155,8 @@ export default
         data() {
             return {
                 email: '',
-                password: ''
+                password: '',
+                admin: null
             };
         },
         mounted() {
@@ -166,9 +167,7 @@ export default
             },
             submitForm(event) {
                 // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
-                console.log('Formulaire soumis !', this.email, this.password, this.admin);
                 event.preventDefault();
-
                 if (this.admin == null) {
                     this.admin = false;
                 }
@@ -179,7 +178,7 @@ export default
                     admin: this.admin
                 };
 
-                fetch("http://localhost:"+port+"/send_login", {
+                fetch("http://localhost:" + port + "/send_login", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
@@ -190,7 +189,6 @@ export default
                     .then(response => response.text())
                     .then(data => {
                         // Traiter la réponse du serveur
-                        console.log(data);
                         data = JSON.parse(data);
                         if (data.status == "success") {
                             alert(data.message);
@@ -202,7 +200,30 @@ export default
                             sessionStorage.setItem('user_email', data.donnees.email);
                             sessionStorage.setItem('user_pseudo', data.donnees.pseudo);
                             sessionStorage.setItem('connected', true);
-                            this.$router.push('/MainPage');
+                            var email = sessionStorage.getItem('user_email');
+                            if (email == null) {
+                                email = "";
+                            }
+                            var datas = { email: email }
+
+                            fetch("http://localhost:" + port + "/current_books", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                                    //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                                },
+                                body: JSON.stringify(datas)
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    sessionStorage.setItem('current_books', JSON.stringify(data));
+                                }).then(() => {
+                                    this.$router.push('/MainPage');
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                });
+
                         } else {
                             alert(data.message);
                         }

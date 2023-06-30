@@ -13,24 +13,14 @@ const storagePDF = firebase.storagePDF;
 const ref = firebase.ref;
 const uploadBytes = firebase.uploadBytes;
 
-async function retrieveImage(book) {
+async function retrieveImageCarousel(book) {
     var image_ref = "";
-    if (typeof book.src === "string")
-        image_ref = await getDownloadURL(ref(storageImages, book.src));
+    if (typeof book.name_img === "string")
+        image_ref = await getDownloadURL(ref(storageImages, book.name_img));
     return {
-        id: book.id,
-        title: book.title,
+        id: book.id_ebook,
+        title: book.titre,
         src: image_ref,
-        author: book.author,
-        library: book.library,
-        theme: book.theme,
-        genre: book.genre,
-        date: book.date, 
-        edition: book.edition,
-        language: book.language,
-        pages: book.pages,
-        description: book.description,
-        pdf: book.pdf,
     };
 }
 
@@ -80,7 +70,7 @@ async function upload_book_img(imgFile, name, metadata) {
 }
 
 module.exports = {
-    retrieveImage,
+    retrieveImageCarousel,
     retrievePDF,
     upload_book_pdf,
     upload_book_img

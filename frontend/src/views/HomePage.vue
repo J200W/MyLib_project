@@ -1,6 +1,8 @@
 <script setup>
 import function_nav from "@/router/functions_nav";
 import TheFooter from "@/components/TheFooter.vue";
+import { port } from "../../../backend/controllers/Tools_controllers";
+
 </script>
 
 <template>
@@ -78,7 +80,50 @@ button:hover {
 export default {
     name: 'HomePage',
     data() { return {} },
+    mounted() {
+        this.fetchHomePage();
+    },
     methods: {
+        fetchHomePage() {
+            var email = sessionStorage.getItem('user_email');
+            if (email == null) {
+                email = "";
+            }
+            var datas = { email: email }
+
+            fetch("http://localhost:" + port + "/new_books", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                    //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("new_books = ", data);
+                    sessionStorage.setItem('new_books', JSON.stringify(data));
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+            fetch("http://localhost:" + port + "/discover_books", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                    //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    sessionStorage.setItem('discover_books', JSON.stringify(data));
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
     }
 }
 </script>

@@ -34,7 +34,7 @@
             </router-link>
             <div class="form-group number">
                 <label class="form-labelMyaccount">Number of borrowed books : </label>
-                <span class="form-labelMyaccount"> {{ books }}</span>
+                <span class="form-labelMyaccount"> 0 </span>
             </div>
             <div id="myAccountButton">
                 <input type="submit" class="form-submitMyAccount" value="Save information" />
