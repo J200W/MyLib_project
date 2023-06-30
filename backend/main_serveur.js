@@ -179,12 +179,12 @@ app.post("*", async (req, res) => {
 
 
     case "/my_books": // COMPONENT: ?
-      // Retourne une réponse JSON
-      req_my_books(datas.email).then((result) => {
-        res.header("Content-Type", "application/json");
-        res.json(result);
-      });
-      /*
+      	// Retourne une réponse JSON
+        req_my_books(email).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        })
+        /*
 		my_books(req.body.mail_client).then((result) => {
 			if (result.length > 0) {
 				res.header("Content-Type", "application/json");
