@@ -1,5 +1,5 @@
 <template>
-    <h1 id="title-MyEbook">Results for "{{ result }}"</h1>
+    <h1 id="title-MyEbook">{{name}} {{ result }}</h1>
 
     <div class="sort-collection-search">
         <h3 class="label-selector-search">Sort</h3>
@@ -91,7 +91,7 @@
 <script>
 export default {
     name: 'SearchBookSort',
-    props: ['result'],
+    props: ['result', 'name'],
 }
 
 </script>

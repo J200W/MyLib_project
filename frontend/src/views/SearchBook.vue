@@ -8,6 +8,7 @@ import { ref, onMounted } from 'vue';
 const image = ref(null);
 const isLoading = ref(false);
 var research_data = sessionStorage.getItem('research');
+var name = "Results for "
 
 var connected = true;
 
@@ -20,7 +21,7 @@ var connected = true;
     <div v-else>
         <NavbarConnected v-if="connected" />
         <NavbarNonConnected v-if="!connected" />
-        <SearchBookSort :result="research_data" />
+        <SearchBookSort :result="research_data" :name=name />
         <SearchBookContent :books="book_list" />
         <TheFooter />
     </div>

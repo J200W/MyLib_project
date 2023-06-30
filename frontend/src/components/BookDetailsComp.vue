@@ -3,7 +3,7 @@
 import PopUpAddFav from "@/components/PopUpAddFav.vue";
 import ModalBox from "./ModalBox.vue";
 
-const admin = false
+const admin = true
 
 </script>
 
@@ -11,7 +11,6 @@ const admin = false
 <template>
     
     <div id="allPage">
-        
         <div id="left-section">
             <div id="left-left-section" >
                 <img id="bookImg" :src="book.src" alt="{{ book.title }}">
@@ -31,7 +30,11 @@ const admin = false
                     
             </div>
             <div id="bookInfo">
-                <h2 id="information"><b>Information</b></h2>
+                <div>
+                    <h2 id="information"><b>Information</b></h2>
+                    
+                </div>
+                
                 <!-- <button v-if="!admin" @click="add_to_fav()" id="button-add-fav">add fav</button> -->
                 <p><b>Author:  </b> 
                     <span v-if="!admin" >{{book.author}}</span>
@@ -105,27 +108,24 @@ const admin = false
         </div>
 
 
-        <div id="right-section">
+            <div id="right-section">
             <h2>Resume :</h2>
             <div id="book-resume">
                 <div class="row">
                     <p v-if="!admin">{{ book.description }}</p>
                     <textarea class="resume" v-else v-model="book.description" placeholder="resume"></textarea>
                 </div>
-                
+                 
             </div>
             
-            <!-- <button v-show="admin" @click="save_book_information()" id="button-save-info" class="save-button">Save Information</button> -->
-            
-
-            <ModalBox v-show="admin" @click="save_book_information()"></ModalBox>
+            <!-- <button v-show="admin" @click="save_book_information()" id="button-save-info">Save Information</button> -->
+            <ModalBox id="button-save-info" v-show="admin" @click="save_book_information()"></ModalBox>
 
         </div>
 
-        
-        
+        <!-- <ModalBox id="button-save-info" v-show="admin" @click="save_book_information()"></ModalBox> -->
 
-        
+ 
 
     </div>
 
@@ -146,6 +146,7 @@ const test_array = [1,2,3,4]
         props: ['book'],
 
         methods: {
+                
                 confirm_action() {
                     let test = confirm("Are you sure you want to erase the previous informations with the new ones ? ");
                     
@@ -181,6 +182,8 @@ const test_array = [1,2,3,4]
 
 <style scoped>
 
+
+
     .btn-primary{
         margin-left: 40px;
         margin-top: 25px;
@@ -208,16 +211,7 @@ const test_array = [1,2,3,4]
         margin-left: 240px;
         width: 200px;
         height: 110px;
-        color: white;
-        background-color: #A8A787;
-        border-radius: 20px;
    
-    }
-
-    #button-save-info:hover{
-        background-color: #D79262;
-        color: white;
-        transition: all 0.3s ease 0s;
     }
 
     hr {

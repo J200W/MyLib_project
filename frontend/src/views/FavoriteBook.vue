@@ -46,7 +46,7 @@ var connected = true;
 import functions_nav from "@/router/functions_nav";
 
 export default {
-    name: 'MyFavorites',
+    name: 'SearchBook',
     data() {
         return {
             researched_name: '',

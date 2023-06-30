@@ -46,8 +46,8 @@
 }
 .sectionModal {
 
-  z-index: 2;
-  position: static  ;
+  z-index: 1;
+  position: relative  ;
 
 
 
@@ -69,7 +69,7 @@ button:hover {
 }
 button.show-modal,
 .modal-box {
-  position: absolute;
+  position: relative;
   left: 65%;
   top: 50%;
   transform: translate(-50%, -50%);
