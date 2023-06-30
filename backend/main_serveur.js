@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-//const port = 80;
+//const port = 8090
 const { port } = require("./controllers/Tools_controllers.js");
 
 const firebase = require("./scripts/firebase_function.js");
@@ -13,6 +13,7 @@ const {
   req_listEbooks,
   req_research,
   req_my_books,
+  req_books_details,
 } = require("./controllers/Post_ebooks.js");
 const {
   req_signIn,
@@ -117,35 +118,25 @@ app.post("*", async (req, res) => {
         res.json(result);
       });
 
-      /*
-		list_books().then((result) => {
-			if (result.length > 0) {
-				res.header("Content-Type", "application/json");
-				res.json([{ list: result }]);
-			} 
-			else {
-				res.header("Content-Type", "application/json");
-				res.json([{ message: "empty list" }]);
-			}
-		}); */
       break;
 
     case "/add_book": // COMPONENT: AddBook.vue
       // Retourne une réponse JSON
       //res.header("Content-Type", "application/json");
       req_new_book(
-        req.body.title,
-        req.body.author,
-        req.body.date,
-        req.body.language,
-        req.body.editor,
-        req.body.page,
-        req.body.category,
-        req.body.theme,
-        req.body.description,
-        req.body.img,
-        req.body.pdf,
-        req.body.admin
+        datas.title,
+        datas.author,
+        datas.date,
+        datas.language,
+        datas.editor,
+        datas.page,
+        datas.category,
+        datas.theme,
+        datas.description,
+        datas.img,
+        datas.pdf,
+        datas.admin,
+        datas.stock
       ).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
@@ -176,16 +167,6 @@ app.post("*", async (req, res) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });
-    /*
-		my_books(req.body.mail_client).then((result) => {
-			if (result.length > 0) {
-				res.header("Content-Type", "application/json");
-				res.json([{ list: result }]);
-			} else {
-				res.header("Content-Type", "application/json");
-				res.json([{ message: "empty list" }]);
-			}
-		});*/
 
     case "/new_books": // VIEW: MainPage
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
@@ -193,11 +174,6 @@ app.post("*", async (req, res) => {
         res.header("Content-Type", "application/json");
         res.json(result.donnees);
       });
-      /*
-  res.header("Content-Type", "application/json");
-  const newImagePromises = books.map((book) => retrieveImage(book));
-  const newImageUrls = await Promise.all(newImagePromises);
-  res.json(newImageUrls); */
       break;
     case "/current_books": // VIEW: MainPage
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
@@ -205,11 +181,6 @@ app.post("*", async (req, res) => {
         res.header("Content-Type", "application/json");
         res.json(result.donnees);
       });
-      /*
-      res.header("Content-Type", "application/json");
-  const currentImagePromises = books.map((book) => retrieveImage(book));
-  const currentImageUrls = await Promise.all(currentImagePromises);
-  res.json(currentImageUrls); */
       break;
     case "/discover_books": // VIEW: MainPage
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
@@ -217,28 +188,19 @@ app.post("*", async (req, res) => {
         res.header("Content-Type", "application/json");
         res.json(result.donnees);
       });
-      /*
-  res.header("Content-Type", "application/json");
-  const discoverImagePromises = books.map((book) => retrieveImage(book));
-  const discoverImageUrls = await Promise.all(discoverImagePromises);
-  res.json(discoverImageUrls);*/
       break;
 
     case "/similar_books": // VIEW: BookDetails
-      // Renvoie les images des livres en tant que réponse JSON venant de firebase
-      /*
-      get_particular_books("similar","image").then((result) => {
-          res.header("Content-Type", "application/json");
-          res.json(result.donnees);
-      });*/
-
       res.header("Content-Type", "application/json");
-      console.log("books : ", books);
-      const similarImagePromises = books.map((book) => retrieveImage(book));
-      const similarImageUrls = await Promise.all(similarImagePromises);
-      res.json(similarImageUrls);
+      res.json([{ list: datas.list }]);
       break;
 
+    case "/book_details": // VIEW: BookDetails
+      // Retourne une réponse JSON
+      req_books_details(datas.id_ebook).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
       break;
 
     case "/send_research_fromNavBar": //  VIEW: SearchBook, COMPONENT: SearchBookComponent

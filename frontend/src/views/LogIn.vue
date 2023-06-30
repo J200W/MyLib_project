@@ -204,30 +204,14 @@ export default
                             if (email == null) {
                                 email = "";
                             }
-                            var datas = { email: email }
-
-                            fetch("http://localhost:" + port + "/current_books", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
-                                    //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
-                                },
-                                body: JSON.stringify(datas)
-                            })
-                                .then(response => response.json())
-                                .then(data => {
-                                    sessionStorage.setItem('current_books', JSON.stringify(data));
-                                }).then(() => {
-                                    this.$router.push('/MainPage');
-                                })
-                                .catch(error => {
-                                    console.log(error);
-                                });
+                            this.$router.push('/MainPage');
 
                         } else {
                             alert(data.message);
                         }
-                    }).catch(error => {
+
+                    })
+                    .catch(error => {
                         // Gérer les erreurs
                         console.error("Erreur lors de l'envoi du formulaire :", error);
                     });

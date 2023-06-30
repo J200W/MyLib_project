@@ -4,11 +4,11 @@ const {execute_query} = require("../database/Connection");
 const {upload_book_pdf, upload_book_img} = require("../scripts/firebase_function");
 
 
-async function req_new_book(title, author, date, language, editor, page, category, theme, description, img, pdf, admin_email) {
+async function req_new_book(title, author, date, language, editor, page, category, theme, description, img, pdf, admin_email, stock) {
     try {
         var query =
-            "INSERT INTO Ebook (titre, auteur, date_parution, langue, editeur, nb_pages, description, name_img, name_pdf, id_Biblio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        var result = await execute_query(query, [title, author, date, language, editor, page, description, img, pdf, admin_email], "insert");
+            "INSERT INTO Ebook (titre, auteur, date_parution, langue, editeur, nb_pages, description, name_img, name_pdf, id_Biblio, stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        var result = await execute_query(query, [title, author, date, language, editor, page, description, img, pdf, admin_email, stock], "insert");
         if (result === false) {
             return prepare_response(false, title, undefined, 'Fail to add book')
         }

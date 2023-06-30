@@ -19,7 +19,7 @@ async function retrieveImageCarousel(book) {
         image_ref = await getDownloadURL(ref(storageImages, book.name_img));
     return {
         id: book.id_ebook,
-        title: book.titre,
+        titre: book.titre,
         src: image_ref,
     };
 }

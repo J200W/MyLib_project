@@ -6,12 +6,9 @@ import TheFooter from "@/components/TheFooter.vue";
 import { port } from "../../../backend/controllers/Tools_controllers";
 
 
-var new_books = JSON.parse(sessionStorage.getItem('new_books'))
-var current_books = JSON.parse(sessionStorage.getItem('current_books'))
-if (current_books == null) {
-    current_books = []
-}
-var discover_books = JSON.parse(sessionStorage.getItem('discover_books'))
+//console.log("new : ", new_books)
+//console.log("current : ", current_books)
+//console.log("discover : ", discover_books)
 
 
 var connected = sessionStorage.getItem('connected');
@@ -26,15 +23,12 @@ if (connected == null) {
     <NavbarConnected v-if="connected" />
     <NavbarNonConnected v-if="!connected" />
 
-
-
-
     <h1 class="titlePage">Unleash your imagination with an extensive eBook collection</h1>
     <hr class="hr">
     <div id="carousels">
-        <Carousel v-if="current_books.length>0" :books="current_books" :name="'Continue to read'" />
-        <Carousel v-if="new_books.length>0" :books="new_books" :name="'New'" />
-        <Carousel v-if="discover_books.length>0" :books="discover_books" :name="'Discover'" />
+        <Carousel v-if="current_books" :books="current_books" :name="'Continue to read'" />
+        <Carousel v-if="new_books" :books="new_books" :name="'New'" />
+        <Carousel v-if="discover_books" :books="discover_books" :name="'Discover'" />
     </div>
 
     <TheFooter />
@@ -75,11 +69,74 @@ if (connected == null) {
 
 export default {
     name: 'MainPage',
-    data() { return {} },
+    data() {
+        return {
+            connected: null,
+            new_books: null,
+            current_books: null,
+            discover_books: null
+        }
+    },
     mounted() {
-
+        this.fetchMainPage();
     },
     methods: {
+        fetchMainPage() {
+            var email = sessionStorage.getItem('user_email');
+            if (email == null) {
+                email = "";
+            }
+            var datas = { email: email }
+
+            fetch("http://localhost:" + port + "/new_books", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                    //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    this.new_books = data;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+            fetch("http://localhost:" + port + "/discover_books", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                    //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    this.discover_books = data;
+                    console.log(this.discover_books);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+            fetch("http://localhost:" + port + "/current_books", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                    //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    sessionStorage.setItem('current_books', JSON.stringify(data));
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
     }
 }
 </script>

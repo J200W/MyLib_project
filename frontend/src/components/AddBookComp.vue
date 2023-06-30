@@ -28,18 +28,6 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                     </div>
                 </div>
 
-
-                <div class="form-line">
-                    <div class="form-subline">
-                        <label for="ebook-date" class="ebook-label">Release date</label>
-                        <input required type="date" name="ebook-date" class="ebook-input">
-                    </div>
-                    <div class="form-subline">
-                        <label for="ebook-language" class="ebook-label">Language</label>
-                        <input required type="text" name="ebook-language" class="ebook-input">
-                    </div>
-                </div>
-
                 <div class="form-line">
                     <div class="form-subline">
                         <label for="ebook-editor" class="ebook-label">Editor</label>
@@ -52,7 +40,22 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                 </div>
 
                 <div class="form-line">
-                    <div class="form-subline-selector">
+                    <div class="form-subline-3">
+                        <label for="ebook-date" class="ebook-label">Release date</label>
+                        <input required type="date" name="ebook-date" class="ebook-input">
+                    </div>
+                    <div class="form-subline-3">
+                        <label for="ebook-language" class="ebook-label">Language</label>
+                        <input required type="text" name="ebook-language" class="ebook-input">
+                    </div>
+                    <div class="form-subline-3">
+                        <label for="ebook-stock" class="ebook-label">Stock</label>
+                        <input min="0" required type="number" name="ebook-stock" class="ebook-input">
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <div class="form-subline-3">
                         <label for="ebook-category1" class="ebook-label">Category n°1</label>
                         <select name="ebook-category1" class="ebook-input">
                             <option value="None">None</option>
@@ -79,7 +82,7 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                         </select>
                     </div>
 
-                    <div class="form-subline-selector">
+                    <div class="form-subline-3">
                         <label for="ebook-category2" class="ebook-label">Category n°2</label>
                         <select name="ebook-category2" class="ebook-input">
                             <option value="None">None</option>
@@ -106,7 +109,7 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                         </select>
                     </div>
 
-                    <div class="form-subline-selector">
+                    <div class="form-subline-3">
                         <label for="ebook-category3" class="ebook-label">Category n°3</label>
                         <select name="ebook-category3" class="ebook-input">
                             <option value="None">None</option>
@@ -135,7 +138,7 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                 </div>
 
                 <div class="form-line">
-                    <div class="form-subline-selector">
+                    <div class="form-subline-3">
                         <label for="ebook-theme1" class="ebook-label">Theme n°1</label>
                         <select name="ebook-theme1" class="ebook-input">
                             <option value="None">None</option>
@@ -163,7 +166,7 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                             <option value="comics">Comics</option>
                         </select>
                     </div>
-                    <div class="form-subline-selector">
+                    <div class="form-subline-3">
                         <label for="ebook-theme2" class="ebook-label">Theme n°2</label>
                         <select name="ebook-theme2" class="ebook-input">
                             <option value="None">None</option>
@@ -191,7 +194,7 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                             <option value="comics">Comics</option>
                         </select>
                     </div>
-                    <div class="form-subline-selector">
+                    <div class="form-subline-3">
                         <label for="ebook-theme3" class="ebook-label">Theme n°3</label>
                         <select name="ebook-theme3" class="ebook-input">
                             <option value="None">None</option>
@@ -220,9 +223,6 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                         </select>
                     </div>
                 </div>
-
-                <label for="ebook-biblio" class="ebook-label">Name of the library owner</label>
-                <input required type="text" name="ebook-biblio" class="ebook-input">
 
                 <label for="ebook-description" class="ebook-label">Description</label>
                 <textarea name="ebook-description" class="ebook-input description" cols="30" rows="10"></textarea>
@@ -300,7 +300,7 @@ import { port } from "../../../backend/controllers/Tools_controllers";
     width: 45%;
 }
 
-.form-subline-selector {
+.form-subline-3 {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -404,7 +404,9 @@ export default
                 const formData = new FormData(form);
                 const ebook_title = formData.get('ebook-title');
                 const ebook_author = formData.get('ebook-author');
-                const ebook_date = formData.get('ebook-date');
+                var ebook_date = formData.get('ebook-date');
+
+                const ebook_stock = formData.get('ebook-stock');
                 const ebook_language = formData.get('ebook-language');
                 const ebook_editor = formData.get('ebook-editor');
                 const ebook_page = formData.get('ebook-page');
@@ -433,7 +435,8 @@ export default
                     description: ebook_description,
                     img: ebook_img,
                     pdf: bookFile.name,
-                    admin: sessionStorage.getItem('user_email')
+                    admin: sessionStorage.getItem('user_email'),
+                    stock: ebook_stock
                 }
                 try {
                     // Convert book file to base64

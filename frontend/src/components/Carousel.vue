@@ -1,7 +1,5 @@
 <script setup>
 
-
-
 </script>
 
 <template>
@@ -14,7 +12,7 @@
                     <div v-for="book in books" :key="book.id">
                         <router-link :to="{ path: '/BookDetails', query: { id: book.id } }" exact>
                             <img :src="book.src" alt="image" />
-                            <p>{{ book.titre }}</p>
+                            <p>{{book.titre}}</p>
                         </router-link>
                     </div>
                 </div>
