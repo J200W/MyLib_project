@@ -4,8 +4,9 @@
     import MyEbooksContent from "@/components/MyEbooksContent.vue";
     import TheFooter from "@/components/TheFooter.vue";
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
+    import { port } from "../../../backend/controllers/Tools_controllers";
 
-    const books = [
+    /*const books = [
         {
             id: 1,
             title: "One Piece Tome 96",
@@ -43,7 +44,7 @@
             library: "Bibliothèque Municipale de Livry-Gargan",
             time: "1d 12h 32m",
         },
-    ]
+    ]*/
 
     var connected = sessionStorage.getItem('connected');
 
@@ -57,8 +58,8 @@
     <NavbarConnected v-if = "connected" />
     <NavbarNonConnected v-if = "!connected" />
     <body>
-        <MyEbooksSort pseudo="Username" />
-        <MyEbooksContent :books="books" />
+        <MyEbooksSort :pseudo=pseudo />
+        <MyEbooksContent :books=books />
     </body>
     <TheFooter />
 </template>
@@ -73,25 +74,54 @@
 <script>
 export default {
     name: 'MyEbooks',
-    data() { return {} },
+    data() { return {
+        books : [],
+        pseudo : sessionStorage.getItem('user_pseudo')
+    } },
+    mounted() {
+        this.fetchMyBooksPage()
+    },
     methods: {
         fetchUserData() {
             },
             fetchMyBooksPage() {            
                 let url = "http://localhost:" + port + "/my_books"
+                console.log("session st", sessionStorage.getItem('user_email'))
+                console.log('le deuxiieme', [JSON.stringify(sessionStorage.getItem('user_email'))])
+                const requestBody = {
+                    email: sessionStorage.getItem('user_email')
+                };
                 fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
                         //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
                     },
-                    body: JSON.stringify(sessionStorage.getItem('user_email'))
+                    body: JSON.stringify(requestBody)
                 })
-                    .then(response => response.text())
+                    .then(response => {
+                        console.log('pouet');
+                        console.log('donc on a a raw', response);
+                        if (response.status >= 200 && response.status <= 299) {
+                            const temp = response.json();
+                            console.log('pouet bis',temp);
+                            return temp;
+                        } else {
+                            return response;
+                        }
+                    })
                     .then(data => {
                         // Traiter la réponse du serveur
-                        data = JSON.parse(data);
- //                       //FETCH BOOKS THAT ARE SPECIFIED IN DATA//////////////////////
+                        //data = JSON.parse(data);
+                        console.log('et ici ?', data)
+                        if(data.status=="success"){
+                            this.books = data.donnees
+                        } else {
+                            this.books = []
+                            console.log("no books borrowed")
+                        }
+                        
+                        
                     }).catch(error => {
                         // Gérer les erreurs
                         console.error("Erreur lors de la réception du formulaire du formulaire :", error);

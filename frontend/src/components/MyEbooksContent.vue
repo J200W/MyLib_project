@@ -1,18 +1,18 @@
 <template>
     <div id="myEbooksList">
         <div class="myEbooks" v-for="book in books" :key="book.id">
-                <router-link class="bookLongCard" :to="{ path: '/BookDetails', query: { name: book.title } }">
-                  <div class = "picture"><img :src="book.src" alt="{{book.title}}"/></div>
+                <router-link class="bookLongCard" :to="{ path: '/BookDetails', query: { name: book.titre } }">
+                  <div class = "picture"><img :src="book.src" alt="{{book.titre}}"/></div>
 
 
                   <div class = "datas">
-                    <div class = "to_line"><p class="titre">Title :</p> <p>{{ book.title }}</p></div>
-                    <div class="to_line"><p class="titre">Author :</p><p>{{ book.author }}</p></div>
-                    <div class="to_line"><p class="titre">Library :</p><p>{{ book.library }}</p></div>
-                    <div class="to_line"><p class="titre">Release date :</p><p>{{ book.date }}</p></div>
+                    <div class = "to_line"><p class="titre">Title :</p> <p>{{ book.titre }}</p></div>
+                    <div class="to_line"><p class="titre">Author :</p><p>{{ book.auteur }}</p></div>
+                    <div class="to_line"><p class="titre">Library :</p><p>{{ book.id_Biblio }}</p></div>
+                    <div class="to_line"><p class="titre">Release date :</p><p>{{ new Date(book.date_parution).toDateString() }}</p></div>
                   </div>
                   <div class = "datas">
-                    <div class="to_line"><p class="titre">Remaining loan time : </p><p>{{ book.time }}</p></div>
+                    <div class="to_line"><p class="titre">Remaining loan time : </p><p>{{ ((new Date(book.fin_emprunt).getTime()) - (new Date(book.debut_emprunt).getTime()))/ (1000 * 3600 * 24) }} days</p></div>
                     <div class="to_line"><p class="titre">On loan</p><p>Yes</p></div>
                   </div>
 

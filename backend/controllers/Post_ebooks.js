@@ -3,6 +3,7 @@ const { prepare_response } = require('./Tools_controllers');
 const {list_books} = require("../database/listBooks");
 const {execute_query} = require("../database/Connection");
 const mysql = require("mysql2/promise");
+const {get_particular_books} = require("./Get_ebooks");
 
 async function req_listEbooks(title, category=[], theme=[]){
     // Retourne une réponse JSON
@@ -32,7 +33,7 @@ async function req_listEbooks(title, category=[], theme=[]){
         query = query + ' AND theme = ?'
         themeList.pop()
     }
-    let result = await execute_query(query, [title, category, theme], "select")
+    let [result] = await execute_query(query, [title, category, theme], "select")
     return prepare_response(result, result, 'filled list', 'empty list');
 
 }
@@ -53,8 +54,11 @@ async function req_research(title) {
 async function req_my_books(id_client) {
     try {
 
-        const query = "SELECT * FROM emprunter WHERE mail_Clients=?";
+        const query = "SELECT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=?";
         const [rows] = await execute_query(query, [id_client], "select");
+        //return get_particular_books(rows)
+        //console.log(rows)
+        //console.log(rows.length)
         return prepare_response(rows.length > 0, rows, 'Livres empruntés trouvés', 'Pas de livres empruntés trouvés');
     } catch (error) {
         console.error("Error listing books:", error);

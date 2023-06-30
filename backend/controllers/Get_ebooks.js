@@ -67,7 +67,7 @@ var books = [
     },
 ];
 
-async function get_particular_books(particularity="current", type="image"){
+async function get_particular_books(books, particularity="current", type="image"){
     // Retourne une réponse JSON
 
     var similarImagePromises = books.map((book) => retrieveImage(book));

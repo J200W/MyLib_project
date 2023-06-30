@@ -61,6 +61,7 @@ app.use(
 app.use(express.json()); // for parsing application/json
 
 app.post("*", async (req, res) => {
+  console.log('==============================');
   const datas = req.body;
   var response_funct = prepare_response(
     false,
@@ -69,6 +70,8 @@ app.post("*", async (req, res) => {
     "Erreur de réponse du serveur"
   );
   //console.log(datas, response_funct)
+
+  console.log('MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM');
 
   switch (req.originalUrl) {
     case "/modify_myAccount": // COMPONENT MyAccount.vue
@@ -151,9 +154,12 @@ app.post("*", async (req, res) => {
 
     case "/my_books": // COMPONENT: ?
       	// Retourne une réponse JSON
-        req_my_books(email).then((result) => {
+        console.log(req.body)
+        req_my_books(req.body.email).then((result) => { //req.body.mail_client
+          console.log(result)
             res.header("Content-Type", "application/json");
             res.json(result);
+
         })
         /*
 		my_books(req.body.mail_client).then((result) => {
