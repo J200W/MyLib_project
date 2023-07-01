@@ -61,7 +61,6 @@ app.use(
 app.use(express.json()); // for parsing application/json
 
 app.post("*", async (req, res) => {
-  console.log('==============================');
   const datas = req.body;
   var response_funct = prepare_response(
     false,
@@ -71,7 +70,6 @@ app.post("*", async (req, res) => {
   );
   //console.log(datas, response_funct)
 
-  console.log('MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM');
 
   switch (req.originalUrl) {
     case "/modify_myAccount": // COMPONENT MyAccount.vue
@@ -230,7 +228,7 @@ app.post("*", async (req, res) => {
 		break;
       
       case "/send_research_fromNavBar": //  VIEW: SearchBook, COMPONENT: SearchBookComponent
-        req_listEbooks(datas.title).then((result) => {
+        req_listEbooks(datas.researched_name, datas.category, datas.theme).then((result) => {
             res.header("Content-Type", "application/json");
             res.json(result);
         });
@@ -247,6 +245,19 @@ app.post("*", async (req, res) => {
 			res.json([{ message: "no book found matching research" }]);
         }
       });*/
+
+      break;
+
+      case "/post_particular_book_url": //  VIEW: SearchBook, COMPONENT: SearchBookComponent
+        req_listEbooks(datas.researched_name, datas.category, datas.theme).then((result) => {
+          res.header("Content-Type", "application/json");
+          res.json(result);
+          /*get_particular_books(result).then((finalresult) => {
+            res.header("Content-Type", "application/json");
+            res.json(finalresult);
+          });*/
+        });
+      
 
       break;
 

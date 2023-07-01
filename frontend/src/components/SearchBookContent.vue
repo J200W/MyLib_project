@@ -4,7 +4,7 @@ import functions_nav from "@/router/functions_nav";
 
 const admin = true
 const isDisabled = true 
-
+const books = sessionStorage.getItem('book_list')
 
 </script>
 
@@ -14,14 +14,14 @@ const isDisabled = true
         <div class="searchBook" v-for="book in books" :key="book.id">
             <router-link class="bookLongCard-search" :to="{ path: '/BookDetails', query: { id: book.id } }">
                 <div class="bookImg">
-                    <img :src="book.src" alt="{{book.title}}" />
+                    <img :src="book.src" alt="{{book.titre}}" />
                 </div>
                     <div class="bookInfo">
-                        <p><span class="titleBook-search">{{ book.title }}</span></p>
-                        <p><span>Author: </span>{{ book.author }}</p>
-                        <p><span>Date: </span>{{ book.date }}</p>
-                        <p><span>Library: </span>{{ book.library }}</p>
-                        <p><span>Genre: </span>{{ book.genre }}</p>
+                        <p><span class="titleBook-search">{{ book.titre }}</span></p>
+                        <p><span>Author: </span>{{ book.auteur }}</p>
+                        <p><span>Date: </span>{{ book.date_parution }}</p>
+                        <p><span>Library: </span>{{ book.id_Biblio }}</p>
+                        <p><span>Genre: </span>{{ book.category }}</p>
                         <p><span>Theme: </span>{{ book.theme }}</p>
                     </div>
                     <div v-show="admin">
@@ -46,7 +46,7 @@ const isDisabled = true
 
 export default {
         name: 'SearchBookContent',
-        props: ['books'],
+        props: ['books'],       
         methods: {
             
         

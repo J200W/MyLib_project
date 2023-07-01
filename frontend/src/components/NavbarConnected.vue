@@ -227,7 +227,9 @@ export default
                     event.preventDefault();
 
                     let datas = {
-                        researched_name: this.researched_name
+                        researched_name: this.researched_name,
+                        category: [],
+                        theme: []
                     };
 
                     fetch("http://localhost:"+ port +"/send_research_fromNavBar", {
@@ -241,6 +243,7 @@ export default
                         .then(response => response.text())
                         .then(data => {
                             // Traiter la réponse du serveur
+                            console.log("recieved data, reload page")
                             sessionStorage.setItem('research', this.researched_name);
                             if (this.$route.path !== '/SearchBook') {
                                 this.$router.push('/SearchBook');

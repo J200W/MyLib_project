@@ -9,7 +9,7 @@ import {port} from "../../../backend/controllers/Tools_controllers";
 import { ref, onMounted } from 'vue';
 const image = ref(null);
 const isLoading = ref(false);
-var research_data = sessionStorage.getItem('research');
+var research_data = ref(sessionStorage.getItem('research'));
 
 var connected = sessionStorage.getItem('connected');
 
@@ -64,17 +64,31 @@ export default {
     methods: {
         fetchBooksUrl() {
 
-            fetch("http://localhost:" + port + "/get_books_url")
-                .then(response => response.text())
-                .then(data => {
-                    // Traiter la réponse du serveur
-                    console.log("Recherche reçu", data);
-                    this.book_list = JSON.parse(data);
-                    sessionStorage.setItem('book_list', data);
-                }).catch(error => {
-                    // Gérer les erreurs
-                    console.error("Erreur lors de l'envoi du formulaire :", error);
-                });
+            //this.researched_name = research_data.value
+            let datas = {
+                        researched_name: sessionStorage.getItem('research'),
+                        category: [],
+                        theme: []
+                    };
+            fetch("http://localhost:"+ port +"/post_particular_book_url", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                        //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                    },
+                    body: JSON.stringify(datas)
+                })
+            .then(response => response.text())
+            .then(data => {
+                // Traiter la réponse du serveur
+                this.book_list = JSON.parse(data);
+                sessionStorage.setItem('book_list', data);
+            }).catch(error => {
+                // Gérer les erreurs
+                console.error("Erreur lors de l'envoi du formulaire :", error);
+            });
+        
+            
         }
     }
 }
