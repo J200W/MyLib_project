@@ -81,9 +81,9 @@ export default {
             .then(response => response.text())
             .then(data => {
                 // Traiter la réponse du serveur
-                this.book_list = JSON.parse(data);
+                this.book_list = data.donnees //JSON.parse(data.donnees);
                 console.log("le booklist qui va etre enregistré", [this.book_list.donnees])
-                sessionStorage.setItem('book_list', data);
+                sessionStorage.setItem('book_list', data.donnees);
             }).catch(error => {
                 // Gérer les erreurs
                 console.error("Erreur lors de l'envoi du formulaire :", error);

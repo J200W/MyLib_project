@@ -6,7 +6,7 @@ const {retrieveImageCarousel, retrievePDF} = require("../scripts/firebase_functi
 const mysql = require("mysql2/promise");
 const {get_particular_books} = require("./Get_ebooks");
 
-async function req_listEbooks(reqBody){
+async function req_listEbooks(title, category=[], theme=[]){
     // Retourne une réponse JSON
     var categoryList = category
     var themeList = theme

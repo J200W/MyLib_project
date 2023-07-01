@@ -4,7 +4,7 @@ import functions_nav from "@/router/functions_nav";
 
 const admin = true
 const isDisabled = true 
-const books = JSON.parse(sessionStorage.getItem('book_list')).donnees
+const books = JSON.parse(sessionStorage.getItem('book_list')) //.donnees // TANT QUE BUG
 console.log("books = ", [books])
 
 </script>

@@ -124,7 +124,7 @@ app.post("*", async (req, res) => {
 
     case "/list_books": // VIEW: ?
 		  // Retourne une réponse JSON
-        req_listEbooks(datas.title, datas.category, datas.theme).then((result) => {
+        req_listEbooks(datas.researched_name, datas.category, datas.theme).then((result) => {
             res.header("Content-Type", "application/json");
             res.json(result);
         });
@@ -260,15 +260,15 @@ app.post("*", async (req, res) => {
         req_listEbooks(datas.researched_name, datas.category, datas.theme).then((result) => {
           console.log("result partiel ?", [result.donnees])
           res.header("Content-Type", "application/json");
-          return res.json(result);
+          /*return */ res.json(result);
           /*get_particular_books(result).then((finalresult) => {
             res.header("Content-Type", "application/json");
             res.json(finalresult);
           });*/
-        }).then((jisonnedResp) => {
+        }) /*.then((jisonnedResp) => {
           console.log("result jisonned ?", [jisonnedResp])
           return jisonnedResp;
-        });
+        }); */
 
 
       break;
