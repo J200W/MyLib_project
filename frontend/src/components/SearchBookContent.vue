@@ -4,7 +4,8 @@ import functions_nav from "@/router/functions_nav";
 
 const admin = true
 const isDisabled = true 
-const books = sessionStorage.getItem('book_list')
+const books = JSON.parse(sessionStorage.getItem('book_list')).donnees
+console.log("books = ", [books])
 
 </script>
 
@@ -19,10 +20,10 @@ const books = sessionStorage.getItem('book_list')
                     <div class="bookInfo">
                         <p><span class="titleBook-search">{{ book.titre }}</span></p>
                         <p><span>Author: </span>{{ book.auteur }}</p>
-                        <p><span>Date: </span>{{ book.date_parution }}</p>
+                        <p><span>Date: </span>{{ new Date(book.date_parution).toDateString() }}</p>
                         <p><span>Library: </span>{{ book.id_Biblio }}</p>
-                        <p><span>Genre: </span>{{ book.category }}</p>
-                        <p><span>Theme: </span>{{ book.theme }}</p>
+                        <p><span>Genre: </span>{{ book.name_category }}</p>
+                        <p><span>Theme: </span>{{ book.name_theme }}</p>
                     </div>
                     <div v-show="admin">
                         <button @click="remove_book()" class ="bookButton" id="deleteButton">Delete</button>

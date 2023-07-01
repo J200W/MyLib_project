@@ -250,12 +250,16 @@ app.post("*", async (req, res) => {
 
       case "/post_particular_book_url": //  VIEW: SearchBook, COMPONENT: SearchBookComponent
         req_listEbooks(datas.researched_name, datas.category, datas.theme).then((result) => {
+          console.log("result partiel ?", [result.donnees])
           res.header("Content-Type", "application/json");
-          res.json(result);
+          return res.json(result);
           /*get_particular_books(result).then((finalresult) => {
             res.header("Content-Type", "application/json");
             res.json(finalresult);
           });*/
+        }).then((jisonnedResp) => {
+          console.log("result jisonned ?", [jisonnedResp])
+          return jisonnedResp;
         });
       
 

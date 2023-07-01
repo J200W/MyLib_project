@@ -9,19 +9,14 @@ async function req_listEbooks(title, category=[], theme=[]){
     // Retourne une réponse JSON
     categoryList = category
     themeList = theme
-    query = 'SELECT * FROM Ebook'
-    if(categoryList.length>0 ){
-        query = query + ' JOIN est_un on est_un.id_ebook=Ebook.id_ebook'
-    }if(themeList.length>0){
-        query = query + ' JOIN parle_de on parle_des.id_ebook=Ebook.id_ebook'
-    }
+    query = 'SELECT * FROM Ebook JOIN (Select group_concat(name_category) as name_category, est_un.id_ebook as id from est_un group by est_un.id_ebook) grp_cat on grp_cat.id=Ebook.id_ebook JOIN (Select group_concat(name_theme) as name_theme, parle_de.id_ebook as id from parle_de group by parle_de.id_ebook) grp_th on grp_th.id=Ebook.id_ebook'
     if(title.length>0){
         query = query + " WHERE titre LIKE CONCAT('%', ?, '%')"
     }
-    else if(categoryList ){
+    else if(categoryList.length>0 ){
         query = query + ' WHERE category = ?'
         categoryList.pop()
-    }else if(themeList){
+    }else if(themeList.length>0){
         query = query + ' WHERE theme = ?'
         themeList.pop()
     }
@@ -33,7 +28,9 @@ async function req_listEbooks(title, category=[], theme=[]){
         query = query + ' AND theme = ?'
         themeList.pop()
     }
+    query = query + " group by Ebook.id_ebook"
     let [result] = await execute_query(query, [title, category, theme], "select")
+    console.log("result ", [result])
     return prepare_response(result, result, 'filled list', 'empty list');
 
 }
@@ -99,7 +96,7 @@ async function req_emprunt_dates(id_client, id_book){
 async function req_book_details_show(id_book){
     try {
 
-        const query = "SELECT * FROM Ebook WHERE id_Ebook=?";
+        const query = "SELECT * FROM Ebook  JOIN (Select group_concat(name_category) as name_category, est_un.id_ebook as id from est_un group by est_un.id_ebook) grp_cat on grp_cat.id=Ebook.id_ebook JOIN (Select group_concat(name_theme) as name_theme, parle_de.id_ebook as id from parle_de group by parle_de.id_ebook) grp_th on grp_th.id=Ebook.id_ebook WHERE Ebook.id_Ebook=? group by Ebook.id_ebook";
         const [rows] = await execute_query(query, [id_book], "select");
         return prepare_response(rows.length > 0, rows, 'Book found', 'Book not found');
     } catch (error) {

@@ -72,13 +72,13 @@ var theme = [
             <div id="left-left-section">
                 <p v-if="admin" id="bookTitle">Title:
                     <!-- <span>{{ book.title }}</span> -->
-                    <span v-if="!admin">{{ book.title }}</span>
-                    <input v-else @click="console.log(book.title)" v-model="book.title" placeholder="Author" />
+                    <span v-if="!admin">{{ book.titre }}</span>
+                    <input v-else @click="console.log(book.titre)" v-model="book.titre" placeholder="Author" />
                 </p>
                 <p id="bookTitle" v-else>
-                    <span>{{ book.title }}</span>
+                    <span>{{ book.titre }}</span>
                 </p>
-                <img id="bookImg" :src="book.src" alt="{{ book.title }}">
+                <img id="bookImg" :src="book.src" alt="{{ book.titre }}">
                 <router-link v-if="!admin" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
 
                 <button v-else @click="save_book_information()" id="borrow-book">Save Information</button>
@@ -102,8 +102,8 @@ var theme = [
                     <button v-if="!admin" @click="add_to_fav()" id="button-add-fav">Add to Favorites</button>
                 </div>
                 <p>Author :
-                    <span v-if="!admin">{{ book.author }}</span>
-                    <input v-else @click="console.log(book.author)" v-model="book.author" placeholder="Author" />
+                    <span v-if="!admin">{{ book.auteur }}</span>
+                    <input v-else @click="console.log(book.auteur)" v-model="book.auteur" placeholder="Author" />
 
                 </p>
                 <hr>
@@ -115,19 +115,19 @@ var theme = [
                 <hr>
                 <p>Release :
                     <!-- <span>{{ book.date }}</span> -->
-                    <span v-if="!admin">{{ book.date }}</span>
-                    <input type="date" v-else @click="console.log(book.date)" v-model="book.date" placeholder="Edition" />
+                    <span v-if="!admin">{{ book.date_parution }}</span>
+                    <input type="date" v-else @click="console.log(book.date_parution)" v-model="book.date_parution" placeholder="Date" />
                 </p>
                 <hr>
                 <p>Languages :
-                    <span v-if="!admin">{{ book.language }}</span>
+                    <span v-if="!admin">{{ book.langue }}</span>
                     <!-- <span v-if="!admin" >{{book.language}}</span> -->
-                    <input v-else v-model="book.language" placeholder="Edition" />
+                    <input v-else v-model="book.langue" placeholder="Language" />
                 </p>
                 <hr>
                 <p>Genre :
                     <!-- <span>{{ book.genre }}</span> -->
-                    <span v-if="!admin">{{ book.genre }}</span>
+                    <span v-if="!admin">{{ book.name_category }}</span>
                     <!-- <input v-else @click="console.log(book.genre)" v-model="book.genre" placeholder="Edition" /> -->
                 <div class="bookAdminCompSelector">
                     <select v-if="admin">
@@ -145,18 +145,18 @@ var theme = [
                 <hr>
                 <p>Theme :
                     <!-- <span>{{ book.theme }}</span> -->
-                    <span v-if="!admin">{{ book.theme }}</span>
+                    <span v-if="!admin">{{ book.name_theme }}</span>
                     <!-- <input v-else @click="console.log(book.theme)" v-model="book.theme" placeholder="Edition" /> -->
                 <div class="bookAdminCompSelector">
-                    <select v-if="admin" v-model="book.theme">
+                    <select v-if="admin" v-model="book.name_theme">
                         <option v-for="t in theme" :key="t">{{ t.text }}</option>
                         <!-- <option>Romance</option> -->
                     </select>
-                    <select v-if="admin" v-model="book.theme">
+                    <select v-if="admin" v-model="book.name_theme">
                         <option v-for="t in theme" :key="t">{{ t.text }}</option>
                         <!-- <option>Romance</option> -->
                     </select>
-                    <select v-if="admin" v-model="book.theme">
+                    <select v-if="admin" v-model="book.name_theme">
                         <option v-for="t in theme" :key="t">{{ t.text }}</option>
                         <!-- <option>Romance</option> -->
                     </select>
@@ -165,8 +165,8 @@ var theme = [
                 <hr>
                 <p>Pages :
                     <!-- <span>{{ book.pages }}</span> -->
-                    <span v-if="!admin">{{ book.pages }}</span>
-                    <input type="number" min="0" v-else @click="console.log(book.pages)" v-model="book.pages" placeholder="Edition" />
+                    <span v-if="!admin">{{ book.nb_pages }}</span>
+                    <input type="number" min="0" v-else @click="console.log(book.nb_pages)" v-model="book.nb_pages" placeholder="Number pages" />
                 </p>
             </div>
         </div>

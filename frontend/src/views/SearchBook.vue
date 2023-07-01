@@ -82,6 +82,7 @@ export default {
             .then(data => {
                 // Traiter la réponse du serveur
                 this.book_list = JSON.parse(data);
+                console.log("le booklist qui va etre enregistré", [this.book_list.donnees])
                 sessionStorage.setItem('book_list', data);
             }).catch(error => {
                 // Gérer les erreurs
