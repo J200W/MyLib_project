@@ -22,6 +22,7 @@ async function connectToDatabase() {
 
 async function execute_query(query, params, mode) {
   try {
+    console.log("result partiel ?", [])
     const connection = await connectToDatabase();
     const [rows] = await connection.query(query, params);
     connection.end();
