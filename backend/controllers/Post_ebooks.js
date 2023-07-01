@@ -146,7 +146,20 @@ async function req_share_book(reqBody) {
 }
 
 
+async function req_similarEbooks(author){
+    // Retourne une réponse JSON
+    categoryList = category
+    themeList = theme
+    query = 'SELECT * FROM Ebook WHERE auteur=? LIMIT 4'
+    
+    let [result] = await execute_query(query, [auteur], "select")
+    console.log("result ", [result])
+    return prepare_response(result, result, 'filled list', 'empty list');
+
+}
+
+
 // =========================================================
 // EXPORTATIONS
 module.exports = { req_listEbooks, req_my_books, req_read_book, req_book_details_show, req_book_details_mod, req_emprunt_dates
-, req_share_book};
+, req_share_book, req_similarEbooks};
