@@ -3,7 +3,7 @@
 import PopUpAddFav from "@/components/PopUpAddFav.vue";
 import ModalBox from "./ModalBox.vue";
 
-const admin = true
+const admin = false
 
 </script>
 
@@ -13,33 +13,41 @@ const admin = true
     <div id="allPage">
         <div id="left-section">
             <div id="left-left-section">
-                <p id="bookTitle">Title:
+                <p><b> Title : </b>
                     <!-- <span>{{ book.title }}</span> -->
                     <span v-if="!admin">{{ book.title }}</span>
                     <input v-else @click="console.log(book.title)" v-model="book.title" placeholder="Author" />
                 </p>
                 <img id="bookImg" :src="book.src" alt="{{ book.title }}">
                 <router-link v-if="!admin" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
+                
 
-                <button v-else @click="save_book_information()" id="borrow-book">Save Information</button>
+                <!-- <button v-else @click="save_book_information()" id="borrow-book">Save Information</button> -->
+                <PopUpAddFav v-show="!admin"></PopUpAddFav>
                 <!-- add the popup -->
 
+                <div v-show="admin">
+                    <p> <b>Stock : </b>
+                        <span v-if="!admin">{{ book.stock }}</span>
+                        <input v-else @click="console.log(book.stock)" v-model="book.stock" placeholder="Author" />
+                        </p>
+                        <hr>
+                    <p><b>Source : </b>
+                        <!-- <span>{{ book.source }}</span> -->
+                        <span v-if="!admin">{{ book.source }}</span>
+                        <input v-else @click="console.log(book.source)" v-model="book.source" placeholder="Author" />
+                    </p>
+                </div>
 
-                <p>Stock:
-                    <!-- <span>{{ book.stock }}</span> -->
-                    <span v-if="!admin">{{ book.stock }}</span>
-                    <input v-else @click="console.log(book.stock)" v-model="book.stock" placeholder="Author" />
-                </p>
-                <p>Source:
-                    <!-- <span>{{ book.source }}</span> -->
-                    <span v-if="!admin">{{ book.source }}</span>
-                    <input v-else @click="console.log(book.source)" v-model="book.source" placeholder="Author" />
-                </p>
+                
+                
+                
             </div>
             <div id="bookInfo">
-                <div id="bookFav">
-                    <h2>Info</h2>
-                    <button v-if="!admin" @click="add_to_fav()" id="button-add-fav">Add to Favorites</button>
+                <div id="info">
+                    <h1><b>Info</b></h1>
+                    
+                    <!-- <button v-if="!admin" @click="add_to_fav()" id="button-add-fav">Add to Favorites</button> -->
                 </div>
                 <p>Author :
                     <span v-if="!admin">{{ book.author }}</span>
@@ -113,6 +121,19 @@ const admin = true
                     <span v-if="!admin">{{ book.pages }}</span>
                     <input v-else @click="console.log(book.pages)" v-model="book.pages" placeholder="Edition" />
                 </p>
+                <hr>
+                <div v-show="!admin">
+                    <p>Stock:
+                        <span v-if="!admin">{{ book.stock }}</span>
+                        <input v-else @click="console.log(book.stock)" v-model="book.stock" placeholder="Author" />
+                        </p>
+                        <hr>
+                    <p>Source:
+                        <!-- <span>{{ book.source }}</span> -->
+                        <span v-if="!admin">{{ book.source }}</span>
+                        <input v-else @click="console.log(book.source)" v-model="book.source" placeholder="Author" />
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -128,12 +149,24 @@ const admin = true
             </div>
 
             <!-- <button v-show="admin" @click="save_book_information()" id="button-save-info">Save Information</button> -->
-            <ModalBox id="button-save-info" v-show="admin" @click="save_book_information()"></ModalBox>
+            <!-- <ModalBox id="button-save-info" v-show="admin" @click="save_book_information()"></ModalBox> -->
+            <div class="sectionModal">
+                <button v-show="admin" class="show-modal" id="borrow-book" @click="save_book_information()" >Save book info</button>
+
+                <div class="modal-box">
+                        <h2>Sucess!</h2>
+                        <h3>Book informations have been  sucessfully saved.</h3>
+
+                        <div class="buttons">
+                        <button class="close-btn" id="borrow-book">Close</button>
+                        </div>
+                </div>
+
+            </div>
 
         </div>
 
-        <!-- <ModalBox id="button-save-info" v-show="admin" @click="save_book_information()"></ModalBox> -->
-
+        
 
 
     </div>
@@ -149,6 +182,18 @@ const test_array = [1, 2, 3, 4]
 export default {
     name: 'BookDetailComp',
     props: ['book'],
+        mounted() {
+                const section = document.querySelector(".sectionModal"),
+                    showBtn = document.querySelector(".show-modal"),
+                    closeBtn = document.querySelector(".close-btn");
+
+                showBtn.addEventListener("click", () => section.classList.add("active"));
+
+                closeBtn.addEventListener("click", () =>
+                    section.classList.remove("active"),
+
+                );
+                },
 
         methods: {
 
@@ -187,6 +232,17 @@ export default {
 </script>
 
 <style scoped>
+
+
+.close-btn{
+    width: 100px;
+    height: 50px;
+
+}
+
+#info{
+    margin-bottom: 20px;
+}
 .btn-primary {
     margin-left: 40px;
     margin-top: 25px;
@@ -220,19 +276,12 @@ export default {
     z-index: 1;
 }
 
-    #button-save-info{
-        margin-top: 50px;
-        margin-left: 240px;
-        width: 200px;
-        height: 110px;
 
-    }
-
-    hr {
-        border: 0;
-        height: 1px;
-        background: black;
-    }
+hr {
+    border: 0;
+    height: 1px;
+    background: black;
+}
 
 #allPage {
     display: flex;
@@ -316,42 +365,116 @@ h2 {
     padding: 20px;
     border-radius: 20px;
     font-size: 2vmin;
-    overflow: auto;
 }
 
 #bookImg {
     margin: auto;
+    margin-bottom: 3vmin;
     display: block;
     max-width: 300px;
 }
 
 #borrow-book {
-    margin-top: 20px !important;
     margin-bottom: 20px !important;
     background-color: #A8A787;
     border: none;
     color: white;
-    padding: 15px 32px;
+    padding: 15px 8px;
     text-align: center;
     text-decoration: none;
     font-size: 1rem;
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 5px;
+    top: 60px;
 }
 
-#popupAddFav {
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-    cursor: pointer;
-}
 
 #borrow-book:hover {
     background-color: #D79262;
     color: white;
     transition: all 0.3s ease 0s;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+.sectionModal {
+
+  z-index: 1;
+  position: relative;
+
+}
+
+#modal-button {
+  font-size: 18px;
+  font-weight: 400;
+  padding: 14px 22px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+#modal-button:hover {
+  transition: 0.3s;
+  background-color: #b97b07;
+}
+button.show-modal,
+.modal-box {
+  position: absolute;
+  left: 50%;
+  top: 80%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+
+}
+.sectionModal.active .show-modal {
+  display: none;
+}
+
+
+.modal-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 380px;
+  width: 100%;
+  padding: 30px 20px;
+  border-radius: 24px;
+  background-color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  transform: translate(-50%, -50%) scale(1.4);
+}
+.sectionModal.active .modal-box {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1.2);
+}
+.modal-box i {
+  font-size: 70px;
+  color: #ecb41b;
+}
+.modal-box h2 {
+  margin-top: 20px;
+  font-size: 25px;
+  font-weight: 500;
+  color: #333;
+}
+.modal-box h3 {
+  font-size: 16px;
+  margin-top: 15px;
+  font-weight: 400;
+  color: #333;
+  text-align: center;
+}
+.modal-box .buttons {
+  margin-top: 25px;
+}
+.modal-box button {
+  font-size: 15px;
+  padding: 9px 18px;
+  margin: 0 10px;
 }
 
 @media (max-width: 1000px) {
@@ -394,6 +517,22 @@ h2 {
         display: block;
         max-width: 200px;
     }
+
+    .sectionModal{
+        margin-top: 100px
+    }
+
+    .modal-box{
+        margin-top: -150px;
+    }
+
+    #borrow-book{
+        top: -60px
+    }
+
+ 
+
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 
 }
 </style>

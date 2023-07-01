@@ -1,40 +1,158 @@
+faire un v for
+<script>
+
+</script>
+
+
 <template>
-    <h1 id="title-comments">Comments</h1>
+ 
+    <h1 id="title-comments"> <b>Average Score :</b> <b id="average-score">4.8 / 5</b></h1>
+    
+    <div class="user-comment">
+        <div>
+            <h5 >Your comment</h5>
+            <div class="rating-box">
+                <div class="stars">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+            </div>
+            <textarea id="resume" placeholder=" Type your comment ..."></textarea>
+        </div>
+        <button @click="send_comment()" id="comment-button">comment</button>
+    </div>
+    
+    
+
+    <h1 id="title-comments">Reader Comments</h1>
     <div id="clear">
         <div class="commentBox">
-            <div class="leftPanelImg">
                 <div class="rightPanel">
-                    
-                    <span>Username</span>
-                    <div class="date">16/06/2023</div>
+                    <span><b>Username</b></span>
+                    <h6>16/06/2023</h6>
                     <div class="rating-number">
-                        <span id="rating-number">5</span> /5
+                        <span id="rating-number">5</span> / 5
                     </div>
                     <hr>
-                    <p class="theComment">COMMENTAIRE
-                        
-                    </p>
+                    <p class="theComment">Comment</p>
+                    <button id="delete-button">delete</button>
+                    
                 </div>
-                <button id="delete-button">delete</button>
-            </div>
+                
         </div>
-
-       
-
     </div>
 
 </template>
 
 <script>
 
+export default {
+    name: 'BookDetailComp',
+    props: ['book'],
+    data() {
+        return {
+        // Initialized to zero to begin
+        current_index: 0,
+        }
+    },
+            mounted() {
+                const stars = document.querySelectorAll(".stars i");
 
+                // Loop through the "stars" NodeList
+                stars.forEach((star, index1) => {
+                // Add an event listener that runs a function when the "click" event is triggered
+                star.addEventListener("click", () => {
+                    // Loop through the "stars" NodeList Again
+                    stars.forEach((star, index2) => {
+                    // Add the "active" class to the clicked star and any stars with a lower index
+                    // and remove the "active" class from any stars with a higher index
+                    index1 >= index2 ? star.classList.add("active") : star.classList.remove("active");
+                    
+                        });
+                    });
+                    
+                });
+                stars.forEach((star, index3) => {
+                star.addEventListener("click", () => {
+                    // console.log(star.className)
+                    this.current_index = index3 + 1
+                    console.log(this.current_index)
+
+                });
+
+                }
+            )
+        },
+        methods: {
+            send_comment(){
+                console.log("send comment")
+            }
+        }
+       
+}
 
 
 </script>
 
-<style>
+<style scoped>
+
+    #comment-button{
+        background-color: #D79262;
+        width: 100px;
+        font-family:Verdana, Geneva, Tahoma, sans-serif;
+        border-radius: 5px;
+        
+    }
+
+    #comment-button:hover{
+        background-color: #f6e387;
+    }
+
+    button:hover{
+        background-color: #f6e387;
+    }
+
+    button:last-of-type{
+        margin-left: auto;
+        margin-right: 10%;
+    }
 
 
+    .user-comment{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin-left: 5%;
+        gap: 1em;
+    }
+
+    .user-comment.active{
+        background: #ffffff;
+    }
+
+    #resume{
+        border-radius: 0px;
+        width: 90%;
+        height: 200px;
+    }
+
+
+    #average-score{
+        color: rgb(222, 151, 11);
+    }
+
+
+    #delete-button{
+        position: relative;  
+        background-color: #A8A787;
+    }
+
+    #delete-button:hover{
+        background-color: #D79262;
+    }
 
 
     #title-comments {
@@ -55,6 +173,8 @@
         padding: 1%;
         width: 90%;
         display: flex;
+        flex-direction: column;
+        justify-content: flex-start; 
         border-radius: 15px;
         margin-top: 20px !important;
         color: black;
@@ -62,27 +182,7 @@
         margin: 0 auto;
     }
 
-    .leftPanelImg {
-        float: left;
-        flex: 1;
-    }
 
-    .leftPanelImg img {
-        min-height: 150px;
-        max-height: 150px;
-        min-width: 150px;
-        max-width: 150px;
-        border-radius: 100%;
-        height: auto;
-        width: auto;
-        object-fit: cover;
-        background: none;
-    }
-
-    .leftPanelImg button {
-        border-radius: 10%;
-        
-    }
 
     #rating-number {
         color: #f27100;
@@ -90,4 +190,28 @@
         font-weight: bold;
         margin: 0 auto;
     }
+
+
+    .rating-box {
+    border-radius: 25px;
+    width: 450px;
+    margin-bottom: 25px;
+    }
+
+    .rating-box .stars {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    }
+    .stars i {
+    color: #aeaeae;
+    font-size: 35px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    }
+    .stars i.active {
+    color: #ff9c1a;
+    }
+
+
 </style>

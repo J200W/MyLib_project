@@ -1,13 +1,13 @@
 <template>
     <div class="sectionModal">
-        <button class="show-modal">Save book info</button>
+        <button class="modal-button show-modal">Save book info</button>
 
           <div class="modal-box">
             <h2>Sucess!</h2>
             <h3>Book informations have been  sucessfully saved.</h3>
 
             <div class="buttons">
-              <button class="close-btn">Close</button>
+              <button class="modal-button close-btn">Close</button>
             </div>
           </div>
 
@@ -53,17 +53,15 @@
 
 }
 
-button {
+#modal-button {
   font-size: 18px;
   font-weight: 400;
-  color: #fff;
   padding: 14px 22px;
   border: none;
-  background: #ecb41b;
   border-radius: 6px;
   cursor: pointer;
 }
-button:hover {
+#modal-button:hover {
   transition: 0.3s;
   background-color: #b97b07;
 }

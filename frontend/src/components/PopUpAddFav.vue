@@ -71,20 +71,10 @@
     display: block;
 }
 
-.body{
-    /* height: 100vh;  */
-    /* display: flex;  */
-    /* align-items: center;  */
-    /* justify-content: center ;  */
-    /* background-color: #f2f2f2; */
-    z-index: 2;
-    overflow : hidden;
-    position: static;
-    margin-left: 50px;
-}
 
 .toast{
     /* display: none; */
+    z-index: 2;
     position: fixed;
     top: 25px;
     right: 35px;
@@ -202,9 +192,10 @@ button{
         padding: 15px 30px;
         text-align: center;
         text-decoration: none;
-        font-size: 2vmin;
+        /* font-size: 2vmin; */
         margin: 4px 2px;
         cursor: pointer;
+        width: 300px;
         border-radius: 5px;
 }
 
