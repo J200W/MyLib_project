@@ -5,7 +5,7 @@ import SearchBookSort from "@/components/SearchBookSort.vue";
 import SearchBookContent from "@/components/SearchBookContent.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import functions_nav from "@/router/functions_nav";
-import {port} from "../../../backend/controllers/Tools_controllers";
+import { port } from "../../../backend/controllers/Tools_controllers";
 import { ref, onMounted } from 'vue';
 const image = ref(null);
 const isLoading = ref(false);
@@ -26,14 +26,22 @@ if (connected == null) {
     <div v-else>
         <NavbarConnected v-if="connected" />
         <NavbarNonConnected v-if="!connected" />
-        <SearchBookSort :result="research_data" />
-        <SearchBookContent :books="book_list" />
+        <h1 id="title-MyEbook">Results for "{{ this.search }}"</h1>
+        <SearchBookSort :result="research_data" @category="updateCategory" @theme="updateTheme" />
+        <SearchBookContent v-if="book_list" :books="book_list" />
         <TheFooter />
     </div>
 </template>
   
 
 <style>
+#title-MyEbook {
+    font-size: 5vmin;
+    text-align: left;
+    color: "#000000";
+    margin-left: 5%;
+}
+
 #loading {
     font-size: 30px;
     font-weight: bold;
@@ -54,23 +62,67 @@ export default {
     name: 'SearchBook',
     data() {
         return {
-            researched_name: '',
+            search: '',
             book_list: [],
         };
     },
     mounted() {
+        const category = sessionStorage.getItem('category');
+        const theme = sessionStorage.getItem('theme');
         this.fetchBooksUrl();
     },
     methods: {
+        updateCategory(category) {
+            sessionStorage.setItem('category', category);
+            window.location.reload();
+        },
+        updateTheme(theme) {
+            sessionStorage.setItem('theme', theme);
+            window.location.reload();
+        },
         fetchBooksUrl() {
+            var link = window.location.href;
+            var url = new URL(link);
+            this.search = url.searchParams.get("search");
 
-            fetch("http://localhost:" + port + "/get_books_url")
+            if (this.search == null) {
+                this.search = sessionStorage.getItem('search');
+            }
+            else sessionStorage.setItem('search', this.search);
+
+            this.search = this.search.replace(/\+/g, ' ');
+            sessionStorage.setItem('search', this.search);
+            var category = url.searchParams.get("category");
+            var theme = url.searchParams.get("theme");
+            var sort =  url.searchParams.get("sort_filter");
+
+            // replace + by space
+            this.search = this.search.replace(/\+/g, ' ');
+            this.search = this.search.replace("%C5%93", 'oe');
+            this.search = this.search.replace("%27", '\'');
+
+            let datas = {
+                search: this.search,
+                category: category,
+                theme: theme, 
+                sort_filter: sort
+            };
+
+
+            fetch("http://localhost:" + port + "/list_books",
+                {
+                    method: 'POST',
+                    body: JSON.stringify(datas),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
                 .then(response => response.text())
                 .then(data => {
                     // Traiter la réponse du serveur
-                    console.log("Recherche reçu", data);
-                    this.book_list = JSON.parse(data);
-                    sessionStorage.setItem('book_list', data);
+                    var books = JSON.parse(data)
+                    this.book_list = books.donnees;
+
                 }).catch(error => {
                     // Gérer les erreurs
                     console.error("Erreur lors de l'envoi du formulaire :", error);

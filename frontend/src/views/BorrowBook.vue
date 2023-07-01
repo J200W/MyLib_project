@@ -57,12 +57,28 @@ var connected = true;
 export default {
     name: 'BorrowBook',
     data() { return {} },
+    mounted() {
+        var connected = sessionStorage.getItem('connected');
+
+        if (connected == null) {
+            connected = false;
+        }
+        else if (connected == "true") {
+            connected = true;
+        }
+        else {
+            connected = false;
+        }
+
+        if (!connected) {
+            this.$router.push({ name: 'LogIn' });
+        }
+    },
     methods: {}
 }
 </script>
 
 <style scoped>
-
 h2 {
     font-size: 5vmin;
 }

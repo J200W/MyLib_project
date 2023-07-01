@@ -24,6 +24,13 @@ async function retrieveImageCarousel(book) {
     };
 }
 
+async function retrieveImage(book) {
+    var image_ref = "";
+    if (typeof book.name_img === "string")
+        image_ref = await getDownloadURL(ref(storageImages, book.name_img));
+    return image_ref
+}
+
 async function retrievePDF(book) {
     var pdf_ref = "";
     if (typeof book.pdf === "string")
@@ -43,6 +50,11 @@ async function retrievePDF(book) {
         description: book.description,
         pdf: book.pdf,
     };
+}
+
+async function readPDF(name_pdf) {
+    pdf_ref = await getDownloadURL(ref(storagePDF, name_pdf));
+    return pdf_ref;
 }
 
 async function upload_book_pdf(pdfFile, name, metadata) {
@@ -71,7 +83,9 @@ async function upload_book_img(imgFile, name, metadata) {
 
 module.exports = {
     retrieveImageCarousel,
+    retrieveImage,
     retrievePDF,
     upload_book_pdf,
-    upload_book_img
+    upload_book_img,
+    readPDF,
 };

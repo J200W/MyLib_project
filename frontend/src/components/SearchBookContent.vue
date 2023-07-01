@@ -1,9 +1,20 @@
 <script setup>
-
+import moment from 'moment';
 import functions_nav from "@/router/functions_nav";
 
-const admin = true
-const isDisabled = true 
+var admin = sessionStorage.getItem('admin');
+
+if (admin == null) {
+    admin = false;
+}
+else if (admin == "true") {
+    admin = true;
+}
+else {
+    admin = false;
+}
+console.log("admin : ", admin)
+const isDisabled = true
 
 
 </script>
@@ -11,18 +22,18 @@ const isDisabled = true
 
 <template>
     <div id="searchBookList">
-        <div class="searchBook" v-for="book in books" :key="book.id">
-            <router-link class="bookLongCard-search" :to="{ path: '/BookDetails', query: { id: book.id } }">
+        <div class="searchBook" v-for="book in books" :key="book.id_ebook">
+            <router-link class="bookLongCard-search" :to="{ path: '/BookDetails', query: { id: book.id_ebook } }">
                 <div class="bookImg">
-                    <img :src="book.src" alt="{{book.title}}" />
+                    <img :src="book.name_img" alt="{{book.name_img}}" />
                 </div>
                     <div class="bookInfo">
-                        <p><span class="titleBook-search">{{ book.title }}</span></p>
-                        <p><span>Author: </span>{{ book.author }}</p>
-                        <p><span>Date: </span>{{ book.date }}</p>
-                        <p><span>Library: </span>{{ book.library }}</p>
-                        <p><span>Genre: </span>{{ book.genre }}</p>
-                        <p><span>Theme: </span>{{ book.theme }}</p>
+                        <p class="bookInfo-section"><span class="titleBook-search">{{ book.titre }}</span></p>
+                        <p bookInfo-section><span>Author: </span>{{ book.auteur }}</p>
+                        <p bookInfo-section><span>Date: </span>{{ moment(book.date_parution).format("YYYY-MM-DD") }}</p>
+                        <p bookInfo-section><span>Library: </span>{{ book.id_Biblio }}</p>
+                        <p bookInfo-section><span>Categories: </span>{{ book.category[0] }}, {{ book.category[1] }}, {{ book.category[2] }}</p>
+                        <p bookInfo-section><span>Themes: </span>{{ book.theme[0] }}, {{ book.theme[1] }}, {{ book.theme[2] }}</p>
                     </div>
                     <div v-show="admin">
                         <button @click="remove_book()" class ="bookButton" id="deleteButton">Delete</button>
@@ -193,11 +204,10 @@ export default {
         padding-left: 20px;
     }
 
-    .bookInfo p {
+    .bookInfo-section {
         text-align: left;
         flex: 1;
         font-size: 2vmin;
-        margin: 3px;
     }
 
     .bookInfo span {

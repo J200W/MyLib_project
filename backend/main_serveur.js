@@ -11,14 +11,15 @@ const retrievePDF = firebase.retrievePDF;
 
 const {
   req_listEbooks,
-  req_research,
   req_my_books,
   req_books_details,
+  req_get_pdf,
 } = require("./controllers/Post_ebooks.js");
 const {
   req_signIn,
   req_modifyMyAccount,
   req_signUp,
+  req_borrowed,
 } = require("./controllers/Post_user.js");
 const {
   req_new_book,
@@ -113,7 +114,7 @@ app.post("*", async (req, res) => {
 
     case "/list_books": // VIEW: ?
       // Retourne une réponse JSON
-      req_listEbooks(datas).then((result) => {
+      req_listEbooks(datas.search, datas.category, datas.theme, datas.sort_filter).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });
@@ -204,23 +205,17 @@ app.post("*", async (req, res) => {
       break;
 
     case "/send_research_fromNavBar": //  VIEW: SearchBook, COMPONENT: SearchBookComponent
-      req_research(req.body.title).then((result) => {
+      req_listEbooks(datas.search).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });
-      // Retourne une réponse JSON
-      /*
-      research(req.body.title).then((result) => {
-        if (result.length > 0) {
-			res.header("Content-Type", "application/json");
-			res.json([{ list: result }]);
-        } 
-		else {
-			res.header("Content-Type", "application/json");
-			res.json([{ message: "no book found matching research" }]);
-        }
-      });*/
-
+      break;
+    
+    case "/get_pdf":
+      req_get_pdf(datas.id_ebook).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
       break;
 
     case "/send_login_forgotMdp": // COMPONENT: ForgottenPassword
@@ -235,14 +230,19 @@ app.post("*", async (req, res) => {
         )
       );
       break;
+    
+      case "/borrowed":
+        res.header("Content-Type", "application/json");
+        req_borrowed(datas.email, datas.id_ebook).then((result) => {
+          res.json(result);
+        });
+        break;
 
     default:
       response_funct.messageFail = "Erreur d'URL pour la requête POST";
       res.status(404).json(response_funct);
       break;
   }
-  //res.header("Content-Type", "application/json");
-  //res.json(response_funct);
 });
 
 // Vérifie si la requête est une requête GET
@@ -285,26 +285,6 @@ app.get("*", async (req, res) => {
         res.header("Content-Type", "application/json");
         res.json(result.donnees);
       });
-      /*
-		res.header("Content-Type", "application/json");
-		console.log("books : ", books);
-		const imagePromises = books.map((book) => retrieveImage(book));
-		const imageUrls = await Promise.all(imagePromises);
-		res.json(imageUrls);*/
-      break;
-
-    case "/get_pdf_url": // VIEW: MainPage
-      get_particular_books("undefined", "pdf").then((result) => {
-        res.header("Content-Type", "application/json");
-        res.json(result.donnees);
-      });
-      // Renvoie les images des livres en tant que réponse JSON venant de firebase
-      /*
-		res.header("Content-Type", "application/json");
-		console.log("books : ", books);
-		const pdfPromises = books.map((book) => retrieveImage(book));
-		const pdfUrls = await Promise.all(pdfPromises);
-		res.json(pdfUrls);*/
       break;
 
     default:

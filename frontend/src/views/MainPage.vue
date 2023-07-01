@@ -99,6 +99,9 @@ export default {
                 .then(response => response.json())
                 .then(data => {
                     this.new_books = data;
+                    if (this.new_books.length == 0) {
+                        this.new_books = null;
+                    }
                 })
                 .catch(error => {
                     console.log(error);
@@ -116,6 +119,9 @@ export default {
                 .then(data => {
                     this.discover_books = data;
                     console.log(this.discover_books);
+                    if (this.discover_books.length == 0) {
+                        this.discover_books = null;
+                    }
                 })
                 .catch(error => {
                     console.log(error);
@@ -131,7 +137,10 @@ export default {
             })
                 .then(response => response.json())
                 .then(data => {
-                    sessionStorage.setItem('current_books', JSON.stringify(data));
+                    this.current_books = data;
+                    if (this.current_books.length == 0) {
+                        this.current_books = null;
+                    }
                 })
                 .catch(error => {
                     console.log(error);

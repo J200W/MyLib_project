@@ -2,45 +2,47 @@
 const { prepare_response } = require('./Tools_controllers');
 const {list_books} = require("../database/listBooks");
 const {execute_query} = require("../database/Connection");
-const {retrieveImageCarousel, retrievePDF} = require("../scripts/firebase_function");
+const {retrieveImageCarousel, readPDF, retrieveImage} = require("../scripts/firebase_function");
 const mysql = require("mysql2/promise");
 
-async function req_listEbooks(reqBody){
+async function req_listEbooks(title, category="", theme="", sort_filter=""){
     // Retourne une réponse JSON
-    var category = reqBody.category
-    var theme = reqBody.theme
-    query = 'SELECT * FROM Ebook'
-    if(category.length>0 ){
-        query = query + ' WHERE category = ?'
-        category.pop()
-    }else if(theme.length>0){
-        query = query + ' WHERE theme = ?'
-        theme.pop()
-    }
-    while (category.length > 0){
-        query = query + ' AND category = ?'
-        category.pop()
-    }
-    while (theme.length > 0){
-        query = query + ' AND theme = ?'
-        theme.pop()
-    }
-    let result = await execute_query(query, reqBody, "select")
-    return prepare_response(result, result, 'filled list', 'empty list');
+    query = 'SELECT DISTINCT * FROM Ebook'
+    var params = [title]
+    if (title == null) title = ""
+    if (category == null || category == "None" || category == "none") category = ""
+    if (theme == null || theme == "None" || theme == "none") theme = ""
 
+    if(category != "" ){
+        query = query + ' JOIN est_un ON Ebook.id_ebook = est_un.id_ebook AND name_category = ?'
+        params.push(category)
+    } 
+    if(theme != ""){
+        query = query + ' JOIN parle_de ON Ebook.id_ebook = parle_de.id_ebook AND name_theme = ?'
+        params.push(theme)
+    }
+    if(title != ""){
+        query = query + " WHERE titre LIKE CONCAT('%', ?, '%')"
+    }
+    if(sort_filter != ""){
+        query = query + " ORDER BY " + sort_filter
+    }
+    
+    console.log(category, theme)
+    console.log(query)
+    let [result] = await execute_query(query, params, "select");
+    for (let i = 0; i < result.length; i++) {
+        result[i].name_img = await retrieveImage(result[i]);
+        var id_Biblio = await get_biblio(result[i].id_Biblio);
+        result[i].id_Biblio = id_Biblio.donnees;
+        var categories = await get_category_theme(result[i].id_ebook, "category");
+        result[i].category = categories.donnees;
+        var themes = await get_category_theme(result[i].id_ebook, "theme");
+        result[i].theme = themes.donnees;
+    }
+    return prepare_response(result.length > 0, result, 'Result list filled', 'Result list empty');
 }
 
-async function req_research(title) {
-    try {
-        const query = "SELECT * FROM Ebook WHERE titre LIKE CONCAT('%', ?, '%')" //"SELECT * FROM Ebook WHERE titre LIKE '%" + title + %'";
-        const [result] = await execute_query(query, [title], "select");
-        return prepare_response(result.length > 0, result, 'Résultats de recherche obtenu', 'Pas de résultats de recherche');
-
-    } catch (error) {
-        console.error("Error during research:", error);
-        return prepare_response(false, [title], undefined, 'Erreur du serveur pour la recherche');
-    }
-}
 
 async function req_my_books(id_client) {
     try {
@@ -115,6 +117,18 @@ async function get_biblio(id_Biblio) {
     }
 }
 
+async function req_get_pdf(id_ebook) {
+    try {
+        const query = "SELECT name_pdf FROM Ebook WHERE id_ebook=?";
+        const [rows] = await execute_query(query, [id_ebook], "select");
+        const pdf = await readPDF(rows[0].name_pdf);
+        return prepare_response(rows.length > 0, pdf, 'PDF found', 'PDF not found');
+    } catch (error) {
+        console.error("Error listing pdf:", error);
+        return prepare_response(false, [id_ebook], undefined, 'Erreur du serveur pour la recherche');
+    }
+}
+
 // =========================================================
 // EXPORTATIONS
-module.exports = { req_listEbooks, req_research, req_my_books, req_books_details };
+module.exports = { req_listEbooks, req_my_books, req_books_details, req_get_pdf };

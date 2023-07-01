@@ -38,6 +38,19 @@ async function req_signIn(email, password, admin) {
     }
 }
 
+async function req_borrowed(email, id_ebook) { // Récupère les livres empruntés par un utilisateur
+    try {
+        const query = "SELECT * FROM emprunter WHERE mail_Clients = ? AND id_ebook = ? AND fin_emprunt > CURRENT_TIMESTAMP()";
+        const [rows] = await execute_query(query, [email, id_ebook], "select")
+        return prepare_response(rows.length > 0, rows, 'Borrowed books', 'No borrowed books');
+    }
+    catch (error) {
+        console.error("Error during authentication:", error);
+        //res.status(500).send('Internal server error');
+        return prepare_response(false, {email: email}, undefined, 'Server error during SignIn' );
+    }
+}
+
 async function req_modifyMyAccount(reqBody) {
     // Vérifier si des données ont été envoyées
     try {
@@ -62,4 +75,4 @@ async function req_modifyMyAccount(reqBody) {
 
 // =========================================================
 // EXPORTATIONS
-module.exports = { req_modifyMyAccount, req_signIn, req_signUp};
+module.exports = { req_modifyMyAccount, req_signIn, req_signUp, req_borrowed};

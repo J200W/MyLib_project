@@ -3,6 +3,7 @@
 import PopUpAddFav from "@/components/PopUpAddFav.vue";
 import ModalBox from "./ModalBox.vue";
 import moment from "moment";
+import { port } from "../../../backend/controllers/Tools_controllers";
 
 var admin = sessionStorage.getItem("admin");
 
@@ -80,9 +81,10 @@ var theme = [
                     <span>{{ book.titre }}</span>
                 </p>
                 <img id="bookImg" :src="book.src" alt="{{ book.titre }}">
-                <router-link v-if="!admin" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
+                <router-link v-if="!borrowed" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
+                <router-link v-if="borrowed" to="/ReadBook" id="borrow-book">Read Book</router-link>
 
-                <button v-else @click="save_book_information()" id="borrow-book">Save Information</button>
+                <button v-if="admin" @click="save_book_information()" id="borrow-book">Save Information</button>
                 <!-- add the popup -->
 
 
@@ -96,7 +98,7 @@ var theme = [
                 <p>Source:
                     <!-- <span>{{ book.source }}</span> -->
                     <span v-if="!admin">{{ book.library }}</span>
-                    <input v-else v-model="book.library" readonly/>
+                    <input v-else v-model="book.library" readonly />
                 </p>
             </div>
             <div id="bookInfo">
@@ -116,21 +118,22 @@ var theme = [
                     <input v-else @click="console.log(book.edition)" v-model="book.edition" placeholder="Edition" />
                 </p>
                 <hr>
-                <p>Release :
+                <p>Release date :
                     <!-- <span>{{ book.date }}</span> -->
                     <span v-if="!admin">{{ moment(book.date).format("YYYY-MM-DD") }}</span>
-                    <input type="date" v-else @click="console.log(book.date)" v-model="book.date" placeholder="{{ moment(book.date).format('YYYY-MM-DD') }}" />
+                    <input type="date" v-else @click="console.log(book.date)" v-model="book.date"
+                        placeholder="{{ moment(book.date).format('YYYY-MM-DD') }}" />
                 </p>
                 <hr>
-                <p>Languages :
+                <p>Language :
                     <span v-if="!admin">{{ book.language }}</span>
                     <!-- <span v-if="!admin" >{{book.language}}</span> -->
                     <input v-else v-model="book.language" placeholder="Language" />
                 </p>
                 <hr>
-                <p>Category :
+                <p>Categories :
                     <!-- <span>{{ book.category }}</span> -->
-                    <span v-if="!admin">{{ book.category }}</span>
+                    <span v-if="!admin">{{ book.category[0] }}, {{ book.category[1] }}, {{ book.category[2] }}</span>
                     <!-- <input v-else @click="console.log(book.category)" v-model="book.category" placeholder="Edition" /> -->
                 <div class="bookAdminCompSelector">
                     <select v-if="admin">
@@ -149,9 +152,9 @@ var theme = [
 
                 </p>
                 <hr>
-                <p>Theme :
+                <p>Themes :
                     <!-- <span>{{ book.theme }}</span> -->
-                    <span v-if="!admin">{{ book.theme }}</span>
+                    <span v-if="!admin">{{ book.theme[0] }}, {{ book.theme[1] }}, {{ book.theme[2] }}</span>
                     <!-- <input v-else @click="console.log(book.theme)" v-model="book.theme" placeholder="Edition" /> -->
                 <div class="bookAdminCompSelector">
                     <select v-if="admin">
@@ -175,7 +178,8 @@ var theme = [
                 <p>Pages :
                     <!-- <span>{{ book.pages }}</span> -->
                     <span v-if="!admin">{{ book.pages }}</span>
-                    <input type="number" min="0" v-else @click="console.log(book.pages)" v-model="book.pages" placeholder="Edition" />
+                    <input type="number" min="0" v-else @click="console.log(book.pages)" v-model="book.pages"
+                        placeholder="Edition" />
                 </p>
             </div>
         </div>
@@ -202,7 +206,15 @@ const test_array = [1, 2, 3, 4]
 
 export default {
     name: 'BookDetailComp',
+    data() {
+        return {
+            borrowed: null,
+        }
+    },
     props: ['book'],
+    mounted() {
+        this.fetchBorrowed()
+    },
     methods: {
         confirm_action() {
             let test = confirm("Are you sure you want to erase the previous informations with the new ones ? ");
@@ -215,6 +227,33 @@ export default {
                 console.log("save cancel")
                 // ne rien faire de plus
             }
+        },
+
+        fetchBorrowed() {
+            sessionStorage.setItem("id_book", this.book.id_ebook)
+            var link = window.location.href;
+            const id_ebook = parseInt(link.split("?id=").pop());
+            let datas = JSON.stringify({
+                email: sessionStorage.getItem('user_email'),
+                id_ebook: id_ebook
+            })
+            fetch("http://localhost:" + port + "/borrowed",
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: datas
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status !== 'success') {
+                        this.borrowed = false
+                    }
+                    else {
+                        this.borrowed = true
+                    }
+                })
         },
 
         save_book_information() {
@@ -257,7 +296,7 @@ export default {
 }
 
 #bookTitle {
-    margin:auto;
+    margin: auto;
     font-size: 2vmin;
     margin-bottom: 1vmin;
 }
@@ -307,7 +346,7 @@ export default {
     flex: 1;
 }
 
-.bookAdminCompSelector > select {
+.bookAdminCompSelector>select {
     padding: 1vmin;
     margin: 0.2vmin;
 }

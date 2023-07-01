@@ -7,9 +7,7 @@
 
 <template>
     <div id="pdfViewer">
-
         <vue-pdf-embed :source="src" />
-
     </div>
 </template>
 
