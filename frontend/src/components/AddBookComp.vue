@@ -1,6 +1,6 @@
 <script setup >
 import functions_nav from "@/router/functions_nav";
-import {port} from "../../../backend/controllers/Tools_controllers";
+import { port } from "../../../backend/controllers/Tools_controllers";
 </script>
 
 
@@ -10,10 +10,10 @@ import {port} from "../../../backend/controllers/Tools_controllers";
             <div id="right-addbook">
                 <img id="preview-img" src="https://via.placeholder.com/200" alt="preview image">
                 <label for="book-file">Book cover</label>
-                <input required class="file" type="file" name="book-file" id="book-img" @change="previewImg"
+                <input required class="file" type="file" name="book-file-img" id="book-file-img" @change="previewImg"
                     accept="image/*">
                 <label for="book-file">PDF file</label>
-                <input required class="file" type="file" name="book-file" id="book-file" accept=".pdf">
+                <input required class="file" type="file" name="book-file-pdf" id="book-file-pdf" accept=".pdf">
             </div>
 
             <div id="left-addbook">
@@ -28,18 +28,6 @@ import {port} from "../../../backend/controllers/Tools_controllers";
                     </div>
                 </div>
 
-
-                <div class="form-line">
-                    <div class="form-subline">
-                        <label for="ebook-date" class="ebook-label">Release date</label>
-                        <input required type="date" name="ebook-date" class="ebook-input">
-                    </div>
-                    <div class="form-subline">
-                        <label for="ebook-language" class="ebook-label">Language</label>
-                        <input required type="text" name="ebook-language" class="ebook-input">
-                    </div>
-                </div>
-
                 <div class="form-line">
                     <div class="form-subline">
                         <label for="ebook-editor" class="ebook-label">Editor</label>
@@ -47,12 +35,27 @@ import {port} from "../../../backend/controllers/Tools_controllers";
                     </div>
                     <div class="form-subline">
                         <label for="ebook-page" class="ebook-label">Number of pages</label>
-                        <input required type="number" name="ebook-page" class="ebook-input">
+                        <input required min="0" type="number" name="ebook-page" class="ebook-input">
                     </div>
                 </div>
 
                 <div class="form-line">
-                    <div class="form-subline-selector">
+                    <div class="form-subline-3">
+                        <label for="ebook-date" class="ebook-label">Release date</label>
+                        <input required type="date" name="ebook-date" class="ebook-input">
+                    </div>
+                    <div class="form-subline-3">
+                        <label for="ebook-language" class="ebook-label">Language</label>
+                        <input required type="text" name="ebook-language" class="ebook-input">
+                    </div>
+                    <div class="form-subline-3">
+                        <label for="ebook-stock" class="ebook-label">Stock</label>
+                        <input min="0" required type="number" name="ebook-stock" class="ebook-input">
+                    </div>
+                </div>
+
+                <div class="form-line">
+                    <div class="form-subline-3">
                         <label for="ebook-category1" class="ebook-label">Category n°1</label>
                         <select name="ebook-category1" class="ebook-input">
                             <option value="None">None</option>
@@ -79,7 +82,7 @@ import {port} from "../../../backend/controllers/Tools_controllers";
                         </select>
                     </div>
 
-                    <div class="form-subline-selector">
+                    <div class="form-subline-3">
                         <label for="ebook-category2" class="ebook-label">Category n°2</label>
                         <select name="ebook-category2" class="ebook-input">
                             <option value="None">None</option>
@@ -106,7 +109,7 @@ import {port} from "../../../backend/controllers/Tools_controllers";
                         </select>
                     </div>
 
-                    <div class="form-subline-selector">
+                    <div class="form-subline-3">
                         <label for="ebook-category3" class="ebook-label">Category n°3</label>
                         <select name="ebook-category3" class="ebook-input">
                             <option value="None">None</option>
@@ -135,7 +138,7 @@ import {port} from "../../../backend/controllers/Tools_controllers";
                 </div>
 
                 <div class="form-line">
-                    <div class="form-subline-selector">
+                    <div class="form-subline-3">
                         <label for="ebook-theme1" class="ebook-label">Theme n°1</label>
                         <select name="ebook-theme1" class="ebook-input">
                             <option value="None">None</option>
@@ -163,7 +166,7 @@ import {port} from "../../../backend/controllers/Tools_controllers";
                             <option value="comics">Comics</option>
                         </select>
                     </div>
-                    <div class="form-subline-selector">
+                    <div class="form-subline-3">
                         <label for="ebook-theme2" class="ebook-label">Theme n°2</label>
                         <select name="ebook-theme2" class="ebook-input">
                             <option value="None">None</option>
@@ -191,7 +194,7 @@ import {port} from "../../../backend/controllers/Tools_controllers";
                             <option value="comics">Comics</option>
                         </select>
                     </div>
-                    <div class="form-subline-selector">
+                    <div class="form-subline-3">
                         <label for="ebook-theme3" class="ebook-label">Theme n°3</label>
                         <select name="ebook-theme3" class="ebook-input">
                             <option value="None">None</option>
@@ -220,9 +223,6 @@ import {port} from "../../../backend/controllers/Tools_controllers";
                         </select>
                     </div>
                 </div>
-
-                <label for="ebook-biblio" class="ebook-label">Name of the library owner</label>
-                <input required type="text" name="ebook-biblio" class="ebook-input">
 
                 <label for="ebook-description" class="ebook-label">Description</label>
                 <textarea name="ebook-description" class="ebook-input description" cols="30" rows="10"></textarea>
@@ -300,7 +300,7 @@ import {port} from "../../../backend/controllers/Tools_controllers";
     width: 45%;
 }
 
-.form-subline-selector {
+.form-subline-3 {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -398,26 +398,29 @@ export default
             submitForm(event) {
                 event.preventDefault();
                 const form = document.querySelector('#addbook-form');
+                const bookFile = document.querySelector('#book-file-pdf').files[0];
+                const coverFile = document.querySelector('#book-file-img').files[0];
+
                 const formData = new FormData(form);
-                const bookFile = document.querySelector('#book-file').files[0];
-                console.log(bookFile);
-                const ebook_title =  formData.get('ebook-title');
-                const ebook_author =  formData.get('ebook-author');
-                const ebook_date =  formData.get('ebook-date');
-                const ebook_language =  formData.get('ebook-language');
-                const ebook_editor =  formData.get('ebook-editor');
-                const ebook_page =  formData.get('ebook-page');
-                const ebook_category1 =  formData.get('ebook-category1');
-                const ebook_category2 =  formData.get('ebook-category2');
-                const ebook_category3 =  formData.get('ebook-category3');
+                const ebook_title = formData.get('ebook-title');
+                const ebook_author = formData.get('ebook-author');
+                var ebook_date = formData.get('ebook-date');
 
-                const ebook_theme1 =  formData.get('ebook-theme1');
-                const ebook_theme2 =  formData.get('ebook-theme2');
-                const ebook_theme3 =  formData.get('ebook-theme3');
+                const ebook_stock = formData.get('ebook-stock');
+                const ebook_language = formData.get('ebook-language');
+                const ebook_editor = formData.get('ebook-editor');
+                const ebook_page = formData.get('ebook-page');
+                const ebook_category1 = formData.get('ebook-category1');
+                const ebook_category2 = formData.get('ebook-category2');
+                const ebook_category3 = formData.get('ebook-category3');
 
-                const ebook_biblio =  formData.get('ebook-biblio');
-                const ebook_description =  formData.get('ebook-description');
-                const ebook_img =  formData.get('book-file').name;
+                const ebook_theme1 = formData.get('ebook-theme1');
+                const ebook_theme2 = formData.get('ebook-theme2');
+                const ebook_theme3 = formData.get('ebook-theme3');
+
+                const ebook_biblio = formData.get('ebook-biblio');
+                const ebook_description = formData.get('ebook-description');
+                const ebook_img = formData.get('book-file-img').name;
 
                 const ebook = {
                     title: ebook_title,
@@ -431,55 +434,95 @@ export default
                     biblio: ebook_biblio,
                     description: ebook_description,
                     img: ebook_img,
-                    pdf: bookFile.name
+                    pdf: bookFile.name,
+                    admin: sessionStorage.getItem('user_email'),
+                    stock: ebook_stock
                 }
-
-                console.log(ebook);
-
-                fetch("http://localhost:"+ port + "/add_book", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
-                        //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
-                },
-                body: JSON.stringify(ebook)
-                }).
-                then(response => {
-                  console.log(response)
-                  alert(response);
-
-
-            })
-
-                /*formData.append('book-file', bookFile);
-                console.log(formData);
-                axios.post('http://localhost:3000/api/books', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
+                try {
+                    // Convert book file to base64
+                    const readerPDF = new FileReader();
+                    readerPDF.readAsArrayBuffer(bookFile);
+                    readerPDF.onloadend = function () {
+                        var arrayBuffer = readerPDF.result;
+                        var bytes = new Uint8Array(arrayBuffer);
+                        var data_pdf = {
+                            pdf: bytes,
+                            name: bookFile.name
+                        }
+                        fetch("http://localhost:" + port + "/upload_book_pdf", {
+                            method: "POST",
+                            body: JSON.stringify(data_pdf),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status != "success") {
+                                throw new Error(data.message);
+                            }
+                        })
                     }
-                })
-                    .then(response => {
-                        console.log(response);
-                        this.$router.push({ name: 'Home' });
+                    // Convert image file to base64
+                    var readerIMG = new FileReader();
+                    readerIMG.readAsArrayBuffer(coverFile);
+                    readerIMG.onloadend = function () {
+                        var arrayBuffer = readerIMG.result;
+                        var bytes = new Uint8Array(arrayBuffer);
+                        var data_img = {
+                            img: bytes,
+                            name: coverFile.name
+                        }
+                        fetch("http://localhost:" + port + "/upload_book_img", {
+                            method: "POST",
+                            body: JSON.stringify(data_img),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status != "success") {
+                                throw new Error(data.message);
+                            }
+                        })
+                    }
+
+                    fetch("http://localhost:"+ port + "/add_book", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                            //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                    },
+                    body: JSON.stringify(ebook)
                     })
-                    .catch(error => {
-                        console.log(error);
-                    });*/
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status == "success") {
+                            alert(data.message);
+                            location.reload();
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                } catch (error) {
+                    alert(error.message);
+                }
             },
             previewImg() {
                 const preview = document.querySelector('#preview-img');
-                const file = document.querySelector('#book-img').files[0];
-                const reader = new FileReader();
+                const file = document.querySelector('#book-file-img').files[0];
+                const readerPREV = new FileReader();
 
-                reader.addEventListener("load", function () {
+                readerPREV.addEventListener("load", function () {
                     // convert image file to base64 string
-                    preview.src = reader.result;
+                    preview.src = readerPREV.result;
                 }, false);
 
                 if (file) {
-                    reader.readAsDataURL(file);
+                    readerPREV.readAsDataURL(file);
                 }
-                
+
             },
         }
     }

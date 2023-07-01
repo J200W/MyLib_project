@@ -2,8 +2,10 @@
 
 import PopUpAddFav from "@/components/PopUpAddFav.vue";
 import ModalBox from "./ModalBox.vue";
+import moment from "moment";
 
 var admin = sessionStorage.getItem("admin");
+
 
 if (admin == null) {
     admin = false;
@@ -62,7 +64,6 @@ var theme = [
     { value: "graphic-novel", text: "Graphic Novel" }
 ];
 
-
 </script>
 
 
@@ -73,7 +74,7 @@ var theme = [
                 <p v-if="admin" id="bookTitle">Title:
                     <!-- <span>{{ book.title }}</span> -->
                     <span v-if="!admin">{{ book.titre }}</span>
-                    <input v-else @click="console.log(book.titre)" v-model="book.titre" placeholder="Author" />
+                    <input v-else v-model="book.titre" placeholder="Author" />
                 </p>
                 <p id="bookTitle" v-else>
                     <span>{{ book.titre }}</span>
@@ -85,15 +86,17 @@ var theme = [
                 <!-- add the popup -->
 
 
+                <!--
                 <p>Stock:
-                    <!-- <span>{{ book.stock }}</span> -->
+                    <span>{{ book.stock }}</span>
                     <span v-if="!admin">{{ book.stock }}</span>
                     <input v-else @click="console.log(book.stock)" v-model="book.stock" type="number" min="0" />
-                </p>
+                </p> 
+                -->
                 <p>Source:
                     <!-- <span>{{ book.source }}</span> -->
-                    <span v-if="!admin">{{ book.source }}</span>
-                    <input v-else @click="console.log(book.source)" v-model="book.source" />
+                    <span v-if="!admin">{{ book.library }}</span>
+                    <input v-else v-model="book.library" readonly/>
                 </p>
             </div>
             <div id="bookInfo">
@@ -102,8 +105,8 @@ var theme = [
                     <button v-if="!admin" @click="add_to_fav()" id="button-add-fav">Add to Favorites</button>
                 </div>
                 <p>Author :
-                    <span v-if="!admin">{{ book.auteur }}</span>
-                    <input v-else @click="console.log(book.auteur)" v-model="book.auteur" placeholder="Author" />
+                    <span v-if="!admin">{{ book.author }}</span>
+                    <input v-else @click="console.log(book.author)" v-model="book.author" placeholder="Author" />
 
                 </p>
                 <hr>
@@ -115,28 +118,31 @@ var theme = [
                 <hr>
                 <p>Release :
                     <!-- <span>{{ book.date }}</span> -->
-                    <span v-if="!admin">{{ book.date_parution }}</span>
-                    <input type="date" v-else @click="console.log(book.date_parution)" v-model="book.date_parution" placeholder="Date" />
+                    <span v-if="!admin">{{ moment(book.date).format("YYYY-MM-DD") }}</span>
+                    <input type="date" v-else @click="console.log(book.date)" v-model="book.date" placeholder="{{ moment(book.date).format('YYYY-MM-DD') }}" />
                 </p>
                 <hr>
                 <p>Languages :
-                    <span v-if="!admin">{{ book.langue }}</span>
+                    <span v-if="!admin">{{ book.language }}</span>
                     <!-- <span v-if="!admin" >{{book.language}}</span> -->
-                    <input v-else v-model="book.langue" placeholder="Language" />
+                    <input v-else v-model="book.language" placeholder="Language" />
                 </p>
                 <hr>
-                <p>Genre :
-                    <!-- <span>{{ book.genre }}</span> -->
-                    <span v-if="!admin">{{ book.name_category }}</span>
-                    <!-- <input v-else @click="console.log(book.genre)" v-model="book.genre" placeholder="Edition" /> -->
+                <p>Category :
+                    <!-- <span>{{ book.category }}</span> -->
+                    <span v-if="!admin">{{ book.category }}</span>
+                    <!-- <input v-else @click="console.log(book.category)" v-model="book.category" placeholder="Edition" /> -->
                 <div class="bookAdminCompSelector">
                     <select v-if="admin">
+                        <option :key="book.category[0]">{{ book.category[0] }}</option>
                         <option v-for="c in category" :key="c">{{ c.text }}</option>
                     </select>
                     <select v-if="admin">
+                        <option :key="book.category[1]">{{ book.category[1] }}</option>
                         <option v-for="c in category" :key="c">{{ c.text }}</option>
                     </select>
                     <select v-if="admin">
+                        <option :key="book.category[2]">{{ book.category[2] }}</option>
                         <option v-for="c in category" :key="c">{{ c.text }}</option>
                     </select>
                 </div>
@@ -145,18 +151,21 @@ var theme = [
                 <hr>
                 <p>Theme :
                     <!-- <span>{{ book.theme }}</span> -->
-                    <span v-if="!admin">{{ book.name_theme }}</span>
+                    <span v-if="!admin">{{ book.theme }}</span>
                     <!-- <input v-else @click="console.log(book.theme)" v-model="book.theme" placeholder="Edition" /> -->
                 <div class="bookAdminCompSelector">
-                    <select v-if="admin" v-model="book.name_theme">
+                    <select v-if="admin">
+                        <option :key="book.theme[0]">{{ book.theme[0] }}</option>
                         <option v-for="t in theme" :key="t">{{ t.text }}</option>
                         <!-- <option>Romance</option> -->
                     </select>
-                    <select v-if="admin" v-model="book.name_theme">
+                    <select v-if="admin">
+                        <option :key="book.theme[1]">{{ book.theme[1] }}</option>
                         <option v-for="t in theme" :key="t">{{ t.text }}</option>
                         <!-- <option>Romance</option> -->
                     </select>
-                    <select v-if="admin" v-model="book.name_theme">
+                    <select v-if="admin">
+                        <option :key="book.theme[2]">{{ book.theme[2] }}</option>
                         <option v-for="t in theme" :key="t">{{ t.text }}</option>
                         <!-- <option>Romance</option> -->
                     </select>
@@ -165,8 +174,8 @@ var theme = [
                 <hr>
                 <p>Pages :
                     <!-- <span>{{ book.pages }}</span> -->
-                    <span v-if="!admin">{{ book.nb_pages }}</span>
-                    <input type="number" min="0" v-else @click="console.log(book.nb_pages)" v-model="book.nb_pages" placeholder="Number pages" />
+                    <span v-if="!admin">{{ book.pages }}</span>
+                    <input type="number" min="0" v-else @click="console.log(book.pages)" v-model="book.pages" placeholder="Edition" />
                 </p>
             </div>
         </div>
@@ -194,7 +203,6 @@ const test_array = [1, 2, 3, 4]
 export default {
     name: 'BookDetailComp',
     props: ['book'],
-
     methods: {
         confirm_action() {
             let test = confirm("Are you sure you want to erase the previous informations with the new ones ? ");

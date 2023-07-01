@@ -1,6 +1,8 @@
 <script setup>
 import function_nav from "@/router/functions_nav";
 import TheFooter from "@/components/TheFooter.vue";
+import { port } from "../../../backend/controllers/Tools_controllers";
+
 </script>
 
 <template>
@@ -78,7 +80,10 @@ button:hover {
 export default {
     name: 'HomePage',
     data() { return {} },
+    mounted() {
+    },
     methods: {
+        
     }
 }
 </script>
