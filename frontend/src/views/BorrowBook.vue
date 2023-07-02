@@ -1,86 +1,58 @@
 <script setup>
 import NavbarConnected from "@/components/NavbarConnected.vue";
 import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
-import TheFooter from '@/components/TheFooter.vue'
-import MyEbooksContent from "@/components/MyEbooksContent.vue";
+import TheFooter from '@/components/TheFooter.vue';
+import { ref } from 'vue';
 
-const book = [
-    {
-        id: 1,
-        title: "One Piece Tome 96",
-        src: require("@/assets/onepiece96.png"),
-        author: "Eiichiro Oda",
-        date: "04/11/2020",
-        library: "Bibliothèque de l'Université de Lille",
-        time: "34d 12h 32m",
-    },
-]
+const book = JSON.parse(sessionStorage.getItem('Book'));
+const bookSrc = ref(book.src);
+const bookTitre = ref(book.titre);
 
-function validateDate() {
-    var selectedDate = new Date(document.getElementById('dateInput').value);
-    var maxDate = new Date();
-    maxDate.setDate(maxDate.getDate() + 21); // Ajoute 21 jours à la date actuelle
-
-    if (selectedDate > maxDate) {
-        alert("La date saisie doit être postérieure de moins de 3 semaines à la date actuelle.");
-        return false;
-    }
-
-    return true;
-}
 var connected = true;
 </script>
 
 <template>
-    <NavbarConnected v-if="connected" />
-    <NavbarNonConnected v-if="!connected" />
+  <NavbarConnected v-if="connected" />
+  <NavbarNonConnected v-if="!connected" />
+  <body>
+  <img id="bookImg" :src="bookSrc" :alt="bookTitre">
+  <div class="form-container">
+    <div><h2 class ="titre">Enter the loan end date</h2></div>
 
-    <body>
-        <div class="form-container">
-            <h2>Enter the loan end date</h2>
-            <div class="form-group">
-                <form onsubmit="return validateDate()">
-                    <input type="date" id="dateInput" required>
-                </form>
-            </div>
-            <input type="submit" value="Borrow !" id="bouton">
-        </div>
-        <MyEbooksContent :books="book" />
-    </body>
+    <div class = "form-group">
+      <form>
+        <input type="date" id="dateInput" required>
+      </form>
+    </div>
+    <input type="submit" value="Confirm" class="bouton" onclick="
 
-    <TheFooter />
+            var selectedDate = new Date(document.getElementById('dateInput').value);
+            var maxDate = new Date();
+            maxDate.setDate(maxDate.getDate() + 21);
+            if (selectedDate > maxDate || selectedDate < new Date()) {
+               alert('La date saisie doit être postérieure de moins de 3 semaines à la date actuelle.');
+               return false;
+            }
+            return true;">
+
+  </div>
+
+  </body>
+
+  <TheFooter />
 </template>
-  
-  
-  
+
 <script>
 
 export default {
-    name: 'BorrowBook',
-    data() { return {} },
-    methods: {}
+  name: 'BorrowBook',
+  data() { return {} },
+  methods: {}
 }
 </script>
 
 <style scoped>
 
-h2 {
-    font-size: 5vmin;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-    max-width: 90%;
-}
-
-.form-container {
-    margin-top: 3vmin;
-
-/*
 #bookImg {
   margin: auto;
   display: block;
@@ -96,43 +68,25 @@ body {
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ccc;
-  background-color : #FFFFFF; */
-} 
+  background-color : #FFFFFF;
+}
 
 .form-group {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 label {
-    display: block;
-    font-weight: bold;
+  display: block;
+  font-weight: bold;
 }
 
 input,
 select {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-
-#bouton {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #D0AB77;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease 0s;
-    margin: auto;
-}
-
-#bouton:hover {
-    background-color: #D79262;
-    transition: all 0.3s ease 0s;
-}
 
 </style>
