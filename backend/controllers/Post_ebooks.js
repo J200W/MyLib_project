@@ -143,6 +143,57 @@ async function req_share_book(reqBody) {
     }
 }
 
+// ============================ FONCTIONS POUR LES COMMENTAIRES ============================
+// FONCTION qui permet d'ajouter un commentaire à un livre :
+// recoit en paramètre le mail du client, l'objet book avec son id et le commentaire
+async function req_new_comment(reqBody) {
+    let email_client = reqBody.newComment.email_client;
+    let id_ebook = reqBody.id_ebook;
+    let commentaire = reqBody.newComment.commentaire;
+    let note = reqBody.newComment.note;
+    let date_comment = reqBody.newComment.date_comment;
+    let query; let rows;
+    try {
+        if (reqBody.isNewComment) {
+            query = "INSERT INTO commenter (mail_Clients, id_ebook, commentaire, note, date_comment) VALUES (?, ?, ?, ?, ?)";
+            rows = await execute_query(query, [email_client, id_ebook, commentaire, note, date_comment], "insert");
+        }
+        else{
+            query = "UPDATE commenter SET commentaire=?, note=?, date_comment=? WHERE mail_Clients=? AND id_ebook=?";
+            rows = await execute_query(query, [commentaire, note, date_comment, email_client, id_ebook], "update");
+        }
+
+        return prepare_response(rows, reqBody, 'Comment added', 'Comment not added');
+    } catch (error) {
+        console.error("Error adding comment:", error);
+        return prepare_response(false, reqBody, undefined, 'Error during adding comment');
+    }
+}
+
+// FONCTION qui permet de supprimer un commentaire : recoit en paramètre l'id du livre et le mail du client
+async function req_delete_comment(reqBody) {
+    try {
+        let query = "DELETE FROM commenter WHERE mail_Clients=? AND id_ebook=?";
+        let rows = await execute_query(query, [reqBody.comment.email_client, reqBody.id_ebook], "delete");
+        return prepare_response(rows, reqBody, 'Comment deleted', 'Comment not deleted');
+    } catch (error) {
+        console.error("Error adding comment:", error);
+        return prepare_response(false, reqBody, undefined, 'Error during adding comment');
+    }
+}
+
+// FONCTION qui permet de récupérer les commentaires d'un livre : recoit en paramètre l'id du livre
+async function get_comments_for_ebook(reqBody) {
+    try {
+        const query = "SELECT Cm.*, pseudo_Clients from commenter as Cm JOIN Clients AS Cl on Cl.mail_Clients=Cm.mail_Clients WHERE id_ebook=?";
+        const [rows] = await execute_query(query, [reqBody.id_ebook], "select");
+        return prepare_response(rows, rows, 'Comments retrieved', 'Comments not retrieved');
+    } catch (error) {
+        console.error("Error adding comment:", error);
+        return prepare_response(false, reqBody, undefined, 'Error during adding comment');
+    }
+}
+
 
 async function req_similarEbooks(author){
     // Retourne une réponse JSON
@@ -220,4 +271,4 @@ async function get_biblio(id_Biblio) {
 // =========================================================
 // EXPORTATIONS
 module.exports = { req_listEbooks, req_my_books, req_read_book, req_book_details_show, req_book_details_mod, req_emprunt_dates
-, req_share_book, req_similarEbooks, req_books_details };
+, req_share_book, req_new_comment, req_delete_comment, get_comments_for_ebook, req_similarEbooks, req_books_details };

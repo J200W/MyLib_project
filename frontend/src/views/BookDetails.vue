@@ -30,7 +30,7 @@ if (connected == null) {
         <BookDetailsComp v-if="book" :book="book" />
 
         <Carousel :books="this.books" name="Similar books" />
-        <Comments />
+        <Comments v-if="book" :book="book" />
     </body>
     <TheFooter />
 </template>
@@ -85,7 +85,9 @@ export default {
             })
                 .then(response => response.json())
                 .then(data => {
-                    this.book = data.donnees;
+                  console.log(data.message)
+                  this.book = data.donnees;
+                  console.log(this.book)
                 })
                 .then(() => {
                     sessionStorage.setItem('book', JSON.stringify(this.book));

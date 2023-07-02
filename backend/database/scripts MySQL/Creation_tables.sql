@@ -3,7 +3,8 @@ create table Admin_biblio
     mail_admin   varchar(250) default '' not null
         primary key,
     mdp_admin    varchar(50)             null,
-    pseudo_admin varchar(50)             not null
+    pseudo_admin varchar(50)             not null,
+    bibliotheque varchar(50)             not null
 );
 
 create table Category
@@ -26,14 +27,17 @@ create table Ebook
 (
     id_ebook      bigint auto_increment
         primary key,
-    titre         varchar(50)  not null,
-    date_parution date         null,
-    auteur        varchar(50)  null,
-    nb_pages      varchar(50)  null,
-    langue        varchar(100) null,
-    editeur       varchar(50)  null,
-    age_limite    int          null,
-    id_Biblio     varchar(250) null,
+    titre         varchar(50)   not null,
+    date_parution date          null,
+    auteur        varchar(50)   null,
+    nb_pages      varchar(50)   null,
+    langue        varchar(100)  null,
+    editeur       varchar(50)   null,
+    name_img      varchar(50)   null,
+    name_PDF      varchar(200)  null,
+    id_Biblio     varchar(250)  null,
+    description   varchar(1000) not null,
+    stock         int           not null,
     constraint Ebook_ibfk_1
         foreign key (id_Biblio) references Admin_biblio (mail_admin)
 );
@@ -53,6 +57,7 @@ create table commenter
     id_ebook     bigint       default 0  not null,
     note         int                     null,
     commentaire  varchar(50)             null,
+    date_comment date                    not null,
     primary key (mail_Clients, id_ebook),
     constraint commenter_ibfk_1
         foreign key (mail_Clients) references Clients (mail_Clients),

@@ -11,7 +11,8 @@ const retrievePDF = firebase.retrievePDF;
 
 const {
   req_listEbooks, req_books_details, req_book_details_mod,
-  req_read_book, req_my_books, req_emprunt_dates, req_share_book
+  req_read_book, req_my_books, req_emprunt_dates, req_share_book,
+  req_new_comment, req_delete_comment, get_comments_for_ebook
 } = require("./controllers/Post_ebooks.js");
 const {
   req_signIn,
@@ -76,7 +77,7 @@ app.post("*", async (req, res) => {
     false,
     datas,
     undefined,
-    "Erreur de réponse du serveur"
+    "Error of answer from server"
   );
   //console.log(datas, response_funct)
 
@@ -187,6 +188,30 @@ app.post("*", async (req, res) => {
       })
       break;
 
+    case "/send_new_comment": // COMPONENT: Comment.vue
+        // Retourne une réponse JSON
+        req_new_comment(datas).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        })
+      break;
+
+    case "/delete_comment": // COMPONENT: Comment.vue
+        // Retourne une réponse JSON
+        req_delete_comment(datas).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        })
+      break;
+
+    case "/recup_comments_for_ebook": // COMPONENT: Comment.vue
+        // Retourne une réponse JSON
+        get_comments_for_ebook(datas).then((result) => {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        })
+      break;
+
 
     case "/my_books": // COMPONENT: ?
       	// Retourne une réponse JSON
@@ -234,7 +259,6 @@ app.post("*", async (req, res) => {
       });
       break;
 
-      break;
 
     case "/read_book": // COMPONENT: ?
       // Retourne une réponse JSON
