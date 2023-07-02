@@ -2,6 +2,7 @@
 import NavbarConnected from "@/components/NavbarConnected.vue";
 import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
 import TheFooter from '@/components/TheFooter.vue';
+import {port} from "../../../backend/controllers/Tools_controllers";
 import { ref } from 'vue';
 
 const book = JSON.parse(sessionStorage.getItem('Book'));
@@ -26,9 +27,8 @@ var connected = true;
     </div>
     <input type="submit" value="Confirm" class="bouton" onclick="
 
-            var selectedDate = new Date(document.getElementById('dateInput').value);
+            const selectedDate = new Date(document.getElementById('dateInput').value);
             var maxDate = new Date();
-            var date_borrow = new Date();
             maxDate.setDate(maxDate.getDate() + 21);
             if (selectedDate > maxDate || selectedDate < new Date()) {
                alert('La date saisie doit être postérieure de moins de 3 semaines à la date actuelle.');
@@ -49,18 +49,22 @@ import {ref} from "vue";
 
 export default {
   name: 'BorrowBook',
+  data() {
+    return {
+      selectedDate: null
+    }
+  },
   mounted() {
     this.borrow();
   },
-  data() { return {} },
   methods: {
-    borrow(){
+    borrow() {
       const book = JSON.parse(sessionStorage.getItem('Book'));
       let datas = {
         user_mail: sessionStorage.getItem('user_email'),
-        book_id : ref(book.id),
-        fin_emprunt: selectedDate,
-        debut_emprunt : date_borrow,
+        book_id: book.id,
+        fin_emprunt: this.selectedDate,
+        debut_emprunt: new Date(),
         marquepage: 0
       };
       fetch("http://localhost:"+ port +"/post_particular_book_url", {
@@ -78,6 +82,7 @@ export default {
         // Gérer les erreurs
         console.error("Erreur lors de l'envoi du formulaire :", error);
       });
+      // Reste du code de votre méthode borrow...
     }
   }
 }
