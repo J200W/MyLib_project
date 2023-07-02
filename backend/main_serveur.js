@@ -18,6 +18,7 @@ const {
   req_signIn,
   req_modifyMyAccount,
   req_signUp,
+  BorrowBook,
 } = require("./controllers/Post_user.js");
 const {
   req_new_book,
@@ -57,10 +58,10 @@ app.use(bodyParser.json()); */
 //app.use('/views', express.static('@/frontend/src/views'));
 
 app.use(
-  cors({
-    methods: ["GET", "POST"], // Spécifiez uniquement les méthodes nécessaires
-    allowedHeaders: ["Authorization", "Content-Type"], // Ajoutez vos en-têtes personnalisés
-  })
+    cors({
+      methods: ["GET", "POST"], // Spécifiez uniquement les méthodes nécessaires
+      allowedHeaders: ["Authorization", "Content-Type"], // Ajoutez vos en-têtes personnalisés
+    })
 );
 
 const bodyParser = require("body-parser");
@@ -74,10 +75,10 @@ app.use(express.json()); // for parsing application/json
 app.post("*", async (req, res) => {
   const datas = req.body;
   var response_funct = prepare_response(
-    false,
-    datas,
-    undefined,
-    "Error of answer from server"
+      false,
+      datas,
+      undefined,
+      "Error of answer from server"
   );
   //console.log(datas, response_funct)
 
@@ -124,11 +125,11 @@ app.post("*", async (req, res) => {
       break;
 
     case "/list_books": // VIEW: ?
-		  // Retourne une réponse JSON
-        req_listEbooks(datas.researched_name, datas.category, datas.theme).then((result) => {
-            res.header("Content-Type", "application/json");
-            res.json(result);
-        });
+      // Retourne une réponse JSON
+      req_listEbooks(datas.researched_name, datas.category, datas.theme).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
 
       break;
 
@@ -136,19 +137,19 @@ app.post("*", async (req, res) => {
       // Retourne une réponse JSON
       //res.header("Content-Type", "application/json");
       req_new_book(
-        datas.title,
-        datas.author,
-        datas.date,
-        datas.language,
-        datas.editor,
-        datas.page,
-        datas.category,
-        datas.theme,
-        datas.description,
-        datas.img,
-        datas.pdf,
-        datas.admin,
-        datas.stock
+          datas.title,
+          datas.author,
+          datas.date,
+          datas.language,
+          datas.editor,
+          datas.page,
+          datas.category,
+          datas.theme,
+          datas.description,
+          datas.img,
+          datas.pdf,
+          datas.admin,
+          datas.stock
       ).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
@@ -174,7 +175,7 @@ app.post("*", async (req, res) => {
       break;
 
     case "/send_share_book": // COMPONENT: ShareBook.vue
-        // Retourne une réponse JSON
+      // Retourne une réponse JSON
       req_share_book(datas).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
@@ -189,40 +190,40 @@ app.post("*", async (req, res) => {
       break;
 
     case "/send_new_comment": // COMPONENT: Comment.vue
-        // Retourne une réponse JSON
-        req_new_comment(datas).then((result) => {
-            res.header("Content-Type", "application/json");
-            res.json(result);
-        })
+      // Retourne une réponse JSON
+      req_new_comment(datas).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      })
       break;
 
     case "/delete_comment": // COMPONENT: Comment.vue
-        // Retourne une réponse JSON
-        req_delete_comment(datas).then((result) => {
-            res.header("Content-Type", "application/json");
-            res.json(result);
-        })
+      // Retourne une réponse JSON
+      req_delete_comment(datas).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      })
       break;
 
     case "/recup_comments_for_ebook": // COMPONENT: Comment.vue
-        // Retourne une réponse JSON
-        get_comments_for_ebook(datas).then((result) => {
-            res.header("Content-Type", "application/json");
-            res.json(result);
-        })
+      // Retourne une réponse JSON
+      get_comments_for_ebook(datas).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      })
       break;
 
 
     case "/my_books": // COMPONENT: ?
-      	// Retourne une réponse JSON
-        console.log(req.body)
-        req_my_books(req.body.email).then((result) => { //req.body.mail_client
-          console.log(result)
-            res.header("Content-Type", "application/json");
-            res.json(result);
+      // Retourne une réponse JSON
+      console.log(req.body)
+      req_my_books(req.body.email).then((result) => { //req.body.mail_client
+        console.log(result)
+        res.header("Content-Type", "application/json");
+        res.json(result);
 
-        })
-          break;
+      })
+      break;
     case "/new_books": // VIEW: MainPage
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
       get_particular_books("new", datas.email).then((result) => {
@@ -280,21 +281,27 @@ app.post("*", async (req, res) => {
       });
       break;
 
-      case "/post_particular_book_url": //  VIEW: SearchBook, COMPONENT: SearchBookComponent
-        req_listEbooks(datas.researched_name, datas.category, datas.theme).then((result) => {
-          console.log("result partiel ?", [result.donnees])
+    case "/post_particular_book_url": //  VIEW: SearchBook, COMPONENT: SearchBookComponent
+      req_listEbooks(datas.researched_name, datas.category, datas.theme).then((result) => {
+        console.log("result partiel ?", [result.donnees])
+        res.header("Content-Type", "application/json");
+        /*return */ res.json(result);
+        /*get_particular_books(result).then((finalresult) => {
           res.header("Content-Type", "application/json");
-          /*return */ res.json(result);
-          /*get_particular_books(result).then((finalresult) => {
-            res.header("Content-Type", "application/json");
-            res.json(finalresult);
-          });*/
-        }) /*.then((jisonnedResp) => {
+          res.json(finalresult);
+        });*/
+      }); /*.then((jisonnedResp) => {
           console.log("result jisonned ?", [jisonnedResp])
           return jisonnedResp;
         }); */
+      break;
 
-
+    case "/borrow":
+      BorrowBook(datas.book_id,datas.user_mail,datas.fin_emprunt,datas.debut_emprunt,datas.marquepage).then((result)=> {
+        console.log("result partiel ?", [result.donnees])
+        res.header("Content-Type", "application/json");
+        res.json(result);
+    });
       break;
 
     default:
@@ -310,10 +317,10 @@ app.post("*", async (req, res) => {
 app.get("*", async (req, res) => {
   var datas = req.body;
   var response_funct = prepare_response(
-    false,
-    datas,
-    undefined,
-    "Erreur de réponse du serveur pour GET"
+      false,
+      datas,
+      undefined,
+      "Erreur de réponse du serveur pour GET"
   );
 
   switch (req.originalUrl) {
@@ -322,7 +329,7 @@ app.get("*", async (req, res) => {
       execute_query("SELECT * FROM Ebook", [], "select").then((result) => {
         res.header("Content-Type", "application/json");
         res.json(
-          prepare_response(true, result, undefined, "Requête SQL réussie")
+            prepare_response(true, result, undefined, "Requête SQL réussie")
         );
       });
       break;
@@ -331,12 +338,12 @@ app.get("*", async (req, res) => {
       // Renvoie les éléments en tant que réponse JSON
       res.header("Content-Type", "application/json");
       res.json(
-        prepare_response(
-          datas,
-          datas,
-          "datas posted found",
-          "datas posted not found"
-        )
+          prepare_response(
+              datas,
+              datas,
+              "datas posted found",
+              "datas posted not found"
+          )
       );
       break;
 

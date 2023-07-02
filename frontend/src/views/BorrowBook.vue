@@ -28,6 +28,7 @@ var connected = true;
 
             var selectedDate = new Date(document.getElementById('dateInput').value);
             var maxDate = new Date();
+            var date_borrow = new Date();
             maxDate.setDate(maxDate.getDate() + 21);
             if (selectedDate > maxDate || selectedDate < new Date()) {
                alert('La date saisie doit être postérieure de moins de 3 semaines à la date actuelle.');
@@ -44,10 +45,41 @@ var connected = true;
 
 <script>
 
+import {ref} from "vue";
+
 export default {
   name: 'BorrowBook',
+  mounted() {
+    this.borrow();
+  },
   data() { return {} },
-  methods: {}
+  methods: {
+    borrow(){
+      const book = JSON.parse(sessionStorage.getItem('Book'));
+      let datas = {
+        user_mail: sessionStorage.getItem('user_email'),
+        book_id : ref(book.id),
+        fin_emprunt: selectedDate,
+        debut_emprunt : date_borrow,
+        marquepage: 0
+      };
+      fetch("http://localhost:"+ port +"/post_particular_book_url", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+          //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+        },
+        body: JSON.stringify(datas)
+      })
+          .then(response => response.text())
+          .then(data => {
+
+          }).catch(error => {
+        // Gérer les erreurs
+        console.error("Erreur lors de l'envoi du formulaire :", error);
+      });
+    }
+  }
 }
 </script>
 
