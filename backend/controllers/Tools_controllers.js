@@ -24,8 +24,15 @@ function prepare_response(condition, reqBody, messageSuccess="", messageFail="")
     return response;
 }
 
+function afficherMessage(message, duree) {
+    alert(message);
+    setTimeout(function() {
+        alert("");
+    }, duree);
+}
+
 const port = process.env.PORT || 8090;
 
 // =========================================================
 // EXPORTATIONS
-module.exports = { prepare_response, port};
+module.exports = { prepare_response, port, afficherMessage};
