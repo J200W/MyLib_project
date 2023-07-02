@@ -83,6 +83,22 @@ async function req_upload_book_img(imgFile, name) {
     }
 }
 
+async function req_delete_comment(email) {
+    try {
+        var query = "DELETE FROM commenter WHERE mail_Clients = ?";
+        var result = await execute_query(query, [email], "delete");
+        if (result === false) {
+            return prepare_response(false, email, undefined, 'Fail to delete comment')
+        }
+        return prepare_response(true, email, 'Comment deleted successfully', 'Fail to delete comment')
+    }
+    catch (error) {
+        console.error("Error during delete comment:", error);
+        return prepare_response(false, email, undefined, 'Fail to delete comment')
+    }
+}
+
+
 // =========================================================
 
-module.exports = { req_new_book, req_upload_book_pdf, req_upload_book_img };
+module.exports = { req_new_book, req_upload_book_pdf, req_upload_book_img, req_delete_comment };

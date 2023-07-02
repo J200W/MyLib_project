@@ -81,20 +81,12 @@ var theme = [
                     <span>{{ book.titre }}</span>
                 </p>
                 <img id="bookImg" :src="book.src" alt="{{ book.titre }}">
-                <router-link v-if="!borrowed" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
-                <router-link v-if="borrowed" to="/ReadBook" id="borrow-book">Read Book</router-link>
+                <router-link v-if="!borrowed&&!admin" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
+                <router-link v-if="borrowed&&!admin" to="/ReadBook" id="borrow-book">Read Book</router-link>
 
                 <button v-if="admin" @click="save_book_information()" id="borrow-book">Save Information</button>
                 <!-- add the popup -->
-
-
-                <!--
-                <p>Stock:
-                    <span>{{ book.stock }}</span>
-                    <span v-if="!admin">{{ book.stock }}</span>
-                    <input v-else @click="console.log(book.stock)" v-model="book.stock" type="number" min="0" />
-                </p> 
-                -->
+                <!-- <PopUpAddFav v-if="!admin" :book="book" /> -->
                 <p>Source:
                     <!-- <span>{{ book.source }}</span> -->
                     <span v-if="!admin">{{ book.library }}</span>

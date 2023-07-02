@@ -20,11 +20,15 @@ const {
   req_modifyMyAccount,
   req_signUp,
   req_borrowed,
+  req_get_comments,
+  req_get_book_stat,
+  req_add_comment,
 } = require("./controllers/Post_user.js");
 const {
   req_new_book,
   req_upload_book_pdf,
   req_upload_book_img,
+  req_delete_comment,
 } = require("./controllers/Post_admin.js");
 const { prepare_response } = require("./controllers/Tools_controllers");
 const { books, get_particular_books } = require("./controllers/Get_ebooks");
@@ -114,7 +118,12 @@ app.post("*", async (req, res) => {
 
     case "/list_books": // VIEW: ?
       // Retourne une réponse JSON
-      req_listEbooks(datas.search, datas.category, datas.theme, datas.sort_filter).then((result) => {
+      req_listEbooks(
+        datas.search,
+        datas.category,
+        datas.theme,
+        datas.sort_filter
+      ).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });
@@ -210,7 +219,7 @@ app.post("*", async (req, res) => {
         res.json(result);
       });
       break;
-    
+
     case "/get_pdf":
       req_get_pdf(datas.id_ebook).then((result) => {
         res.header("Content-Type", "application/json");
@@ -230,13 +239,42 @@ app.post("*", async (req, res) => {
         )
       );
       break;
+
+    case "/borrowed":
+      res.header("Content-Type", "application/json");
+      req_borrowed(datas.email, datas.id_ebook).then((result) => {
+        res.json(result);
+      });
+      break;
+
+    case "/get_comments":
+      res.header("Content-Type", "application/json");
+      req_get_comments(datas.id_ebook).then((result) => {
+        res.json(result);
+      });
+      break;
     
-      case "/borrowed":
-        res.header("Content-Type", "application/json");
-        req_borrowed(datas.email, datas.id_ebook).then((result) => {
-          res.json(result);
-        });
-        break;
+    case "/add_comment":
+      res.header("Content-Type", "application/json");
+      req_add_comment(datas.email, datas.id_ebook, datas.comment, datas.note).then((result) => {
+        res.json(result);
+      });
+      break;
+
+    case "/get_book_stat":
+      res.header("Content-Type", "application/json");
+      req_get_book_stat(datas.id_ebook).then((result) => {
+        res.json(result);
+      });
+      break;
+    
+    case "/delete_comment":
+      res.header("Content-Type", "application/json");
+      console.log(datas.email)
+      req_delete_comment(datas.email).then((result) => {
+        res.json(result);
+      });
+      break;
 
     default:
       response_funct.messageFail = "Erreur d'URL pour la requête POST";
