@@ -25,16 +25,7 @@ var connected = true;
         <input type="date" id="dateInput" required>
       </form>
     </div>
-    <input type="submit" value="Confirm" class="bouton" onclick="
-
-            const selectedDate = new Date(document.getElementById('dateInput').value);
-            var maxDate = new Date();
-            maxDate.setDate(maxDate.getDate() + 21);
-            if (selectedDate > maxDate || selectedDate < new Date()) {
-               alert('La date saisie doit être postérieure de moins de 3 semaines à la date actuelle.');
-               return false;
-            }
-            return true;">
+    <input type="submit" value="Confirm" class="bouton" @click="borrow">
 
   </div>
 
@@ -59,15 +50,23 @@ export default {
   },
   methods: {
     borrow() {
+      this.selectedDate=document.getElementById('dateInput').value;
+      var maxDate = new Date();
+      maxDate.setDate(maxDate.getDate() + 21);
+      if (this.selectedDate > maxDate || this.selectedDate < new Date()) {
+        alert('La date saisie doit être postérieure de moins de 3 semaines à la date actuelle.');
+        return false;
+      }
       const book = JSON.parse(sessionStorage.getItem('Book'));
       let datas = {
         user_mail: sessionStorage.getItem('user_email'),
-        book_id: book.id,
+        book_id: book.id_ebook,
         fin_emprunt: this.selectedDate,
         debut_emprunt: new Date(),
         marquepage: 0
       };
-      fetch("http://localhost:"+ port +"/post_particular_book_url", {
+      alert(datas.book_id)
+      fetch("http://localhost:"+ port +"/borrow", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
@@ -83,6 +82,7 @@ export default {
         console.error("Erreur lors de l'envoi du formulaire :", error);
       });
       // Reste du code de votre méthode borrow...
+      return true;
     }
   }
 }

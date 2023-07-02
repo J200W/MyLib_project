@@ -64,14 +64,14 @@ async function BorrowBook(id_ebook,mail_Clients,debut_emprunt,fin_emprunt,marque
     // Vérifier si des données ont été envoyées
     try {
         let query ;
-        query = "INSERT INTO emprunter values (id_ebook,mail_Clients,debut_emprunt,fin_emprunt,marquepage) (?,?,?,?,?)";
+        query = "INSERT INTO emprunter (id_ebook,mail_Clients,debut_emprunt,fin_emprunt,marquepage) values (?,?,?,?,?)";
         const result = await execute_query(query, [id_ebook, mail_Clients,debut_emprunt,fin_emprunt,marquepage], "insert");
-        return prepare_response(result, reqBody,  `Data has been modified for ${reqBody.mail_Clients}.`,
-            `Fail modifying data for ${reqBody.mail_Clients}.`);
+        return prepare_response(result, [id_ebook,mail_Clients,debut_emprunt,fin_emprunt,marquepage],  `Borrow Successful.`,
+            `Borrow FATAL ERROR.`);
     } catch (error) {
-        console.error("Error during Borrow:", error);
+        console.error("BORROW HERETICAL ERROR:", error);
         //res.status(500).send('Internal server error');
-        return prepare_response(false, reqBody, undefined, 'Error of server to Borrow');
+        return prepare_response(false, [id_ebook,mail_Clients,debut_emprunt,fin_emprunt,marquepage], undefined, 'HERETICAL Error of server to Borrow');
     }
 }
 
