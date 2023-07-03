@@ -3,9 +3,8 @@
 import PopUpAddFav from "@/components/PopUpAddFav.vue";
 import ModalBox from "./ModalBox.vue";
 import moment from "moment";
-
+import {port} from "../../../backend/controllers/Tools_controllers";
 var admin = sessionStorage.getItem("admin");
-
 
 
 if (admin == null) {
@@ -81,8 +80,8 @@ var theme = [
           <span>{{ book.titre }}</span>
         </p>
         <img id="bookImg" :src="book.src" alt="{{ book.titre }}">
-        <router-link v-if="!admin" to="/BorrowBook" id="borrow-book" @click="storeBookInSessionStorage">Borrow Book</router-link>
-
+        <router-link v-if="verif_ifClient && !this.ifBorrowed" to="/BorrowBook" id="borrow-book" @click="storeBookInSessionStorage">Borrow Book</router-link>
+        <router-link v-if="verif_ifClient && this.ifBorrowed" to="/ShareBook" id="share-book" @click="storeBookBorrowedInSessionStorage">Share Book</router-link>
         <button v-else @click="save_book_information()" id="borrow-book">Save Information</button>
         <!-- add the popup -->
 
@@ -133,20 +132,20 @@ var theme = [
           <!-- <span>{{ book.category }}</span> -->
           <span v-if="!admin">{{ book.category }}</span>
           <!-- <input v-else @click="console.log(book.category)" v-model="book.category" placeholder="Edition" /> -->
-        <div class="bookAdminCompSelector">
-          <select v-if="admin">
-            <option :key="book.category[0]">{{ book.category[0] }}</option>
-            <option v-for="c in category" :key="c">{{ c.text }}</option>
-          </select>
-          <select v-if="admin">
-            <option :key="book.category[1]">{{ book.category[1] }}</option>
-            <option v-for="c in category" :key="c">{{ c.text }}</option>
-          </select>
-          <select v-if="admin">
-            <option :key="book.category[2]">{{ book.category[2] }}</option>
-            <option v-for="c in category" :key="c">{{ c.text }}</option>
-          </select>
-        </div>
+          <div class="bookAdminCompSelector">
+            <select v-if="admin">
+              <option :key="book.category[0]">{{ book.category[0] }}</option>
+              <option v-for="c in category" :key="c">{{ c.text }}</option>
+            </select>
+            <select v-if="admin">
+              <option :key="book.category[1]">{{ book.category[1] }}</option>
+              <option v-for="c in category" :key="c">{{ c.text }}</option>
+            </select>
+            <select v-if="admin">
+              <option :key="book.category[2]">{{ book.category[2] }}</option>
+              <option v-for="c in category" :key="c">{{ c.text }}</option>
+            </select>
+          </div>
 
         </p>
         <hr>
@@ -154,23 +153,23 @@ var theme = [
           <!-- <span>{{ book.theme }}</span> -->
           <span v-if="!admin">{{ book.theme }}</span>
           <!-- <input v-else @click="console.log(book.theme)" v-model="book.theme" placeholder="Edition" /> -->
-        <div class="bookAdminCompSelector">
-          <select v-if="admin">
-            <option :key="book.theme[0]">{{ book.theme[0] }}</option>
-            <option v-for="t in theme" :key="t">{{ t.text }}</option>
-            <!-- <option>Romance</option> -->
-          </select>
-          <select v-if="admin">
-            <option :key="book.theme[1]">{{ book.theme[1] }}</option>
-            <option v-for="t in theme" :key="t">{{ t.text }}</option>
-            <!-- <option>Romance</option> -->
-          </select>
-          <select v-if="admin">
-            <option :key="book.theme[2]">{{ book.theme[2] }}</option>
-            <option v-for="t in theme" :key="t">{{ t.text }}</option>
-            <!-- <option>Romance</option> -->
-          </select>
-        </div>
+          <div class="bookAdminCompSelector">
+            <select v-if="admin">
+              <option :key="book.theme[0]">{{ book.theme[0] }}</option>
+              <option v-for="t in theme" :key="t">{{ t.text }}</option>
+              <!-- <option>Romance</option> -->
+            </select>
+            <select v-if="admin">
+              <option :key="book.theme[1]">{{ book.theme[1] }}</option>
+              <option v-for="t in theme" :key="t">{{ t.text }}</option>
+              <!-- <option>Romance</option> -->
+            </select>
+            <select v-if="admin">
+              <option :key="book.theme[2]">{{ book.theme[2] }}</option>
+              <option v-for="t in theme" :key="t">{{ t.text }}</option>
+              <!-- <option>Romance</option> -->
+            </select>
+          </div>
         </p>
         <hr>
         <p>Pages :
@@ -203,7 +202,7 @@ const test_array = [1, 2, 3, 4]
 
 export default {
   name: 'BookDetailComp',
-  props: ['book'],
+  props: ['book', 'ifBorrowed'],
   methods: {
     confirm_action() {
       let test = confirm("Are you sure you want to erase the previous informations with the new ones ? ");
@@ -233,8 +232,56 @@ export default {
       //
     },
 
+    verif_ifClient(){
+      return !admin && sessionStorage.getItem('user_email')
+    },
+
     storeBookInSessionStorage() {
       sessionStorage.setItem('Book', JSON.stringify(this.book));
+    },
+
+    storeBookBorrowedInSessionStorage() {
+      fetch("http://localhost:" + port +"/get_emprunt_dates", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id_ebook: this.book.id_ebook,
+          user_email: sessionStorage.getItem("user_email")
+        })
+      })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data.message);
+            if(data.status==="success"){
+              sessionStorage.setItem("book_detailed_emprunt_dates", JSON.stringify(data.donnees));
+            }
+          })
+          .catch(error => {
+            console.error('Erreur lors de la récupération des données utilisateur:', error);
+          })
+      this.storeBookInSessionStorage()
+      fetch("http://localhost:" + port +"/get_emprunt_dates", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id_ebook: this.book.id_ebook,
+          user_email: sessionStorage.getItem("user_email")
+        })
+      })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data.message);
+            if(data.status==="success"){
+              sessionStorage.setItem("book_detailed_emprunt_dates", JSON.stringify(data.donnees));
+            }
+          })
+          .catch(error => {
+            console.error('Erreur lors de la récupération des données utilisateur:', error);
+          })
     }
 
   }

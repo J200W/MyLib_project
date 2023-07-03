@@ -1,4 +1,6 @@
 <script setup>
+import moment from "moment/moment";
+
 $(document).ready(function () {
   $('.nav-toggle').click(function () {
     var collapse_content_selector = $(this).attr('href');
@@ -18,7 +20,7 @@ import {link_MyEbooks} from "@/router/functions_nav";
 
     <div id="left-section">
       <div id="left-left-section">
-        <img id="bookImg" src="@/assets/onepiece96.png" alt="Book_example">
+        <img id="bookImg" :src="book_shared.src" alt="{{ book_shared.titre }}">
         <br><br>
         <p>Stock: <span>{{ stock }}</span></p>
         <p>Source: <span>{{ book_shared.library }}</span></p>
@@ -31,7 +33,7 @@ import {link_MyEbooks} from "@/router/functions_nav";
         <hr>
         <p>Edition : <span>{{ book_shared.edition }}</span></p>
         <hr>
-        <p>Release : <span>{{ book_shared.date }}</span></p>
+        <p>Release : <span>{{ moment(book_shared.date).format("YYYY-MM-DD") }}</span></p>
         <hr>
         <p>Languages : <span>{{ book_shared.language }}</span></p>
         <hr>
@@ -44,22 +46,24 @@ import {link_MyEbooks} from "@/router/functions_nav";
     <div id="right-section">
       <h2>Clauses</h2>
       <div id="book-resume">
-        <div class="row">
-          <p>Date to return the book : {{emprunt_dates.fin_emprunt}}</p>
-          <p>Time remaining to return the book : {{calcul_time_remaining}}</p>
+        <div className="row">
+          <p>Date to return the book : {{ emprunt_dates.fin_emprunt }}</p>
+          <p>Time remaining to return the book : {{ calcul_time_remaining }}</p>
           <p>WARNING !
             If you share this book you won't be able to read it again.
             You will have to wait until the book is back in the stock in order to borrow it again.<br>
-            Be careful when you write the pseudo of the person you want to send it to, you won't be able to cancel the action.
-            If however you realise that you made a typo, you can send an email to the administrator and he will manage it.
+            Be careful when you write the pseudo of the person you want to send it to, you won't be able to cancel the
+            action.
+            If however you realise that you made a typo, you can send an email to the administrator and he will manage
+            it.
           </p>
 
 
         </div>
       </div>
       <form id="formshare" @submit="submitForm">
-        <label class="formlabel" for="username">Recipient's username </label>
-        <input class="forminput" type="text" id="pseudo" name="pseudo" v-model="pseudo_destination" required>
+        <label className="formlabel" htmlFor="username">Recipient's username </label>
+        <input className="forminput" type="text" id="pseudo" name="pseudo" v-model="pseudo_destination" required>
         <button type="submit" id="share-book">Share the book to this person</button>
       </form>
     </div>
@@ -73,6 +77,7 @@ hr {
   height: 1px;
   background: black;
 }
+
 #allPage {
   display: flex;
   flex-direction: row;
@@ -82,14 +87,15 @@ hr {
   width: 100%;
   margin-top: 0.6rem;
 }
+
 #left-section {
   display: flex;
   flex-direction: row;
-  //justify-content: flex-start;
-  align-items: flex-start;
+//justify-content: flex-start; align-items: flex-start;
   justify-content: left;
   width: 50%;
 }
+
 #left-left-section {
   display: flex;
   flex: 1;
@@ -100,6 +106,7 @@ hr {
   padding-left: 20px;
   padding-right: 20px;
 }
+
 #bookInfo {
   flex: 1;
   flex-direction: column;
@@ -107,6 +114,7 @@ hr {
   align-items: flex-start; /* Aligner le contenu à gauche */
   justify-content: top;
 }
+
 #right-section {
   display: flex;
   flex-direction: column;
@@ -117,10 +125,12 @@ hr {
   padding-left: 20px;
   padding-right: 20px;
 }
+
 h2 {
   text-align: left;
   font-size: 1.5rem;
 }
+
 #book-resume {
   flex: 1;
   justify-content: space-between;
@@ -131,6 +141,7 @@ h2 {
   border-radius: 20px;
   font-size: 2vmin;
 }
+
 #bookImg {
   margin: auto;
   display: block;
@@ -145,13 +156,12 @@ h2 {
   margin: 3% auto;
   align-items: center;
   flex-wrap: nowrap;
-//padding: 25px 25px 25px 25px;
-  /*
+//padding: 25px 25px 25px 25px; /*
   display: flex;
   flex-direction: column;
   justify-content: left;
   align-items: left;
-  //padding: 25px 25px 25px 25px;
+//padding: 25px 25px 25px 25px;
   width: 50%;
   left: 50%;
   margin: auto;
@@ -163,8 +173,9 @@ h2 {
   flex: 0.3;
   margin-right: 0.5rem;
   text-align: center;
-  //margin-bottom: 0.5rem;
+//margin-bottom: 0.5rem;
 }
+
 .forminput {
 
   font-size: 2.1vmin;
@@ -174,8 +185,7 @@ h2 {
   background-color: #A09C9C;
   color: #FFF;
   flex: 0.4;
-//margin-right: 1rem;
-  //margin-bottom: 1rem;
+//margin-right: 1rem; //margin-bottom: 1rem;
 }
 
 #share-book {
@@ -191,8 +201,10 @@ h2 {
   border-radius: 5px;
   width: 60%;
   height: 130%;
-  margin: auto;   //margin-top: 5px !important;   //margin: 16px 175px;
+  margin: auto;
+//margin-top: 5px !important;   //margin: 16px 175px;
 }
+
 #share-book:hover {
   background-color: #545444;
   color: white;
@@ -213,8 +225,8 @@ h2 {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    justify-content: left;     //justify-content: flex-start;
-    width: 100%;
+    justify-content: left;
+  //justify-content: flex-start; width: 100%;
     padding-left: 20px;
     padding-right: 20px;
   }
@@ -239,15 +251,15 @@ h2 {
 export default {
   name: 'Share',
   props: ['book_shared', 'emprunt_dates', 'stock'],
-  data () {
+  data() {
     return {
       pseudo_destination: '',
     }
   },
-  mounted(){
+  mounted() {
   },
-  computed:{
-    calcul_time_remaining(){
+  computed: {
+    calcul_time_remaining() {
       let date1 = new Date(this.emprunt_dates.debut_emprunt);
       let date2 = new Date(this.emprunt_dates.fin_emprunt);
 
@@ -264,7 +276,7 @@ export default {
 
     }
   },
-  methods:{
+  methods: {
     submitForm(event) {
       // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
       console.log('Formulaire soumis !', this.pseudo_destination, sessionStorage.getItem('user_email'), this.book_shared);
@@ -277,7 +289,7 @@ export default {
         stock: this.stock
       };
 
-      fetch("http://localhost:" + port +"/send_share_book", {
+      fetch("http://localhost:" + port + "/send_share_book", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
@@ -291,16 +303,16 @@ export default {
             //console.log("answer from serveur", data);
             data = JSON.parse(data)
             alert(data.message)
-            if(data.status === "success"){
+            if (data.status === "success") {
               data.stock -= 1;
               sessionStorage.setItem("stock", JSON.stringify(data.stock))
               link_MyEbooks.call(this)
             }
           })
           .catch(error => {
-        // Gérer les erreurs
-        console.error("Erreur lors de l'envoi du formulaire :", error);
-      });
+            // Gérer les erreurs
+            console.error("Erreur lors de l'envoi du formulaire :", error);
+          });
 
     }
   }

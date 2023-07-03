@@ -11,7 +11,7 @@ async function req_listEbooks(title, category=[], theme=[]){
     var categoryList = category
     var themeList = theme
     var query = 'SELECT * FROM Ebook JOIN (Select group_concat(name_category) as name_category, est_un.id_ebook as id from est_un group by est_un.id_ebook) grp_cat on grp_cat.id=Ebook.id_ebook JOIN (Select group_concat(name_theme) as name_theme, parle_de.id_ebook as id from parle_de group by parle_de.id_ebook) grp_th on grp_th.id=Ebook.id_ebook'
-    if(title.length>0){
+    if(title){
         query = query + " WHERE titre LIKE CONCAT('%', ?, '%')"
     }
     else if(categoryList.length>0 ){
@@ -54,7 +54,7 @@ async function req_research(title) {
 async function req_my_books(id_client) {
     try {
 
-        const query = "SELECT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=?";
+        const query = "SELECT DISTINCT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=?";
         const [rows] = await execute_query(query, [id_client], "select");
         return prepare_response(rows.length > 0, rows, 'Livres empruntés trouvés', 'Pas de livres empruntés trouvés');
     } catch (error) {
@@ -67,7 +67,7 @@ async function req_my_books(id_client) {
 async function req_read_book(id_client, id_book){
     try {
 
-        const query = "SELECT * FROM emprunter WHERE mail_Clients=? AND id_Ebook=?";
+        const query = "SELECT DISTINCT * FROM emprunter WHERE mail_Clients=? AND id_Ebook=?";
         const [rows] = await execute_query(query, [id_client, id_book], "select");
         return prepare_response(rows.length > 0, rows, 'Book borrowed, allowed to read', 'Not borrowed, unable to read');
     } catch (error) {
@@ -76,12 +76,22 @@ async function req_read_book(id_client, id_book){
     }
 }
 
+function verif_stock_date(date_debut, date_fin){
+    var date_debut_stock = new Date(date_debut)
+    var date_fin_stock = new Date(date_fin)
+    var date_now = new Date()
+    if (date_now > date_debut && date_now < date_fin){
+        return 1
+    }
+    return 0
+}
+
 async function req_emprunt_dates(id_client, id_book){
     try {
         let res_emprunte_table = await req_read_book(id_client, id_book)
         if (res_emprunte_table.status === "success"){
             return prepare_response(true,
-                [res_emprunte_table.donnees.debut_emprunt, res_emprunte_table.donnees.fin_emprunt]
+                {debut_emprunt: res_emprunte_table.donnees.debut_emprunt, fin_emprunt: res_emprunte_table.donnees.fin_emprunt}
                 , 'Book borrowed, allowed to read', 'Not borrowed, unable to read');
         }
         return res_emprunte_table;
@@ -271,4 +281,5 @@ async function get_biblio(id_Biblio) {
 // =========================================================
 // EXPORTATIONS
 module.exports = { req_listEbooks, req_my_books, req_read_book, req_book_details_show, req_book_details_mod, req_emprunt_dates
-, req_share_book, req_new_comment, req_delete_comment, get_comments_for_ebook, req_similarEbooks, req_books_details };
+, req_share_book, req_new_comment, req_delete_comment, get_comments_for_ebook, req_similarEbooks, req_books_details,
+    verif_stock_date};

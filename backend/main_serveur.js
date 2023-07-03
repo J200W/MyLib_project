@@ -182,8 +182,8 @@ app.post("*", async (req, res) => {
       })
       break;
 
-    case '/share_book': // COMPONENT: ShareBook
-      req_emprunt_dates(datas.email, datas.idBook).then((result) => {
+    case '/get_emprunt_dates': // COMPONENT: ShareBook
+      req_emprunt_dates(datas.email, datas.id_ebook).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       })
@@ -263,7 +263,7 @@ app.post("*", async (req, res) => {
 
     case "/read_book": // COMPONENT: ?
       // Retourne une réponse JSON
-      req_read_book(datas.email, datas.idBook).then((result) => {
+      req_read_book(datas.email, datas.id_ebook).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
 
@@ -301,8 +301,15 @@ app.post("*", async (req, res) => {
         console.log("result partiel ?", [result.donnees])
         res.header("Content-Type", "application/json");
         res.json(result);
-    });
+      });
       break;
+
+    case "/if_borrowed_book":
+        req_read_book(datas.user_email, datas.book_id).then((result)=> {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        });
+        break;
 
     default:
       response_funct.messageFail = "Erreur d'URL pour la requête POST";
