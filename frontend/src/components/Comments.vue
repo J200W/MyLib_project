@@ -46,18 +46,18 @@ import {port, afficherMessage} from "../../../backend/controllers/Tools_controll
 </template>
 
 <script>
-const user_email = sessionStorage.getItem('user_email');
-const user_pseudo = sessionStorage.getItem('user_pseudo');
-const isAdmin = sessionStorage.getItem('admin') === 'true';
+
 export default {
   name: 'MyAccount',
   props: ['book'],
   data() {
     return {
+      user_pseudo: sessionStorage.getItem('user_pseudo'),
+      user_email: sessionStorage.getItem('user_email'),
       comments: [],
       newComment: {
-        email_client: user_email,
-        pseudo_client: user_pseudo,
+        email_client: sessionStorage.getItem('user_email'),
+        pseudo_client: sessionStorage.getItem('user_pseudo'),
         date_comment: this.getDateToday,
         note: 0,
         commentaire: '',
@@ -82,9 +82,9 @@ export default {
 
 
     verif_permits_forCom() {
-      if(user_email){
+      if(this.user_email){
         // Check if the user has already commented this book
-        const existingComment = this.comments.find(comment => comment.email_client === user_email);
+        const existingComment = this.comments.find(comment => comment.email_client === this.user_email);
         existingComment ? alert("You have already commented this book.") : this.showForm = true;
       }
       else{
@@ -177,10 +177,10 @@ export default {
           });
     },
     canModifyComment(comment) {
-      return comment.email_client === user_email;
+      return comment.email_client === this.user_email;
     },
     canDeleteComment(comment) {
-      return comment.email_client === user_email || isAdmin;
+      return comment.email_client === this.user_email || sessionStorage.getItem('admin') === "true";
     },
     editComment(comment) {
       // Implement edit comment functionality
@@ -410,8 +410,8 @@ export default {
 
 <!--
       /* {
-        email_client: user_email, // "Email"
-        pseudo_client: user_pseudo, // "Username"
+        email_client: this.user_email, // "Email"
+        pseudo_client: this.user_pseudo, // "Username"
         date_comment: this.getDateToday,
         note: 5,
         commentaire: 'COMMENTAIRE'} */ // POUR TEST UNIQUEMENT
