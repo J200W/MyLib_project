@@ -31,7 +31,7 @@ async function req_signIn(email, password, admin) {
             const [rows] = await execute_query(query, [email, password], "select")
             return prepare_response(rows.length > 0,{email: email, pseudo : rows[0] ? rows[0].pseudo_Clients : rows}, 'LogIn successful', 'LogIn failed');
         }
-    } 
+    }
     catch (error) {
         console.error("Error during authentication:", error);
         //res.status(500).send('Internal server error');
@@ -60,7 +60,22 @@ async function req_modifyMyAccount(reqBody) {
 
 }
 
+async function BorrowBook(id_ebook,mail_Clients,debut_emprunt,fin_emprunt,marquepage) {
+    // Vérifier si des données ont été envoyées
+    try {
+        let query ;
+        query = "INSERT INTO emprunter (id_ebook,mail_Clients,debut_emprunt,fin_emprunt,marquepage) values (?,?,?,?,?)";
+        const result = await execute_query(query, [id_ebook, mail_Clients,debut_emprunt,fin_emprunt,marquepage], "insert");
+        return prepare_response(result, [id_ebook,mail_Clients,debut_emprunt,fin_emprunt,marquepage],  `Borrow Successful.`,
+            `Borrow FATAL ERROR.`);
+    } catch (error) {
+        console.error("BORROW HERETICAL ERROR:", error);
+        //res.status(500).send('Internal server error');
+        return prepare_response(false, [id_ebook,mail_Clients,debut_emprunt,fin_emprunt,marquepage], undefined, 'HERETICAL Error of server to Borrow');
+    }
+}
+
 
 // =========================================================
 // EXPORTATIONS
-module.exports = { req_modifyMyAccount, req_signIn, req_signUp};
+module.exports = { req_modifyMyAccount, req_signIn, req_signUp, BorrowBook};
