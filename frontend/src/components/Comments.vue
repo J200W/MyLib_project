@@ -12,11 +12,23 @@ else {
     admin = false;
 }
 
+var borrowed = sessionStorage.getItem('borrowed');
+
+if (borrowed == null) {
+    borrowed = false;
+}
+else if (borrowed == "true") {
+    borrowed = true;
+}
+else {
+    borrowed = false;
+}
+
 </script>
 <template>
     <div id="clear">
         <h1 id="title-comments">Average score : <span class="values"> {{ avg_score }} </span> /5</h1>
-        <div class="user-comment" v-if="!admin">
+        <div class="user-comment" v-if="!admin&&borrowed">
             <div>
                 <h5>Based on : <span class="values">{{ nb_com }}</span> review(s)</h5>
                 <div class="rating-box">
@@ -33,7 +45,7 @@ else {
             <button @click="send_comment()" id="comment-button">Comment</button>
         </div>
 
-        <h1 id="title-comments" v-if="!admin && comments">Reader Comments</h1>
+        <h1 id="title-comments" v-if="!admin && comments.length>0">Reader Comments</h1>
         <div class="commentBox" v-for="comment in comments" :key="comments.mail_Clients">
             <div class="rightPanel">
                 <span><b>{{ comment.pseudo_Clients }} </b></span>
@@ -45,7 +57,7 @@ else {
                 </div>
                 <hr>
                 <p class="theComment">{{ comment.commentaire }} </p>
-                <button v-if="admin" @click="deleteCom(comment.mail_Clients)" id="delete-button">delete</button>
+                <button v-if="admin" @click="deleteCom(comment.mail_Clients)" id="delete-button">Delete</button>
             </div>
 
         </div>

@@ -29,6 +29,7 @@ const {
   req_upload_book_pdf,
   req_upload_book_img,
   req_delete_comment,
+  req_update_book,
 } = require("./controllers/Post_admin.js");
 const { prepare_response } = require("./controllers/Tools_controllers");
 const { books, get_particular_books } = require("./controllers/Get_ebooks");
@@ -156,16 +157,34 @@ app.post("*", async (req, res) => {
     case "/upload_book_pdf": // COMPONENT: AddBookComp.vue
       // Retourne une réponse JSON
       // For uploading pdf files only
-      req_upload_book_pdf(datas.pdf, datas.name).then((result) => {
+      req_upload_book_pdf(datas.pdf, datas.name, "upload", "").then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+    
+    case "/update_book_pdf": // COMPONENT: BookDetailsComp.vue
+      // Retourne une réponse JSON
+      // For uploading pdf files only
+      req_upload_book_pdf(datas.pdf, datas.name, "update", datas.old_name).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });
       break;
 
-    case "/upload_book_img": // COMPONENT: AddBookComp.vue
+    case "/update_book_img": // COMPONENT: AddBookComp.vue
       // Retourne une réponse JSON
       // For uploading images files only
-      req_upload_book_img(datas.img, datas.name).then((result) => {
+      req_upload_book_img(datas.img, datas.name, "upload").then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/update_book_img": // COMPONENT: BookDetailsComp.vue
+      // Retourne une réponse JSON
+      // For uploading images files only
+      req_upload_book_img(datas.img, datas.name, "update", datas.old_name).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });
@@ -177,6 +196,7 @@ app.post("*", async (req, res) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });
+      break;
 
     case "/new_books": // VIEW: MainPage
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
@@ -185,6 +205,7 @@ app.post("*", async (req, res) => {
         res.json(result.donnees);
       });
       break;
+
     case "/current_books": // VIEW: MainPage
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
       get_particular_books("current", datas.email).then((result) => {
@@ -201,8 +222,11 @@ app.post("*", async (req, res) => {
       break;
 
     case "/similar_books": // VIEW: BookDetails
-      res.header("Content-Type", "application/json");
-      res.json([{ list: datas.list }]);
+      
+      req_similar_books(datas.category, datas.theme, datas.id_ebook).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result.donnees);
+      });
       break;
 
     case "/book_details": // VIEW: BookDetails
@@ -272,6 +296,13 @@ app.post("*", async (req, res) => {
       res.header("Content-Type", "application/json");
       console.log(datas.email)
       req_delete_comment(datas.email).then((result) => {
+        res.json(result);
+      });
+      break;
+    
+    case "/update_book":
+      res.header("Content-Type", "application/json");
+      req_update_book(datas).then((result) => {
         res.json(result);
       });
       break;

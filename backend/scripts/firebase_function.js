@@ -12,6 +12,7 @@ const storageImages = firebase.storageImages;
 const storagePDF = firebase.storagePDF;
 const ref = firebase.ref;
 const uploadBytes = firebase.uploadBytes;
+const deleteObject = firebase.deleteObject;
 
 async function retrieveImageCarousel(book) {
     var image_ref = "";
@@ -52,6 +53,24 @@ async function retrievePDF(book) {
     };
 }
 
+async function deleteImage(name_img) {
+    try {
+        await deleteObject(ref(storageImages, name_img));
+    } catch (error) {
+        console.error("Error during delete image in firebase:", error);
+        return null;
+    }
+}
+
+async function deletePDF(name_pdf) {
+    try {   
+        await deleteObject(ref(storagePDF, name_pdf));
+    } catch (error) {
+        console.error("Error during delete pdf in firebase:", error);
+        return null;
+    }
+}
+
 async function readPDF(name_pdf) {
     pdf_ref = await getDownloadURL(ref(storagePDF, name_pdf));
     return pdf_ref;
@@ -88,4 +107,6 @@ module.exports = {
     upload_book_pdf,
     upload_book_img,
     readPDF,
+    deleteImage,
+    deletePDF,
 };

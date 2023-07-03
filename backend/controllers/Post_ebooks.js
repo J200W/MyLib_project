@@ -78,6 +78,9 @@ async function req_books_details(id_ebook) {
             language: rows[0].langue,
             pages: rows[0].nb_pages,
             library: library.donnees,
+            stock: rows[0].stock,
+            name_pdf: rows[0].name_PDF,
+            name_img: rows[0].name_img
         }
         return prepare_response(rows.length > 0, books, 'Book found', 'Book not found');
     } catch (error) {

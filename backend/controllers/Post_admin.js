@@ -1,7 +1,7 @@
 const mysql = require("mysql2/promise");
 const { prepare_response } = require('./Tools_controllers');
 const {execute_query} = require("../database/Connection");
-const {upload_book_pdf, upload_book_img} = require("../scripts/firebase_function");
+const {upload_book_pdf, upload_book_img, deleteImage, deletePDF} = require("../scripts/firebase_function");
 
 
 async function req_new_book(title, author, date, language, editor, page, category, theme, description, img, pdf, admin_email, stock) {
@@ -49,33 +49,67 @@ async function req_new_book(title, author, date, language, editor, page, categor
 }
 
 
-async function req_upload_book_pdf(pdfFile, name) {
+async function req_upload_book_pdf(pdfFile, name, action="", old_name="") {
     try {
-        const metadata = {
-            contentType: "application/pdf",
-        };
-        const uploadTaskPDF = await upload_book_pdf(pdfFile, name, metadata);
-        if (uploadTaskPDF === null) {
-            return prepare_response(false, pdfFile, undefined, 'Fail to upload book');
+        if (action === "upload") {
+            const metadata = {
+                contentType: "application/pdf",
+            };
+            const uploadTaskPDF = await upload_book_pdf(pdfFile, name, metadata);
+            if (uploadTaskPDF === null) {
+                return prepare_response(false, pdfFile, undefined, 'Fail to upload book PDF');
+            }
+            return prepare_response(true, pdfFile, 'Book PDF uploaded successfully', 'Fail to upload book PDF');
         }
-        return prepare_response(true, pdfFile, 'Book uploaded successfully', 'Fail to upload book');
+        else if (action === "update") {
+            const metadata = {
+                contentType: "application/pdf",
+            };
+            const deleteTaskPDF = await deletePDF(old_name);
+            if (deleteTaskPDF === null) {
+                return prepare_response(false, pdfFile, undefined, 'Fail to upload book PDF');
+            }
+
+            const uploadTaskPDF = await upload_book_pdf(pdfFile, name, metadata);
+            if (uploadTaskPDF === null) {
+                return prepare_response(false, pdfFile, undefined, 'Fail to upload book PDF');
+            }
+            return prepare_response(true, pdfFile, 'Book PDF updated successfully', 'Fail to update book PDF');
+        }
     }
     catch (error) {
         console.error("Error during upload book in firebase:", error);
-        return prepare_response(false, pdfFile, undefined, 'Fail to upload book');
+        return prepare_response(false, pdfFile, undefined, 'Fail to upload book PDF');
     }
 }
 
-async function req_upload_book_img(imgFile, name) {
+async function req_upload_book_img(imgFile, name, action="", old_name="") {
     try {
-        const metadata = {
-            contentType: "image/jpeg",
-        };
-        const uploadTaskIMG = await upload_book_img(imgFile, name, metadata);
-        if (uploadTaskIMG === null) {
-            return prepare_response(false, imgFile, undefined, 'Fail to upload book');
+        if (action === "upload") {
+            const metadata = {
+                contentType: "image/jpeg",
+            };
+            const uploadTaskIMG = await upload_book_img(imgFile, name, metadata);
+            if (uploadTaskIMG === null) {
+                return prepare_response(false, imgFile, undefined, 'Fail to upload book');
+            }
+            return prepare_response(true, imgFile, 'Book image uploaded successfully', 'Fail to upload book');
         }
-        return prepare_response(true, imgFile, 'Book uploaded successfully', 'Fail to upload book');
+        else if (action === "update") {
+            const metadata = {
+                contentType: "image/jpeg",
+            };
+            const deleteTaskIMG = await deleteImage(old_name);
+            if (deleteTaskIMG === null) {
+                return prepare_response(false, imgFile, undefined, 'Fail to update book image');
+            }
+
+            const uploadTaskIMG = await upload_book_img(imgFile, name, metadata);
+            if (uploadTaskIMG === null) {
+                return prepare_response(false, imgFile, undefined, 'Fail to update book image');
+            }
+            return prepare_response(true, imgFile, 'Book image updated successfully', 'Fail to update book image');
+        }
     }
     catch (error) {
         console.error("Error during upload book in firebase:", error);
@@ -98,7 +132,50 @@ async function req_delete_comment(email) {
     }
 }
 
+async function req_update_book(datas) {
+    console.log(datas.titre)
+    try {
+        var query = "UPDATE Ebook SET titre = ?, auteur = ?, date_parution = ?, langue = ?, editeur = ?, nb_pages = ?, description = ?, name_img = ?, name_pdf = ?, stock = ?, id_Biblio = ? WHERE id_Ebook = ?";
+        var result = await execute_query(query, [datas.titre, datas.auteur, datas.date, datas.langue, datas.editeur, datas.page, datas.description, datas.img, datas.pdf, datas.stock, datas.admin, datas.id_ebook], "update");
+        if (result === false) {
+            return prepare_response(false, datas, undefined, 'Fail to update book 1')
+        }
+        query = "DELETE FROM est_un WHERE id_ebook = ?";
+        result = await execute_query(query, [datas.id_ebook], "delete");
+
+        query = "DELETE FROM parle_de WHERE id_ebook = ?";
+        result = await execute_query(query, [datas.id_ebook], "delete");
+
+        query = "INSERT INTO est_un (id_ebook, name_category) VALUES (?, ?)";
+        var final_result = true;
+        for (var i = 0; i < datas.categories.length; i++) {
+            if (datas.categories[i] !== "None" && datas.categories[i] !== "") {
+                result = await execute_query(query, [
+                    datas.id_ebook,
+                    datas.categories[i]
+                ], 'insert')
+                final_result = final_result && result;
+            }
+        }
+        query = "INSERT OR INTO parle_de (id_ebook, name_theme) VALUES (?, ?)";
+        for (var i = 0; i < datas.themes.length; i++) {
+            if (datas.themes[i] !== "None" && datas.themes[i] !== "") {
+                result = await execute_query(query, [
+                    datas.id_ebook,
+                    datas.themes[i]
+                ], 'insert')
+                final_result = final_result && result;
+            }
+        }
+        return prepare_response(final_result, datas, 'Book updated successfully', 'Fail to update book 4')
+    }
+    catch (error) {
+        console.error("Error during update book:", error);
+        return prepare_response(false, datas, undefined, 'Fail to update book')
+    }
+}
+
 
 // =========================================================
 
-module.exports = { req_new_book, req_upload_book_pdf, req_upload_book_img, req_delete_comment };
+module.exports = { req_new_book, req_upload_book_pdf, req_upload_book_img, req_delete_comment, req_update_book };

@@ -155,7 +155,7 @@ export default {
                 .catch((error) => {
                     console.error('Error:', error);
                 });
-            
+
             fetch("http://localhost:" + port + "/get_book_stat", {
                 method: 'POST',
                 headers: {

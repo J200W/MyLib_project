@@ -29,7 +29,6 @@ async function execute_query(query, params, mode) {
         return [rows];
     }
     else{
-      console.log(rows)
         return rows.affectedRows > 0;
     }
   } catch (error) {
