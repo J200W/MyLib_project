@@ -109,7 +109,10 @@ var theme = [
                 </div>
                 <router-link v-if="!borrowed && !admin" to="/BorrowBook" class="borrow-book">Borrow eBook</router-link>
                 <router-link v-if="borrowed && !admin" to="/ReadBook" class="borrow-book">Read eBook</router-link>
-                <button @click="returnBook()" v-if="borrowed && !admin" class="borrow-book">Return my eBook</button>
+                <div id="options">
+                    <button @click="returnBook()" v-if="borrowed && !admin" class="borrow-book">Return my eBook</button>
+                    <button @click="shareBook()" v-if="borrowed && !admin" class="borrow-book">Share my eBook</button>
+                </div>
                 <!-- add the popup -->
                 <!-- <PopUpAddFav v-if="!admin" :book="book" /> -->
                 <p><b>Library: </b>
@@ -120,8 +123,8 @@ var theme = [
                     <span v-if="!admin || !can_modify">{{ book.stock }}</span>
                     <input min="0" type="number" id="stock" v-if="admin && can_modify" v-model="book.stock" />
                 </p>
-                <input @click="save_book_information()" v-if="admin && can_modify" required class="borrow-book" type="submit"
-                    value="Save Information">
+                <input @click="save_book_information()" v-if="admin && can_modify" required class="borrow-book"
+                    type="submit" value="Save Information">
             </div>
             <div id="bookInfo">
                 <div id="bookFav">
@@ -237,7 +240,7 @@ export default {
     props: ['book', 'can_modify'],
     mounted() {
         this.fetchBorrowed(),
-            this.checkFavorite()
+        this.checkFavorite()
     },
     methods: {
         checkFavorite() {
@@ -295,6 +298,11 @@ export default {
                         console.error("Error:", error);
                     });
             }
+        },
+
+        shareBook() {
+            sessionStorage.setItem("book", JSON.stringify(this.book))
+            this.$router.push({ name: 'ShareBook' })
         },
         previewImg() {
             var file = document.getElementById("fileIMG").files[0];
@@ -497,9 +505,9 @@ export default {
                     }
                 })
         }
-
     }
 }
+
 
 </script>
 
@@ -565,6 +573,28 @@ export default {
 }
 
 #button-save-info:hover {
+    background-color: #D79262;
+    color: white;
+    transition: all 0.3s ease 0s;
+}
+
+#options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#options>button {
+    padding: 1vmin;
+    font-size: 2vmin;
+    color: white;
+    background-color: #D0AB77;
+    border-radius: 20px;
+    border: none;
+}
+
+#options>button:hover {
     background-color: #D79262;
     color: white;
     transition: all 0.3s ease 0s;

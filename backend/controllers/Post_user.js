@@ -272,9 +272,32 @@ async function req_return_book(mail_Clients, id_ebook) {
     }
 }
 
+async function req_share_book(mail_Clients, id_ebook, email_dest, fin) {
+    // Vérifier si des données ont été envoyées
+    try {
+        let query = "SELECT * FROM Clients WHERE mail_Clients = ?";
+        const [rows] = await execute_query(query, [email_dest], "select");
+        if (rows.length == 0) {
+            return prepare_response(false, mail_Clients,  `No user with this email.`,
+            `Fail sharing book for ${mail_Clients}.`);
+        }
+        query = "UPDATE emprunter SET fin_emprunt = NOW() WHERE mail_Clients = ? AND id_ebook = ? AND fin_emprunt > NOW()";
+        const result1 = await execute_query(query, [mail_Clients, id_ebook], "update");
+        query = "INSERT INTO partager (mail_Clients, id_ebook, mail_Clients_dest) values (?,?,?,?)";
+        const result2 = await execute_query(query, [mail_Clients, id_ebook, email_dest, fin], "insert");
+        return prepare_response(result1&&result2, mail_Clients,  `Book has been shared with ${email_dest}.`,
+            `Fail sharing book for ${mail_Clients}.`);
+    } catch (error) {
+        console.error("Error during Borrow:", error);
+        //res.status(500).send('Internal server error');
+        return prepare_response(false, mail_Clients, undefined, 'Error of server to Borrow');
+    }
+}
+
+
 
 // =========================================================
 // EXPORTATIONS
-module.exports = { req_modifyMyAccount, req_signIn, req_signUp, req_borrowed, 
+module.exports = { req_share_book, req_modifyMyAccount, req_signIn, req_signUp, req_borrowed, 
     req_get_comments, req_get_book_stat, req_add_comment, req_borrowBook, req_add_remove_favorite, 
     req_check_favorite, req_get_favorites,req_return_book,};

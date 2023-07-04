@@ -16,6 +16,7 @@ const {
   req_get_pdf,
   req_similar_books,
   req_history,
+  req_get_book_borrowed,
 } = require("./controllers/Post_ebooks.js");
 const {
   req_signIn,
@@ -30,6 +31,7 @@ const {
   req_check_favorite,
   req_get_favorites,
   req_return_book,
+  req_share_book,
 } = require("./controllers/Post_user.js");
 const {
   req_new_book,
@@ -365,6 +367,20 @@ app.post("*", async (req, res) => {
       // Retourne une réponse JSON
       req_history(datas.email).then((result) => {
         //req.body.mail_client
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/get_book_borrowed":
+      req_get_book_borrowed(datas.email, datas.id_ebook).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/send_share_book": 
+      req_share_book(datas.email, datas.id_ebook, datas.email_dest, datas.fin).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });

@@ -46,6 +46,10 @@ async function req_my_books(id_client) {
     try {
         const query = "SELECT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=? AND fin_emprunt > NOW()";
         const [rows] = await execute_query(query, [id_client], "select");
+        // get also the books in partager
+        const query2 = "SELECT * FROM partager JOIN Ebook on Ebook.id_ebook=partager.id_ebook WHERE mail_Clients=? AND fin_emprunt > NOW()";
+        const [rows2] = await execute_query(query2, [id_client], "select");
+        rows.push(...rows2);
         for (let i = 0; i < rows.length; i++) {
             rows[i].name_img = await retrieveImage(rows[i]);
             var id_Biblio = await get_biblio(rows[i].id_Biblio);
@@ -186,8 +190,21 @@ async function req_history(id_client) {
         return prepare_response(false, [id_client], undefined, 'Erreur du serveur pour la recherche');
     }
 }
+
+async function req_get_book_borrowed(email, id_ebook) {
+    console.log(email, id_ebook)
+    try {
+        const query = "SELECT * FROM emprunter WHERE mail_Clients=? AND id_ebook=? AND fin_emprunt > NOW()";
+        const [rows] = await execute_query(query, [email, id_ebook], "select");
+        console.log(rows)
+        return prepare_response(rows.length > 0, rows, 'Book found', 'Book not found');
+    } catch (error) {
+        console.error("Error listing books:", error);
+        return prepare_response(false, [email, id_ebook], undefined, 'Erreur du serveur pour la recherche');
+    }
+}
         
 
 // =========================================================
 // EXPORTATIONS
-module.exports = { req_history, req_listEbooks, req_my_books, req_books_details, req_get_pdf, req_similar_books, get_biblio, get_category_theme }
+module.exports = { req_get_book_borrowed, req_history, req_listEbooks, req_my_books, req_books_details, req_get_pdf, req_similar_books, get_biblio, get_category_theme }
