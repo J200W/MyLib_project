@@ -27,7 +27,7 @@ if (connected == null) {
     <body>
 
 
-        <BookDetailsComp v-if="book" :book="book" :ifBorrowed="ifborrowed" />
+        <BookDetailsComp v-if="book && ifborrowed != null" :book="book" :ifBorrowed="ifborrowed" />
 
         <Carousel :books="this.books" name="Similar books" />
         <Comments v-if="book" :book="book" />
@@ -45,7 +45,7 @@ export default {
     data() {
         return {
             book: null,
-            ifborrowed: false,
+            ifborrowed: null,
         }
     },
     mounted() {
@@ -117,29 +117,30 @@ export default {
                 .catch((error) => {
                     console.error('Error:', error);
                 });
-        }
-    },
-  fetchIfBorrowed() {
-    var link = window.location.href;
-    // Get the id of the book from the url
+        },
+      fetchIfBorrowed() {
+        var link = window.location.href;
+        // Get the id of the book from the url
 
-    const id_ebook = parseInt(link.split("?id=").pop());
-    fetch("http://localhost:" + port + "/if_borrowed_book", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        user_email: sessionStorage.getItem('user_email'),
-        id_ebook: id_ebook })
-    })
-      .then(response => response.json())
-      .then(data => {
-        this.ifborrowed = data.status === "success" ? true : false;
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  }
+        const id_ebook = parseInt(link.split("?id=").pop());
+        fetch("http://localhost:" + port + "/if_borrowed_book", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_email: sessionStorage.getItem('user_email'),
+            id_ebook: id_ebook })
+        })
+            .then(response => response.json())
+            .then(data => {
+              this.ifborrowed = data.status === "success" ? true : false;
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+      }
+    },
+
 }
 </script>

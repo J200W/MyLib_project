@@ -80,8 +80,13 @@ var theme = [
           <span>{{ book.titre }}</span>
         </p>
         <img id="bookImg" :src="book.src" alt="{{ book.titre }}">
-        <router-link v-if="verif_ifClient && !this.ifBorrowed" to="/BorrowBook" id="borrow-book" @click="storeBookInSessionStorage">Borrow Book</router-link>
-        <router-link v-if="verif_ifClient && this.ifBorrowed" to="/ShareBook" id="share-book" @click="storeBookBorrowedInSessionStorage">Share Book</router-link>
+        <div v-if="verif_ifClient">
+          <router-link v-if="this.ifBorrowed" to="/BorrowBook" id="borrow-book" @click="storeBookInSessionStorage">Borrow Book</router-link>
+          <div v-else>
+            <p> Date d'emprunt: Date de rendu: Temps restant:</p>
+            <router-link to="/ShareBook" id="share-book" @click="storeBookBorrowedInSessionStorage">Share Book</router-link>
+          </div>
+        </div>
         <button v-else @click="save_book_information()" id="borrow-book">Save Information</button>
         <!-- add the popup -->
 
@@ -228,12 +233,12 @@ export default {
     },
     add_to_fav() {
       console.log("add to fav to bd")
-
+      console.log((sessionStorage.getItem("admin") !== "true") && (sessionStorage.getItem('user_email') != null))
       //
     },
 
     verif_ifClient(){
-      return !admin && sessionStorage.getItem('user_email')
+      return (sessionStorage.getItem("admin") !== "true") && (sessionStorage.getItem('user_email') != null)
     },
 
     storeBookInSessionStorage() {
@@ -241,26 +246,6 @@ export default {
     },
 
     storeBookBorrowedInSessionStorage() {
-      fetch("http://localhost:" + port +"/get_emprunt_dates", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          id_ebook: this.book.id_ebook,
-          user_email: sessionStorage.getItem("user_email")
-        })
-      })
-          .then(response => response.json())
-          .then(data => {
-            console.log(data.message);
-            if(data.status==="success"){
-              sessionStorage.setItem("book_detailed_emprunt_dates", JSON.stringify(data.donnees));
-            }
-          })
-          .catch(error => {
-            console.error('Erreur lors de la récupération des données utilisateur:', error);
-          })
       this.storeBookInSessionStorage()
       fetch("http://localhost:" + port +"/get_emprunt_dates", {
         method: 'POST',
@@ -275,7 +260,7 @@ export default {
           .then(response => response.json())
           .then(data => {
             console.log(data.message);
-            if(data.status==="success"){
+            if(data.status === "success"){
               sessionStorage.setItem("book_detailed_emprunt_dates", JSON.stringify(data.donnees));
             }
           })

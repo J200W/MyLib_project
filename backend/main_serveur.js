@@ -183,7 +183,7 @@ app.post("*", async (req, res) => {
       break;
 
     case '/get_emprunt_dates': // COMPONENT: ShareBook
-      req_emprunt_dates(datas.email, datas.id_ebook).then((result) => {
+      req_emprunt_dates(datas.user_email, datas.id_ebook).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       })

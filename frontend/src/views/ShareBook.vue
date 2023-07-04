@@ -3,7 +3,8 @@ import NavbarConnected from "@/components/NavbarConnected.vue";
 import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import Share from "@/components/Share.vue"
-import {port} from "../../../backend/controllers/Tools_controllers";
+import {port, verif_stock_date} from "../../../backend/controllers/Tools_controllers";
+//import {verif_stock_date} from "../../../backend/controllers/Tools_controllers";
 
 var connected = sessionStorage.getItem('connected');
 if (connected == null) {
@@ -27,7 +28,6 @@ if (connected == null) {
 <style></style>
 
 <script>
-import {verif_stock_date} from "../../../backend/controllers/Post_ebooks";
 
 export default {
   name: 'ShareBook',
@@ -79,8 +79,9 @@ export default {
       //this.book_shared = JSON.parse(sessionStorage.getItem("book_detailed"));
       this.book_shared = JSON.parse(sessionStorage.getItem("Book"));
       this.emprunt_dates = JSON.parse(sessionStorage.getItem("book_detailed_emprunt_dates"));
+      console.log(this.emprunt_dates)
       this.stock = verif_stock_date(this.emprunt_dates.debut_emprunt, this.emprunt_dates.fin_emprunt)
-      sessionStorage.setItem("book_detailed_stock", ""+this.stock);
+      sessionStorage.setItem("book_detailed_stock", "" + this.stock);
       //this.stock = +sessionStorage.getItem("book_detailed_stock");
 
     }
