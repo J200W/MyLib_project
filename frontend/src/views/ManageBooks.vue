@@ -94,11 +94,9 @@ export default {
         },
         updateCategory(category) {
             this.category = category;
-            this.fetchMyBooksPage()
         },
         updateTheme(theme) {
             this.theme = theme;
-            this.fetchMyBooksPage()
         },
     },
     components: {

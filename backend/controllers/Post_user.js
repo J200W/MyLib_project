@@ -156,8 +156,10 @@ async function req_add_comment(email, id_ebook, comment, note) {
 async function req_borrowBook(id_ebook, mail_Clients, debut_emprunt, fin_emprunt) {
     // Vérifier si des données ont été envoyées
     try {
-        let query ;
-        query = "INSERT INTO emprunter (id_ebook, mail_Clients, debut_emprunt, fin_emprunt) values (?,?,?,?,?)";
+        var query ;
+        query = "DELETE FROM emprunter WHERE mail_Clients = ? AND id_ebook = ?";
+        const result3 = await execute_query(query, [mail_Clients, id_ebook], "delete");
+        query = "INSERT INTO emprunter (id_ebook, mail_Clients, debut_emprunt, fin_emprunt) values (?,?,?,?)";
         const result = await execute_query(query, [id_ebook, mail_Clients,debut_emprunt,fin_emprunt], "insert");
         query = "UPDATE Ebook SET stock = stock - 1 WHERE id_ebook = ?";
         const result2 = await execute_query(query, [id_ebook], "update");

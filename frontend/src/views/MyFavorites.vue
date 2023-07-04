@@ -28,8 +28,8 @@
   <NavbarConnected v-if="connected" />
   <NavbarNonConnected v-if="!connected" />
   <body>
-     <MyEbooksSort :pseudo="pseudo" />
-     <MyEbooksContent :books="books_fav" :fav="true" />
+     <MyEbooksSort :pseudo="pseudo" :fav="true" />
+     <MyEbooksContent :books="books_fav" :fav="true"  />
   </body>
     <TheFooter />
 </template>

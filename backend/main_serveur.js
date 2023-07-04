@@ -15,6 +15,7 @@ const {
   req_books_details,
   req_get_pdf,
   req_similar_books,
+  req_history,
 } = require("./controllers/Post_ebooks.js");
 const {
   req_signIn,
@@ -185,7 +186,7 @@ app.post("*", async (req, res) => {
         res.json(result);
       });
       break;
-    
+
     case "/can_modify_book":
       // Retourne une réponse JSON
       req_can_modify_book(datas.email, datas.id_ebook).then((result) => {
@@ -193,7 +194,7 @@ app.post("*", async (req, res) => {
         res.json(result);
       });
       break;
-    
+
     case "/return_book":
       // Retourne une réponse JSON
       req_return_book(datas.email, datas.id_ebook).then((result) => {
@@ -227,9 +228,12 @@ app.post("*", async (req, res) => {
 
     case "/books_library": // VIEW: MainPage
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
-      req_library_books( 
-      datas.email, datas.category,
-      datas.theme, datas.sort_filter).then((result) => {
+      req_library_books(
+        datas.email,
+        datas.category,
+        datas.theme,
+        datas.sort_filter
+      ).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });
@@ -335,23 +339,32 @@ app.post("*", async (req, res) => {
         res.json(result);
       });
       break;
-    
+
     case "/add_remove_favorite":
       req_add_remove_favorite(datas.id_ebook, datas.email).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });
       break;
-    
+
     case "/check_favorite":
       req_check_favorite(datas.id_ebook, datas.user_email).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });
       break;
-    
+
     case "/get_favorite":
       req_get_favorites(datas.email).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/my_history": // COMPONENT: ?
+      // Retourne une réponse JSON
+      req_history(datas.email).then((result) => {
+        //req.body.mail_client
         res.header("Content-Type", "application/json");
         res.json(result);
       });

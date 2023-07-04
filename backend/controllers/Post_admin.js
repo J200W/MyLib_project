@@ -225,7 +225,7 @@ async function req_library_books(email, category="None", theme="None", sort_filt
         console.log(sort_filter)
         // Fetch books added by admin of the same library
         var query = "SELECT * FROM Ebook WHERE id_Biblio IN (SELECT mail_admin FROM Admin_biblio WHERE bibliotheque = ?)";
-        var [result] = await execute_query(query, [biblio, sort_filter], "select");
+        var [result] = await execute_query(query, [biblio], "select");
         console.log(result)
         for (var i = 0; i < result.length; i++) {
             result[i].name_img = await retrieveImage(result[i]);

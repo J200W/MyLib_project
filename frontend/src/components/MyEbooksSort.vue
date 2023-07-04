@@ -1,5 +1,4 @@
 <template>
-    <h1 id="title-MyEbook">eBooks of {{ pseudo }}</h1>
 
     <div class="sort-collection">
         <h3 class="label-selector">Sort</h3>
@@ -155,7 +154,7 @@
 
 <script>
 export default {
-    props: ['pseudo'],
+    props: ['pseudo', 'fav'],
 }
 
 </script>

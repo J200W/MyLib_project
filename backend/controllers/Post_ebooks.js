@@ -169,8 +169,25 @@ async function req_similar_books(auteur, id_ebook){
         return prepare_response(false, [auteur], undefined, 'Erreur du serveur pour la recherche');
     }
 }
+
+async function req_history(id_client) {
+    try {
+        const query = "SELECT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=?";
+        const [rows] = await execute_query(query, [id_client], "select");
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].name_img = await retrieveImage(rows[i]);
+            rows[i].on_loan = rows[i].fin_emprunt > new Date();
+            var id_Biblio = await get_biblio(rows[i].id_Biblio);
+            rows[i].id_Biblio = id_Biblio.donnees;
+        }
+        return prepare_response(rows.length > 0, rows, 'Historique trouvé', 'Pas d\'historique trouvé');
+    } catch (error) {
+        console.error("Error listing books:", error);
+        return prepare_response(false, [id_client], undefined, 'Erreur du serveur pour la recherche');
+    }
+}
         
 
 // =========================================================
 // EXPORTATIONS
-module.exports = { req_listEbooks, req_my_books, req_books_details, req_get_pdf, req_similar_books, get_biblio, get_category_theme }
+module.exports = { req_history, req_listEbooks, req_my_books, req_books_details, req_get_pdf, req_similar_books, get_biblio, get_category_theme }
