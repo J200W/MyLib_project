@@ -3,11 +3,43 @@
 import {port, afficherMessage} from "../../../backend/controllers/Tools_controllers";
 
 </script>
-
 <template>
-  <div>
-    <h1 id="title-comments">Comments</h1>
-    <button id="button_addComment" @click="verif_permits_forCom()" v-if="!showForm">Add Comment</button>
+    <div id="clear">
+        <h1 class="title-comments">Average score : <span class="values"> {{ avg_score }} </span> /5</h1>
+        <div class="user-comment" v-if="!admin">
+            <div>
+                <h5 class="title-comments">Based on : <span class="values">{{ nb_com }} </span> review(s)</h5>
+                <div class="rating-box">
+                    <div class="stars">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                </div>
+                <textarea id="commentTextBox" placeholder="Type your comment ..."></textarea>
+            </div>
+            <button @click="send_comment()" id="comment-button">Comment</button>
+        </div>
+
+        <h1 class="title-comments" v-if="!admin && comments">Reader Comments</h1>
+        <div class="commentBox" v-for="comment in comments" :key="comments.mail_Clients">
+            <div class="rightPanel">
+                <div id="firstLineComment">
+                    <span class="theComment"><b>{{ comment.pseudo_Clients }} </b></span>
+                    <button v-if="comment.mail_Clients==this.email||can_modify" @click="deleteCom(comment.mail_Clients)" id="delete-button">Delete</button>
+                </div>
+                <h6 class="theComment">{{ moment(comment.date_comment).format("YYYY-MM-DD") }}</h6>
+                <div class="rating-number theComment">
+                    <span id="rating-number" class="values">
+                        {{ comment.note }}
+                    </span> / 5
+                </div>
+                <hr>
+                <p class="theComment">{{ comment.commentaire }} </p>
+            </div>
+
 
     <div v-for="(comment, index) in comments" :key="index"  class="commentBox">
       <div class="leftPanelImg">
@@ -48,56 +80,75 @@ import {port, afficherMessage} from "../../../backend/controllers/Tools_controll
 <script>
 
 export default {
-  name: 'MyAccount',
-  props: ['book'],
-  data() {
-    return {
-      user_pseudo: sessionStorage.getItem('user_pseudo'),
-      user_email: sessionStorage.getItem('user_email'),
-      comments: [],
-      newComment: {
-        email_client: sessionStorage.getItem('user_email'),
-        pseudo_client: sessionStorage.getItem('user_pseudo'),
-        date_comment: this.getDateToday,
-        note: 0,
-        commentaire: '',
-      },
-      showForm: false,
-      isNewComment: true,
-    };
-  },
-  mounted() {
-    this.fetchUserData();
-  },
-  computed:{
-    getDateToday() {
-      const today = new Date();
-      const day = today.getDate();
-      const month = today.getMonth() + 1;
-      const year = today.getFullYear();
-      return `${day}/${month}/${year}`;
-    }
-  },
-  methods: {
-
-
-    verif_permits_forCom() {
-      if(this.user_email){
-        // Check if the user has already commented this book
-        const existingComment = this.comments.find(comment => comment.email_client === this.user_email);
-        existingComment ? alert("You have already commented this book.") : this.showForm = true;
-      }
-      else{
-        alert('You need to be connected to post comments !')
-      }
+    name: 'Comments',
+    props: ['comments', 'avg_score', 'nb_com', 'can_modify'],
+    data() {
+        return {
+            // Initialized to zero to begin
+            current_index: 0,
+            email: sessionStorage.getItem('user_email'),
+        }
     },
+    mounted() {
+        if (this.avg_score == NaN) this.avg_score = 0;
+        const stars = document.querySelectorAll(".stars i");
+        // Loop through the "stars" NodeList
+        stars.forEach((star, index1) => {
+            // Add an event listener that runs a function when the "click" event is triggered
+            star.addEventListener("click", () => {
+                // Loop through the "stars" NodeList Again
+                stars.forEach((star, index2) => {
+                    // Add the "active" class to the clicked star and any stars with a lower index
+                    // and remove the "active" class from any stars with a higher index
+                    index1 >= index2 ? star.classList.add("active") : star.classList.remove("active");
 
-    fetchUserData() {
-      console.log(this.book)
-      fetch("http://localhost:" + port + "/recup_comments_for_ebook", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+                });
+            });
+
+        });
+        stars.forEach((star, index3) => {
+            star.addEventListener("click", () => {
+                // console.log(star.className)
+                this.current_index = index3 + 1
+                console.log(this.current_index)
+            });
+        }
+        )
+    },
+    methods: {
+        send_comment() {
+            if (sessionStorage.getItem('connected') == "false" || sessionStorage.getItem('connected') == null) {
+                this.$router.push('/LogIn')
+                return;
+            }
+            var link = window.location.href;
+            // Get the id of the book from the url
+
+            const id_ebook = parseInt(link.split("?id=").pop());
+            fetch("http://localhost:" + port + "/add_comment", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: sessionStorage.getItem('user_email'),
+                    id_ebook: id_ebook,
+                    comment: document.getElementById("commentTextBox").value,
+                    note: this.current_index,
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    if (data.status == "success") {
+                        alert(data.message)
+                        location.reload()
+                    }
+                    else {
+                        alert("Error")
+                    }
+                })
+
         },
         body: JSON.stringify({ id_ebook: this.book.id_ebook }),
       })
@@ -222,222 +273,148 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+#comment-button {
+    padding: 1vmin;
+    font-size: 2.2vmin;
+    color: white;
+    background-color: #D0AB77;
+    border-radius: 20px;
+    border: none;
+    transition: all 0.3s ease 0s;
+    width: fit-content;
+    display: block;
+}
+
+#comment-button:hover {
+    background-color: #D79262;
+    transition: all 0.3s ease 0s;
+}
+
+#firstLineComment {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button:hover {
+    background-color: #f6e387;
+}
 
 
-    #title-comments {
-        margin-left: 5%;
-        margin-top: 2%;
-        font-size: 2rem;
-        font-family: 'Roboto', sans-serif;
-        color: #000;
-    }
+.user-comment {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
 
-    #title-comments {
-      display: inline-block;
-      margin-right: 10px;
-    }
+.values {
+    color: #D79262;
+    font-weight: bold;
+    padding-left: 1vmin;
+}
 
-    .commentForm button, #button_addComment {
-      margin-top: 10px;
-      padding: 8px 12px;
-      background-color: #d3b936;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    #button_addComment{
-      margin-left : 3%;
-      margin-bottom: 0.6rem;
-    }
-
-    #button_addComment:hover, .commentForm button:hover {
-      background-color: #b07d10;
-    }
-
-    #clear {
-        clear: both;
-        margin-bottom: 30px;
-    }
-
-    .commentBox {
-        background: #ffffff;
-        padding: 1%;
-        width: 90%;
-        display: flex;
-        border-radius: 15px;
-        margin-top: 20px !important;
-        color: black;
-        font-size: 2vmin;
-        margin: 0 auto;
-    }
-
-    .leftPanelImg {
-        float: left;
-        flex: 1;
-    }
-
-    .leftPanelImg img {
-        min-height: 150px;
-        max-height: 150px;
-        min-width: 150px;
-        max-width: 150px;
-        border-radius: 100%;
-        height: auto;
-        width: auto;
-        object-fit: cover;
-        background: none;
-    }
-
-    .leftPanelImg button {
-        border-radius: 10%;
-        
-    }
-
-    #button_delete_comment {
-      background-color: #b9480b;
-    }
-
-    #button_modify_comment {
-      background-color: #185d7a;
-    }
-
-    .commentBox .leftPanelImg button {
-      margin-top: 10px;
-      margin-right: 1%;
-      padding: 8px 12px;
-      background-color: #d3b936;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .commentBox .leftPanelImg button:hover {
-      background-color: #b07d10;
-    }
-
-    .commentForm {
-      background: #ffffff;
-      padding: 1%;
-      width: 90%;
-      display: flex;
-      border-radius: 15px;
-      margin-top: 20px !important;
-      color: black;
-      font-size: 2vmin;
-      margin: 0 auto;
-      /*
-      flex-direction: column;*/
-      flex-direction: row;
-      align-items: center;
-    }
-    .commentForm label {
-      margin-bottom: 5px;
-    }
-
-    .commentForm input[type="number"]
-    /*, .commentForm textarea */{
-      /*
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;*/
-      width: 80%;
-      height: 70%;
-      padding: 5px;
-      margin-right: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-      //font-size: 14px;
-    }
-
-    .commentForm textarea {
-      width: 100%;
-      height: 100px;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-
-    .commentForm_element {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    #commentForm_note {
-      flex: 0.08;
-    }
-
-    #commentForm_text {
-      flex: 0.77;
-    }
-
-    #commentForm_buttons {
-      flex: 0.15;
-    }
-
-    .commentForm button {
-      margin-left: 1rem;
-      height: 100%;
-    }
-
-    #button_newComment_cancel{
-      background-color: #bdbcbc;
-    }
-
-    #button_newComment_reset{
-      background-color: #ec8888;
-    }
+.commentBox {
+    display: flex;
+    flex-direction: column;
+    padding: 2vmin;
+    background-color: #fff;
+    border-radius: 3vmin;
+    margin: auto;
+    margin-bottom: 4vmin;
+}
 
 
-    #rating-number {
-        color: #f27100;
-        font-size: larger;
-        font-weight: bold;
-        margin: 0 auto;
-    }
+.user-comment.active {
+    background: #ffffff;
+}
+
+.theComment {
+    font-size: 2.2vmin;
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+#commentTextBox {
+    border-radius: 0px;
+    width: 100%;
+    height: 200px;
+    min-height: 200px;
+    max-height: 200px;
+    padding: 1vmin;
+    border-radius: 2vmin;
+}
+
+#average-score {
+    color: rgb(222, 151, 11);
+}
+
+#delete-button {
+    padding: 1vmin;
+    font-size: 2.2vmin;
+    color: white;
+    background-color: #d76462;
+    border-radius: 20px;
+    border: none;
+    transition: all 0.3s ease 0s;
+    width: fit-content;
+    display: block;
+}
+
+#delete-button:hover {
+    background-color: #d44340;
+}
+
+#clear {
+    clear: both;
+    width: 90%;
+    margin: 0;
+    margin: auto;
+}
+
+.title-comments {
+    padding-bottom: 1%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    border-radius: 15px;
+    margin-top: 20px !important;
+    color: black;
+    margin: 0 auto;
+    font-size: 3vmin;
+    gap: 1vmin;
+}
+
+#rating-number {
+    color: #f27100;
+    font-weight: bold;
+    margin: 0 auto;
+    padding : 0;
+}
+
+.rating-box {
+    border-radius: 25px;
+    width: 450px;
+    margin-bottom: 25px;
+}
+
+.rating-box .stars {
+    display: flex;
+    align-items: center;
+    gap: 2vmin;
+}
+
+.stars i {
+    color: #aeaeae;
+    font-size: 3.5vmin;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.stars i.active {
+    color: #ff9c1a;
+}
 </style>
 
-<!--
-      /* {
-        email_client: this.user_email, // "Email"
-        pseudo_client: this.user_pseudo, // "Username"
-        date_comment: this.getDateToday,
-        note: 5,
-        commentaire: 'COMMENTAIRE'} */ // POUR TEST UNIQUEMENT
-<template>
-    <h1 id="title-comments">Comments</h1>
-    <div id="clear">
-        <div class="commentBox">
-            <div class="leftPanelImg">
-                <div class="rightPanel">
-
-                    <span>Username</span>
-                    <div class="date">16/06/2023</div>
-                    <div class="rating-number">
-                        <span id="rating-number">5</span> /5
-                    </div>
-                    <hr>
-                    <p class="theComment">COMMENTAIRE
-
-                    </p>
-                </div>
-                <button id="delete-button">delete</button>
-            </div>
-        </div>
-
-
-
-    </div>
-
-</template> -->

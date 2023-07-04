@@ -6,51 +6,18 @@
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
     import { port } from "../../../backend/controllers/Tools_controllers";
 
-    /*const books = [
-        {
-            id: 1,
-            title: "One Piece Tome 96",
-            src: require("@/assets/onepiece96.png"),
-            author: "Eiichiro Oda",
-            date: "04/11/2020",
-            library: "Bibliothèque de l'Université de Lille",
-            time: "34d 12h 32m",
-        },
-
-        {
-            id: 2,
-            title: "One Piece Tome 97",
-            src: require("@/assets/onepiece97.png"),
-            author: "Eiichiro Oda",
-            date: "03/02/2021",
-            library: "Bibliothèque de l'Université de Paris 8",
-            time: "12d 23h 12m",
-        },
-        {
-            id: 3,
-            title: "One Piece Tome 98",
-            src: require("@/assets/onepiece98.png"),
-            author: "Eiichiro Oda",
-            date: "07/04/2021",
-            library: "Bibliothèque Municipale de Lyon",
-            time: "4d 12h 32m",
-        },
-        {
-            id: 4,
-            title: "One Piece Tome 99",
-            src: require("@/assets/onepiece99.png"),
-            author: "Eiichiro Oda",
-            date: "04/08/2021",
-            library: "Bibliothèque Municipale de Livry-Gargan",
-            time: "1d 12h 32m",
-        },
-    ]*/
-
     var connected = sessionStorage.getItem('connected');
 
     if (connected == null) {
         connected = false;
     }
+    else if (connected == "true") {
+        connected = true;
+    }
+    else {
+        connected = false;
+    }
+
 </script>
 
 <template>
@@ -59,7 +26,7 @@
     <NavbarNonConnected v-if = "!connected" />
     <body>
         <MyEbooksSort :pseudo=pseudo />
-        <MyEbooksContent :books=books />
+        <MyEbooksContent :books=books  :fav=false />
     </body>
     <TheFooter />
 </template>
@@ -86,8 +53,6 @@ export default {
             },
             fetchMyBooksPage() {            
                 let url = "http://localhost:" + port + "/my_books"
-                console.log("session st", sessionStorage.getItem('user_email'))
-                console.log('le deuxiieme', [JSON.stringify(sessionStorage.getItem('user_email'))])
                 const requestBody = {
                     email: sessionStorage.getItem('user_email')
                 };
@@ -126,7 +91,6 @@ export default {
                         // Gérer les erreurs
                         console.error("Erreur lors de la réception du formulaire du formulaire :", error);
                     });
-
             }
     }
 }

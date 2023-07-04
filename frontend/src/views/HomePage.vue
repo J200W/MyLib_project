@@ -9,7 +9,8 @@ import { port } from "../../../backend/controllers/Tools_controllers";
     <div class="container">
         <img src="../assets/logo.png" width="140" height="140">
         <h1 class="main"> Welcome to MyLib </h1>
-        <p> Explore our extensive catalog and dive into a world of captivating reads. </p>
+        <p> Our goal is to digitize library books to give as many people as possible in the world to have access to any kinds of books and writings, vector of culture and knowledge.</p>
+        <p> Like a real library, borrow, read, share, enjoy, then start again, all completely <b>free</b>. </p>
         <router-link class="link" to="/MainPage">Explore Now</router-link>
     </div>
 

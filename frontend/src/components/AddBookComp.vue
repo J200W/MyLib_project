@@ -142,28 +142,28 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                         <label for="ebook-theme1" class="ebook-label">Theme n°1</label>
                         <select name="ebook-theme1" class="ebook-input">
                             <option value="None">None</option>
-                            <option value="love">Love</option>
-                            <option value="friendship">Friendship</option>
-                            <option value="family">Family</option>
-                            <option value="war">War</option>
-                            <option value="survival">Survival</option>
-                            <option value="identity">Identity</option>
-                            <option value="betrayal">Betrayal</option>
-                            <option value="forgiveness">Forgiveness</option>
-                            <option value="courage">Courage</option>
-                            <option value="loss">Loss</option>
-                            <option value="resilience">Resilience</option>
-                            <option value="redemption">Redemption</option>
-                            <option value="discovery">Discovery</option>
-                            <option value="hope">Hope</option>
-                            <option value="adventure">Adventure</option>
-                            <option value="transformation">Transformation</option>
-                            <option value="coming-of-age">Coming of Age</option>
-                            <option value="self-discovery">Self-Discovery</option>
-                            <option value="sacrifice">Sacrifice</option>
-                            <option value="justice">Justice</option>
-                            <option value="manga">Manga</option>
-                            <option value="comics">Comics</option>
+                            <option value="Love">Love</option>
+                            <option value="Friendship">Friendship</option>
+                            <option value="Family">Family</option>
+                            <option value="War">War</option>
+                            <option value="Survival">Survival</option>
+                            <option value="Identity">Identity</option>
+                            <option value="Betrayal">Betrayal</option>
+                            <option value="Forgiveness">Forgiveness</option>
+                            <option value="Courage">Courage</option>
+                            <option value="Loss">Loss</option>
+                            <option value="Resilience">Resilience</option>
+                            <option value="Redemption">Redemption</option>
+                            <option value="Discovery">Discovery</option>
+                            <option value="Hope">Hope</option>
+                            <option value="Adventure">Adventure</option>
+                            <option value="Transformation">Transformation</option>
+                            <option value="Coming-of-Age">Coming of Age</option>
+                            <option value="Self-Discovery">Self-Discovery</option>
+                            <option value="Sacrifice">Sacrifice</option>
+                            <option value="Justice">Justice</option>
+                            <option value="Manga">Manga</option>
+                            <option value="Comics">Comics</option>
                         </select>
                     </div>
                     <div class="form-subline-3">

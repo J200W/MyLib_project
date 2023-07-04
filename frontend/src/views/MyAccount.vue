@@ -157,7 +157,6 @@ export default {
         submitForm(event) {
             // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
             const admin = sessionStorage.getItem('admin')
-            console.log('Formulaire soumis !', this.pseudo, this.email, admin);
             event.preventDefault();
 
             var datas = {

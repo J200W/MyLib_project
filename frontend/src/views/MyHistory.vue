@@ -60,8 +60,9 @@
   <NavbarNonConnected v-if = "!connected" />
   <h1>Emprunts Actifs</h1>
   <body>
-  <MyEbooksSort :pseudo=pseudo />
-  <MyEbooksContent :books=books />
+
+  <MyEbooksSort pseudo="Username" />
+  <MyEbooksContent :books="books_act" :fav="false" />
   </body>
 
     <div>
@@ -70,7 +71,8 @@
         <p>Aucun emprunt Passé.</p>
       </div>
       <div v-else>
-        <MyEbooksContent :books=books_done />
+
+        <MyEbooksContent :books="books_inact" :fav="false" />
       </div>
     </div>
 

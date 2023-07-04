@@ -149,43 +149,54 @@ export default
             this.fetchUserData();
         },
         methods: {
-          fetchUserData() {
-          },
+            fetchUserData() {
+            },
 
-          submitForm(event) {
-            // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+            submitForm(event) {
+                // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+                if (this.search == "") this.search = " ";
+                if (this.search !== '') {
+                    console.log('Formulaire soumis !', this.search);
+                    event.preventDefault();
 
-            if (this.researched_name !== '') {
-              console.log('Formulaire soumis !', this.researched_name);
-              event.preventDefault();
+                    let datas = {
+                        search: this.search
+                    };
 
-              let datas = {
-                researched_name: this.researched_name
-              };
+                    fetch("http://localhost:" + port + "/send_research_fromNavBar", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                            //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                        },
+                        body: JSON.stringify(datas)
+                    })
+                        .then(response => response.text())
+                        .then(data => {
+                            // Traiter la réponse du serveur
+                            sessionStorage.setItem('research', this.search);
+                            this.$router.push(
+                                {
+                                    path: '/SearchBook',
+                                    query: { search: this.search }
+                                }
+                            )
+                            // Check if we are already on the page
+                            // Get the current path
+                            var link = window.location.href;
 
-              fetch("http://localhost:"+ port +"/send_research_fromNavBar", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
-                  //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
-                },
-                body: JSON.stringify(datas)
-              })
-                  .then(response => response.text())
-                  .then(data => {
-                    // Traiter la réponse du serveur
-                    sessionStorage.setItem('research', this.researched_name);
-                    link_SearchBook.call(this)
-                    /*
-                    if (this.$route.path !== '/SearchBook') {
-                      this.$router.push('/SearchBook');
-                    } else {
-                      location.reload();
-                    }*/
-                  }).catch(error => {
-                // Gérer les erreurs
-                console.error("Erreur lors de l'envoi du formulaire :", error);
-              });
+                            var currentPath = link.substring(link.lastIndexOf('/') + 1).split('?')[0];
+                            if (currentPath == 'SearchBook') {
+                                // wait and reload
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 100);
+                            }
+                        }).catch(error => {
+                            // Gérer les erreurs
+                            console.error("Erreur lors de l'envoi du formulaire :", error);
+                        });
+                }
             }
           }
         }

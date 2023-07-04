@@ -1,35 +1,53 @@
 <template>
-    <div id="myEbooksList">
-        <div class="myEbooks" v-for="book in books" :key="book.id">
-                <router-link class="bookLongCard" :to="{ path: '/BookDetails', query: { name: book.titre } }">
-                  <div class = "picture"><img :src="book.src" alt="{{book.titre}}"/></div>
-
-
-                  <div class = "datas">
-                    <div class = "to_line"><p class="titre">Title :</p> <p>{{ book.titre }}</p></div>
-                    <div class="to_line"><p class="titre">Author :</p><p>{{ book.auteur }}</p></div>
-                    <div class="to_line"><p class="titre">Library :</p><p>{{ book.id_Biblio }}</p></div>
-                    <div class="to_line"><p class="titre">Release date :</p><p>{{ new Date(book.date_parution).toDateString() }}</p></div>
-                  </div>
-                  <div class = "datas">
-                    <div class="to_line"><p class="titre">Remaining loan time : </p><p>{{ ((new Date(book.fin_emprunt).getTime()) - (new Date(book.debut_emprunt).getTime()))/ (1000 * 3600 * 24) }} days</p></div>
-                    <div class="to_line"><p class="titre">On loan</p><p>Yes</p></div>
-                  </div>
-
-                </router-link>
-        </div>
-    </div>
+  <div id="myEbooksList">
+      <div class="myEbooks" v-for="book in books" :key="book.id_ebook">
+              <router-link class="bookLongCard" :to="{ path: '/BookDetails', query: { id: book.id_ebook } }">
+                <div class = "picture"><img id="imageBook" :src="book.name_img" alt="{{book.titre}}"/></div>
+                <div class = "datas1">
+                  <div class = "to_line"><p class="titre">Title :</p> <p>{{ book.titre }}</p></div>
+                  <div class="to_line"><p class="titre">Author :</p><p>{{ book.auteur }}</p></div>
+                  <div class="to_line"><p class="titre">Library :</p><p>{{ book.id_Biblio }}</p></div>
+                  <div class="to_line"><p class="titre">Release date :</p><p>{{ new Date(book.date_parution).toDateString() }}</p></div>
+                </div>
+                <div class = "datas2" v-if="!fav">
+                  <div v-if="book.on_loan" class="to_line"><p class="titre">Remaining loan time : </p><p>{{ ((new Date(book.fin_emprunt).getTime()) - (new Date(book.debut_emprunt).getTime()))/ (1000 * 3600 * 24) }} days</p></div>
+                  <div v-if="book.on_loan" class="to_line"><p class="titre">On loan :</p><p class="y">Yes</p></div>
+                  <div v-else class="to_line"><p class="titre">On loan :</p><p class="n">No</p></div>
+                </div>
+              </router-link>
+      </div>
+  </div>
 </template>
 
-<style>
+
+<style scoped>
+#imageBook {
+    height: auto;
+    width: auto;
+    max-height: 260px;
+}
+
+.y{
+  color: green;
+}
+
+
+.n{
+  color: red;
+}
+
 .titre{
   font-weight: bold;
 }
 .to_line p{
   display: inline-block;
+  text-align: left;
 }
-.datas{
+.datas1{
   flex : 1;
+}
+.datas2{
+  flex : 0.5;
 }
 .picture{
   flex : 0.5;
@@ -79,7 +97,7 @@
     }
 
     .bookLongCard p {
-        text-align: center;
+        text-align: left;
         flex: 1;
         justify-content: center;
         align-items: center;
@@ -94,7 +112,7 @@
     .bookLongCard img {
         width: auto;
         height: 100%;
-        max-width: 200px;
+        max-width: 100px;
         flex: 1;
     }
 
@@ -104,7 +122,7 @@
 <script>
 export default {
     name: 'MyEbooksContent',
-    props: ['books'],
+    props: ['books', 'fav'],
 }
 
 </script>

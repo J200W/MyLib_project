@@ -6,56 +6,62 @@ const {retrieveImageCarousel, retrievePDF} = require("../scripts/firebase_functi
 const mysql = require("mysql2/promise");
 const {get_particular_books} = require("./Get_ebooks");
 
-async function req_listEbooks(title, category=[], theme=[]){
+
+async function req_listEbooks(title, category="", theme="", sort_filter=""){
+    var params = []
     // Retourne une réponse JSON
-    var categoryList = category
-    var themeList = theme
-    var query = 'SELECT * FROM Ebook JOIN (Select group_concat(name_category) as name_category, est_un.id_ebook as id from est_un group by est_un.id_ebook) grp_cat on grp_cat.id=Ebook.id_ebook JOIN (Select group_concat(name_theme) as name_theme, parle_de.id_ebook as id from parle_de group by parle_de.id_ebook) grp_th on grp_th.id=Ebook.id_ebook'
-    if(title){
+    query = 'SELECT * FROM Ebook'
+    if (title == null) title = ""
+    if (category == null || category == "None" || category == "none") category = ""
+    if (theme == null || theme == "None" || theme == "none") theme = ""
+
+    if(category != "" ){
+        query = query + ' JOIN est_un ON Ebook.id_ebook = est_un.id_ebook AND name_category = ?'
+        params.push(category)
+    } 
+    if(theme != ""){
+        query = query + ' JOIN parle_de ON Ebook.id_ebook = parle_de.id_ebook AND name_theme = ?'
+        params.push(theme)
+    }
+    if(title != ""){
+
         query = query + " WHERE titre LIKE CONCAT('%', ?, '%')"
+        params.push(title)
     }
-    else if(categoryList.length>0 ){
-        query = query + ' WHERE category = ?'
-        categoryList.pop()
-    }else if(themeList.length>0){
-        query = query + ' WHERE theme = ?'
-        themeList.pop()
-    }
-    while (categoryList.length>0){
-        query = query + ' AND category = ?'
-        categoryList.pop()
-    }
-    while (themeList.length>0){
-        query = query + ' AND theme = ?'
-        themeList.pop()
-    }
-    query = query + " group by Ebook.id_ebook"
-    let [result] = await execute_query(query, [title, category, theme], "select")
-    console.log("result ", [result])
-    return prepare_response(result, result, 'filled list', 'empty list');
 
+    if(sort_filter != ""){
+        query = query + " ORDER BY " + sort_filter
+    }
+    
+    var [result] = await execute_query(query, params, "select");
+    for (let i = 0; i < result.length; i++) {
+        result[i].name_img = await retrieveImage(result[i]);
+        var id_Biblio = await get_biblio(result[i].id_Biblio);
+        result[i].id_Biblio = id_Biblio.donnees;
+        var categories = await get_category_theme(result[i].id_ebook, "category");
+        result[i].category = categories.donnees;
+        var themes = await get_category_theme(result[i].id_ebook, "theme");
+        result[i].theme = themes.donnees;
+    }
+    return prepare_response(result.length > 0, result, 'Result list filled', 'Result list empty');
 }
-
-
-
-/*
-async function req_research(title) {
-    try {
-        const query = "SELECT * FROM Ebook WHERE titre LIKE CONCAT('%', ?, '%')" //"SELECT * FROM Ebook WHERE titre LIKE '%" + title + %'";
-        const [result] = await execute_query(query, [title], "select");
-        return prepare_response(result.length > 0, result, 'Résultats de recherche obtenu', 'Pas de résultats de recherche');
-
-    } catch (error) {
-        console.error("Error during research:", error);
-        return prepare_response(false, [title], undefined, 'Erreur du serveur pour la recherche');
-    }
-}*/
 
 async function req_my_books(id_client) {
     try {
-
-        const query = "SELECT DISTINCT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=? and fin_emprunt> NOW()";
+        const query = "SELECT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=? AND fin_emprunt > NOW() AND stock_emprunt = 1";
         const [rows] = await execute_query(query, [id_client], "select");
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].name_img = await retrieveImage(rows[i]);
+            var id_Biblio = await get_biblio(rows[i].id_Biblio);
+            rows[i].id_Biblio = id_Biblio.donnees;
+            if (((new Date(rows[i].fin_emprunt).getTime()) 
+            - (new Date(rows[i].debut_emprunt).getTime()))/ (1000 * 3600 * 24) == 0) {
+                rows[i].on_loan = false;
+            }
+            else {
+                rows[i].on_loan = true;
+            }
+        }
         return prepare_response(rows.length > 0, rows, 'Livres empruntés trouvés', 'Pas de livres empruntés trouvés');
     } catch (error) {
         console.error("Error listing books:", error);
@@ -63,6 +69,8 @@ async function req_my_books(id_client) {
     }
 }
 
+
+=======
 async function req_history(id_client) {
     try {
 
@@ -264,6 +272,10 @@ async function get_category_theme(id_ebook, name) {
             if (name == "category") array.push(row.name_category);
             else array.push(row.name_theme);
         });
+        // Put the first letter in uppercase
+        for (let i = 0; i < array.length; i++) {
+            array[i] = array[i].charAt(0).toUpperCase() + array[i].slice(1);
+        }
         return prepare_response(rows.length > 0, array, 'Categories or Theme found', 'Categories not found');
     } catch (error) {
         console.error("Error listing categories:", error);
@@ -282,7 +294,49 @@ async function get_biblio(id_Biblio) {
     }
 }
 
+
+async function req_get_pdf(id_ebook) {
+    try {
+        const query = "SELECT name_pdf FROM Ebook WHERE id_ebook=?";
+        const [rows] = await execute_query(query, [id_ebook], "select");
+        const pdf = await readPDF(rows[0].name_pdf);
+        return prepare_response(rows.length > 0, pdf, 'PDF found', 'PDF not found');
+    } catch (error) {
+        console.error("Error listing pdf:", error);
+        return prepare_response(false, [id_ebook], undefined, 'Erreur du serveur pour la recherche');
+    }
+}
+
+async function req_similar_books(auteur, id_ebook){
+    try {
+        query = 'SELECT * FROM Ebook WHERE auteur=? AND id_ebook != ? LIMIT 4'
+        let [result] = await execute_query(query, [auteur, id_ebook], "select")
+        if (result.length < 4){
+            query = 'SELECT * FROM Ebook WHERE auteur!=? LIMIT 4'
+            let [result2] = await execute_query(query, [auteur], "select")
+            result = result.concat(result2)
+        }
+        // randomize the order of the elements
+        result = result.sort(() => Math.random() - 0.5);
+        // keep only the first 4 elements
+        result = result.slice(0, 4)
+        // add the image source
+        for (let i = 0; i < result.length; i++) {
+            result[i].src = await retrieveImage(result[i]);
+            result[i].id = result[i].id_ebook;
+        }
+        return prepare_response(result, result, 'filled list', 'empty list');
+    }
+    catch (error) {
+        console.error("Error listing books:", error);
+        return prepare_response(false, [auteur], undefined, 'Erreur du serveur pour la recherche');
+    }
+}
+        
+
 // =========================================================
 // EXPORTATIONS
-module.exports = { req_listEbooks, req_my_books, req_read_book, req_book_details_show, req_book_details_mod, req_emprunt_dates
-, req_share_book, req_new_comment, req_delete_comment, get_comments_for_ebook, req_similarEbooks, req_books_details};
+module.exports = { req_listEbooks, req_my_books, req_books_details, req_get_pdf, req_similar_books, get_biblio,
+                 req_read_book, req_book_details_show, req_book_details_mod, req_emprunt_dates
+, req_share_book, req_new_comment, get_comments_for_ebook}
+

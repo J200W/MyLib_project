@@ -35,13 +35,15 @@ else {
                     MyLib
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="/MyEbooks">My Ebooks</a>
-                    <a class="dropdown-item" href="/MyFavorites">My Favorites</a>
-                    <a class="dropdown-item" href="/MyHistory">History</a>
+                    <a v-if="!admin" class="dropdown-item" href="/MyEbooks">My eBooks</a>
+                    <a v-if="!admin" class="dropdown-item" href="/MyFavorites">My Favorites</a>
+                    <a v-if="!admin" class="dropdown-item" href="/MyHistory">My History</a>
 
                     <div v-if="admin">
-                        <a class="dropdown-item" href="/SearchBook">Manage books</a>
+                        <!-- 
                         <a class="dropdown-item" href="/ManageUsers">Manage users</a>
+                        -->
+                        <a class="dropdown-item" href="/ManageBooks">Manage books</a>
                         <a class="dropdown-item" href="/AddBook">Add an ebook</a>
                     </div>
 
@@ -221,9 +223,10 @@ export default
             fetchUserData() { },
             submitForm(event) {
                 // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+                if (this.search == "") this.search = " ";
+                if (this.search !== '') {
+                    console.log('Formulaire soumis !', this.search);
 
-                if (this.researched_name !== '') {
-                    console.log('Formulaire soumis !', this.researched_name);
                     event.preventDefault();
 
                     let datas = {

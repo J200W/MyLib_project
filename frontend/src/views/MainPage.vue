@@ -6,10 +6,6 @@ import TheFooter from "@/components/TheFooter.vue";
 import { port } from "../../../backend/controllers/Tools_controllers";
 
 
-//console.log("new : ", new_books)
-//console.log("current : ", current_books)
-//console.log("discover : ", discover_books)
-
 
 var connected = sessionStorage.getItem('connected');
 
@@ -27,8 +23,8 @@ if (connected == null) {
     <hr class="hr">
     <div id="carousels">
         <Carousel v-if="current_books" :books="current_books" :name="'Continue to read'" />
-        <Carousel v-if="new_books" :books="new_books" :name="'New'" />
-        <Carousel v-if="discover_books" :books="discover_books" :name="'Discover'" />
+        <Carousel v-if="new_books" :books="new_books" :name="'New eBooks'" />
+        <Carousel v-if="discover_books" :books="discover_books" :name="'Discover new worlds'" />
     </div>
 
     <TheFooter />
@@ -115,7 +111,9 @@ export default {
                 .then(response => response.json())
                 .then(data => {
                     this.discover_books = data;
-                    console.log(this.discover_books);
+                    if (this.discover_books.length == 0) {
+                        this.discover_books = null;
+                    }
                 })
                 .catch(error => {
                     console.log(error);
