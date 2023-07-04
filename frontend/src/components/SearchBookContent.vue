@@ -27,13 +27,6 @@ else {
                 <div class="bookInfo">
                     <div id="firstline">
                         <p class="bookInfo-section"><span class="titleBook-search">{{ book.titre }}</span></p>
-                        <div v-show="admin">
-                            <button @click.native="remove_book(book)" class="bookButton" id="deleteButton">Delete</button>
-                            <button @click.native="display_book_detail(book)" class="bookButton" id="modifyButton">
-                                Modify
-                            </button>
-
-                        </div>
                     </div>
 
                     <p bookInfo-section><span>Author: </span>{{ book.auteur }}</p>

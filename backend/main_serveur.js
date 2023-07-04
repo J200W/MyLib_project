@@ -37,38 +37,13 @@ const {
   req_delete_comment,
   req_update_book,
   req_can_modify_book,
+  req_library_books,
 } = require("./controllers/Post_admin.js");
 const { prepare_response } = require("./controllers/Tools_controllers");
 const { books, get_particular_books } = require("./controllers/Get_ebooks");
 const { get_user_datas } = require("./controllers/Get_user");
 
 const { execute_query } = require("./database/Connection");
-
-// Create the Multer middleware using the MemoryStorage
-
-/*
-const requete = require("./database/requete.js");
-const verify_signIn = requete.verify_signIn;
-const list_books = requete.list_books;
-const my_books = requete.my_books;
-const research = requete.research;
-const new_book = requete.new_book;
-const sign_up = requete.sign_up;
-const connectToDatabase = requete.connectToDatabase; */
-
-/*
-const bodyParser = require('body-parser');
-
-// Middleware pour parser le corps des requêtes
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json()); */
-
-// MIDDLEWARE : fonction de prétraitement de requête (avant app.get out app.post)
-// app.use : active un middleware sur toutes requêtes entrantes
-//app.use(express.static('../frontend/src/views'));
-// Configurer le middleware pour servir les fichiers statiques
-//app.use('/components', express.static('@/frontend/src/components'));
-//app.use('/views', express.static('@/frontend/src/views'));
 
 app.use(
   cors({
@@ -252,9 +227,11 @@ app.post("*", async (req, res) => {
 
     case "/books_library": // VIEW: MainPage
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
-      get_particular_books("library", datas.email).then((result) => {
+      req_library_books( 
+      datas.email, datas.category,
+      datas.theme, datas.sort_filter).then((result) => {
         res.header("Content-Type", "application/json");
-        res.json(result.donnees);
+        res.json(result);
       });
       break;
 

@@ -27,8 +27,8 @@ if (connected == "false") {
 <template>
     <NavbarConnected v-if="connected" />
     <NavbarNonConnected v-if="!connected" />
-    <h1 id="title-MyEbook">eBooks of {{name_lib}}</h1>
-    <SearchBookSort :result="research_data"  @category="updateCategory" @theme="updateTheme" />
+    <h1 id="title-MyEbook">eBooks of {{ name_lib }}</h1>
+    <SearchBookSort :result="research_data" @category="updateCategory" @theme="updateTheme" />
     <SearchBookContent v-if="book_list" :manage="true" :books="book_list" :search="''" />
     <TheFooter />
 </template>
@@ -50,28 +50,46 @@ export default {
     },
     methods: {
         fetchLibraryBooks() {
-            let url = "http://localhost:" + port + "/books_library"
-            const requestBody = {
-                email: sessionStorage.getItem('user_email')
+            var url = new URL(window.location.href);
+            var category = url.searchParams.get("category");
+            var theme = url.searchParams.get("theme");
+            var sort = url.searchParams.get("sort_filter");
+
+            if (category == null) {
+                category = "None";
+            }
+            if (theme == null) {
+                theme = "None";
+            }
+            if (sort == null) {
+                sort = "titre";
+            }
+            const datas = {
+                email: sessionStorage.getItem('user_email'),
+                category: category,
+                theme: theme,
+                sort_filter: sort,
             };
-            fetch(url, {
+            console.log(datas)
+            fetch("http://localhost:" + port + "/books_library", {
                 method: "POST",
-                body: JSON.stringify(requestBody),
                 headers: {
                     "Content-Type": "application/json",
                 },
+                body: JSON.stringify(datas),
             })
-                .then((response) => {
-                    if (response.status === 200) {
-                        return response.json();
-                    } else {
-                        throw new Error("Something went wrong on api server!");
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status !== 'success') {
+                        console.log("Error in fetching books");
+                    }
+                    else {
+                        this.book_list = data.donnees[0];
+                        this.name_lib = data.donnees[1];
                     }
                 })
-                .then((response) => {
-                    this.book_list = response;
-                }).catch((error) => {
-                    console.error(error);
+                .catch((error) => {
+                    console.error('Error:', error);
                 });
         },
         updateCategory(category) {
@@ -95,10 +113,10 @@ export default {
 </script>
 
 <style scoped>
-    #title-MyEbook {
-        font-size: 5vmin;
-        text-align: left;
-        color: "#000000";
-        margin-left: 5%;
-    }
+#title-MyEbook {
+    font-size: 5vmin;
+    text-align: left;
+    color: "#000000";
+    margin-left: 5%;
+}
 </style>

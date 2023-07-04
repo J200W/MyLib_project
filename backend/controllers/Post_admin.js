@@ -1,7 +1,8 @@
 const mysql = require("mysql2/promise");
 const { prepare_response } = require('./Tools_controllers');
 const {execute_query} = require("../database/Connection");
-const {upload_book_pdf, upload_book_img, deleteImage, deletePDF} = require("../scripts/firebase_function");
+const {upload_book_pdf, upload_book_img, deleteImage, deletePDF, retrieveImage} = require("../scripts/firebase_function");
+const {get_biblio, get_category_theme} = require("../controllers/Post_ebooks");
 
 
 async function req_new_book(title, author, date, language, editor, page, category, theme, description, img, pdf, admin_email, stock) {
@@ -217,8 +218,76 @@ async function req_can_modify_book(email, id_ebook) {
     }
 }
 
+async function req_library_books(email, category="None", theme="None", sort_filter="titre") {
+    try {
+        var biblio = await get_biblio(email);
+        biblio = biblio.donnees;
+        console.log(sort_filter)
+        // Fetch books added by admin of the same library
+        var query = "SELECT * FROM Ebook WHERE id_Biblio IN (SELECT mail_admin FROM Admin_biblio WHERE bibliotheque = ?)";
+        var [result] = await execute_query(query, [biblio, sort_filter], "select");
+        console.log(result)
+        for (var i = 0; i < result.length; i++) {
+            result[i].name_img = await retrieveImage(result[i]);
+            var id_Biblio = await get_biblio(result[i].id_Biblio);
+            result[i].id_Biblio = id_Biblio.donnees;
+            var categories = await get_category_theme(result[i].id_ebook, "category");
+            result[i].category = categories.donnees;
+            var themes = await get_category_theme(result[i].id_ebook, "theme");
+            result[i].theme = themes.donnees;
+        }
+
+        // ORDER BY sort_filter
+        if (sort_filter === "titre") {
+            result.sort(function (a, b) {
+                return a.titre.localeCompare(b.titre);
+            });
+        }
+        else if (sort_filter === "auteur") {
+            result.sort(function (a, b) {
+                return a.auteur.localeCompare(b.auteur);
+            });
+        }
+        else if (sort_filter === "date_parution") {
+            result.sort(function (a, b) {
+                a = new Date(a.date_parution);
+                b = new Date(b.date_parution);
+                return a > b ? -1 : a < b ? 1 : 0;
+            });
+        }
+
+        // Filter by category
+        if (category !== "None") {
+            var filtered_result = [];
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].category.includes(category)) {
+                    filtered_result.push(result[i]);
+                }
+            }
+            result = filtered_result;
+        }
+
+        // Filter by theme
+        if (theme !== "None") {
+            var filtered_result = [];
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].theme.includes(theme)) {
+                    filtered_result.push(result[i]);
+                }
+            }
+            result = filtered_result;
+        }
+
+        return prepare_response(true, [result, biblio], "Success to get books for firebase", "Error while retrieving books");
+    }
+    catch (error) {
+        console.error("Error during retrieve user:", error);
+        return prepare_response(false, null, "Error during retrieve user", "Error while retrieving library");
+    }
+}
+
 
 // =========================================================
 
 module.exports = { req_new_book, req_upload_book_pdf, 
-    req_upload_book_img, req_delete_comment, req_update_book, req_can_modify_book };
+    req_upload_book_img, req_delete_comment, req_update_book, req_can_modify_book, req_library_books };

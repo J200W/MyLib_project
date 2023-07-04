@@ -157,8 +157,8 @@ async function req_borrowBook(id_ebook, mail_Clients, debut_emprunt, fin_emprunt
     // Vérifier si des données ont été envoyées
     try {
         let query ;
-        query = "INSERT INTO emprunter (id_ebook, mail_Clients, debut_emprunt, fin_emprunt, stock_emprunt) values (?,?,?,?,?)";
-        const result = await execute_query(query, [id_ebook, mail_Clients,debut_emprunt,fin_emprunt, 1], "insert");
+        query = "INSERT INTO emprunter (id_ebook, mail_Clients, debut_emprunt, fin_emprunt) values (?,?,?,?,?)";
+        const result = await execute_query(query, [id_ebook, mail_Clients,debut_emprunt,fin_emprunt], "insert");
         query = "UPDATE Ebook SET stock = stock - 1 WHERE id_ebook = ?";
         const result2 = await execute_query(query, [id_ebook], "update");
         return prepare_response(result&result2, mail_Clients,  `Data has been modified for ${mail_Clients}.`,
@@ -252,7 +252,7 @@ async function req_return_book(mail_Clients, id_ebook) {
     console.log(mail_Clients, id_ebook)
     // Vérifier si des données ont été envoyées
     try {
-        let query = "UPDATE emprunter SET stock_emprunt = 0, fin_emprunt = NOW() WHERE mail_Clients = ? AND id_ebook = ?";
+        let query = "UPDATE emprunter SET fin_emprunt = NOW() WHERE mail_Clients = ? AND id_ebook = ?";
         const result = await execute_query(query, [mail_Clients, id_ebook], "update");
         console.log(result)
         if (!result) {

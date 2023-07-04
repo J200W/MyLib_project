@@ -44,7 +44,7 @@ async function req_listEbooks(title, category="", theme="", sort_filter=""){
 
 async function req_my_books(id_client) {
     try {
-        const query = "SELECT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=? AND fin_emprunt > NOW() AND stock_emprunt = 1";
+        const query = "SELECT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=? AND fin_emprunt > NOW()";
         const [rows] = await execute_query(query, [id_client], "select");
         for (let i = 0; i < rows.length; i++) {
             rows[i].name_img = await retrieveImage(rows[i]);
@@ -173,4 +173,4 @@ async function req_similar_books(auteur, id_ebook){
 
 // =========================================================
 // EXPORTATIONS
-module.exports = { req_listEbooks, req_my_books, req_books_details, req_get_pdf, req_similar_books, get_biblio }
+module.exports = { req_listEbooks, req_my_books, req_books_details, req_get_pdf, req_similar_books, get_biblio, get_category_theme }

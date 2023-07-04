@@ -16,6 +16,13 @@ var connected = sessionStorage.getItem('connected');
 if (connected == null) {
     connected = false;
 }
+if (connected == "true") {
+    connected = true;
+}
+
+if (connected == "false") {
+    connected = false;
+}
 
 </script>
 
