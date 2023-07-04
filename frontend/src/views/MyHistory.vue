@@ -4,7 +4,9 @@
     import MyEbooksContent from "@/components/MyEbooksContent.vue";
     import TheFooter from "@/components/TheFooter.vue";
     import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
+    import { port } from "../../../backend/controllers/Tools_controllers";
     var connected = sessionStorage.getItem('connected');
+    //var pseudo = sessionStorage.getItem('user_pseudo')
 
     if (connected == null) {
         connected = false;
@@ -58,17 +60,17 @@
   <NavbarNonConnected v-if = "!connected" />
   <h1>Emprunts Actifs</h1>
   <body>
-  <MyEbooksSort pseudo="Username" />
-  <MyEbooksContent :books="books_act" />
+  <MyEbooksSort :pseudo=pseudo />
+  <MyEbooksContent :books=books />
   </body>
 
     <div>
       <h1>Emprunts Passés</h1>
-      <div v-if="books_inact.length === 0">
+      <div v-if="books_done.length === 0">
         <p>Aucun emprunt Passé.</p>
       </div>
       <div v-else>
-        <MyEbooksContent :books="books_inact" />
+        <MyEbooksContent :books=books_done />
       </div>
     </div>
 
@@ -81,19 +83,89 @@
   
 <script>
   export default {
-  data() {
-  return {
-  emprunts: [
-{ id: 1, ebookId: 123, titre: 'Ebook 1' },
-{ id: 2, ebookId: 456, titre: 'Ebook 2' },
-{ id: 3, ebookId: 789, titre: 'Ebook 3' }
-  ] // Remplacez ces données avec les vraies données de l'utilisateur
-};
-},
+  data() { return {
+    books: [],
+    books_done: [],
+    pseudo: sessionStorage.getItem('user_pseudo')
+  }},
+  mounted(){
+    this.fetchBookHistory();
+    this.fetchcurrentBooks();
+  },
   methods: {
   redirigerVersEbook(ebookId) {
     this.$router.push({ path: '/BookDetails' })
-}
+},
+  fetchBookHistory(){
+    let datas = {
+                        email: sessionStorage.getItem('user_email')
+                    };
+            fetch("http://localhost:"+ port +"/my_history", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                        //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                    },
+                    body: JSON.stringify(datas)
+                })
+            .then(response => {
+              if (response.status >= 200 && response.status <= 299) {
+                  const temp = response.json();
+                  return temp;
+              } else {
+                  return response;
+              }})
+            .then(data => {
+                // Traiter la réponse du serveur
+                if(data.status=="success"){
+                    this.books_done = data.donnees
+                } else {
+                    this.books_done = []
+                    console.log("no books borrowed")
+                }
+            }).catch(error => {
+                // Gérer les erreurs
+                console.error("Erreur lors de l'envoi du formulaire :", error);
+            });
+  },
+  fetchcurrentBooks(){           
+                let url = "http://localhost:" + port + "/my_books"
+                const requestBody = {
+                    email: sessionStorage.getItem('user_email')
+                };
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                        //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                    },
+                    body: JSON.stringify(requestBody)
+                })
+                    .then(response => {
+                       if (response.status >= 200 && response.status <= 299) {
+                            const temp = response.json();
+                            return temp;
+                        } else {
+                            return response;
+                        }
+                    })
+                    .then(data => {
+                        // Traiter la réponse du serveur
+                        //data = JSON.parse(data);
+                        console.log('et ici ?', data)
+                        if(data.status=="success"){
+                            this.books = data.donnees
+                        } else {
+                            this.books = []
+                            console.log("no books borrowed")
+                        }
+                        
+                        
+                    }).catch(error => {
+                        // Gérer les erreurs
+                        console.error("Erreur lors de la réception du formulaire du formulaire :", error);
+                    });
+  }
 }
 };
 </script>

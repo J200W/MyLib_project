@@ -54,9 +54,21 @@ async function req_research(title) {
 async function req_my_books(id_client) {
     try {
 
-        const query = "SELECT DISTINCT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=?";
+        const query = "SELECT DISTINCT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=? and fin_emprunt> NOW()";
         const [rows] = await execute_query(query, [id_client], "select");
         return prepare_response(rows.length > 0, rows, 'Livres empruntés trouvés', 'Pas de livres empruntés trouvés');
+    } catch (error) {
+        console.error("Error listing books:", error);
+        return prepare_response(false, [id_client], undefined, 'Erreur du serveur pour la recherche');
+    }
+}
+
+async function req_history(id_client) {
+    try {
+
+        const query = "SELECT DISTINCT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=? and fin_emprunt< NOW()";
+        const [rows] = await execute_query(query, [id_client], "select");
+        return prepare_response(rows.length > 0, rows, 'Historique trouvé', 'Pas d\'historique trouvé');
     } catch (error) {
         console.error("Error listing books:", error);
         return prepare_response(false, [id_client], undefined, 'Erreur du serveur pour la recherche');

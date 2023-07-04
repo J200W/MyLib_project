@@ -224,6 +224,18 @@ app.post("*", async (req, res) => {
 
       })
       break;
+
+      case "/my_history": // COMPONENT: ?
+      // Retourne une réponse JSON
+      console.log(req.body)
+      req_history(req.body.email).then((result) => { //req.body.mail_client
+        console.log(result)
+        res.header("Content-Type", "application/json");
+        res.json(result);
+
+      })
+      break;
+
     case "/new_books": // VIEW: MainPage
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
       get_particular_books("new", datas.email).then((result) => {
