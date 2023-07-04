@@ -19,6 +19,7 @@
   </div>
 </template>
 
+
 <style scoped>
 #imageBook {
     height: auto;
@@ -29,6 +30,7 @@
 .y{
   color: green;
 }
+
 
 .n{
   color: red;

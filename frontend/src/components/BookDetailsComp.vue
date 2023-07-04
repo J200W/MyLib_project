@@ -3,17 +3,16 @@
 import PopUpAddFav from "@/components/PopUpAddFav.vue";
 import ModalBox from "./ModalBox.vue";
 import moment from "moment";
-import { port } from "../../../backend/controllers/Tools_controllers";
-
+import {port} from "../../../backend/controllers/Tools_controllers";
 var admin = sessionStorage.getItem("admin");
 
 if (admin == null) {
-    admin = false;
+  admin = false;
 }
 else if (admin == "true") {
-    admin = true;
+  admin = true;
 } else {
-    admin = false;
+  admin = false;
 }
 
 var connected = sessionStorage.getItem("connected");
@@ -77,6 +76,7 @@ var theme = [
     { "value": "Justice", "text": "Justice" },
     { "value": "Manga", "text": "Manga" },
     { "value": "Comics", "text": "Comics" }
+
 ];
 
 </script>
@@ -107,6 +107,15 @@ var theme = [
                     </p>
                     <input type="file" name="img" id="fileIMG" class="file" @change="previewImg" accept="image/*" required>
                 </div>
+                <!--         
+                <div v-if="verif_ifClient">
+          <router-link v-if="this.ifBorrowed" to="/BorrowBook" id="borrow-book" @click="storeBookInSessionStorage">Borrow Book</router-link>
+          <div v-else>
+            <p> Date d'emprunt: Date de rendu: Temps restant:</p>
+            <router-link to="/ShareBook" id="share-book" @click="storeBookBorrowedInSessionStorage">Share Book</router-link>
+          </div>
+        </div>
+        <button v-else @click="save_book_information()" id="borrow-book">Save Information</button> -->
                 <router-link v-if="!borrowed && !admin" to="/BorrowBook" class="borrow-book">Borrow eBook</router-link>
                 <router-link v-if="borrowed && !admin" to="/ReadBook" class="borrow-book">Read eBook</router-link>
                 <button @click="returnBook()" v-if="borrowed && !admin" class="borrow-book">Return my eBook</button>
@@ -216,6 +225,7 @@ var theme = [
 
         </div>
     </div>
+
 </template>
 
 <script>
@@ -313,15 +323,12 @@ export default {
         confirm_action() {
             let test = confirm("Are you sure you want to erase the previous informations with the new ones ? ");
 
-            if (test === true) {
-                console.log("new informations saved")
-                // ajouter a la db
-            }
-            else {
-                console.log("save cancel")
-                // ne rien faire de plus
-            }
-        },
+    save_book_information() {
+      // this.confirm_action()
+      if (save === false) {
+        console.log("new informations saved")
+        save = true
+
 
         async fetchBorrowed() {
 
@@ -353,41 +360,13 @@ export default {
             if (date) date.value = moment(this.book.date).format('YYYY-MM-DD');
         },
 
-        save_book_information() {
-            // Get informations from the form
-            const fileIMG = document.getElementById("fileIMG").files[0];
-            const filePDF = document.getElementById('filePDF').files[0];
-            const title = document.getElementById("title").value
-            const author = document.getElementById("author").value
-            const editor = document.getElementById("editor").value
-            const stock = document.getElementById("stock").value
-            const date = document.getElementById("date").value
-            const language = document.getElementById("language").value
-            const page = document.getElementById("page").value
-            const resume = document.getElementById("resume").value
-            const category0 = document.getElementById("category0").value
-            const category1 = document.getElementById("category1").value
-            const category2 = document.getElementById("category2").value
-            const theme0 = document.getElementById("theme0").value
-            const theme1 = document.getElementById("theme1").value
-            const theme2 = document.getElementById("theme2").value
+    },
+    add_to_fav() {
+      console.log("add to fav to bd")
+      console.log((sessionStorage.getItem("admin") !== "true") && (sessionStorage.getItem('user_email') != null))
+      //
+    },
 
-            let datas = {
-                id_ebook: this.book.id_ebook,
-                titre: title,
-                auteur: author,
-                editeur: editor,
-                date: date,
-                page: page,
-                stock: stock,
-                langue: language,
-                description: resume,
-                categories: [category0, category1, category2],
-                themes: [theme0, theme1, theme2],
-                img: fileIMG.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
-                pdf: filePDF.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
-                admin: sessionStorage.getItem('user_email'),
-            }
 
             console.log(datas)
             try {
@@ -498,7 +477,40 @@ export default {
                 })
         }
 
+
+    verif_ifClient(){
+      return (sessionStorage.getItem("admin") !== "true") && (sessionStorage.getItem('user_email') != null)
+    },
+
+    storeBookInSessionStorage() {
+      sessionStorage.setItem('Book', JSON.stringify(this.book));
+    },
+
+    storeBookBorrowedInSessionStorage() {
+      this.storeBookInSessionStorage()
+      fetch("http://localhost:" + port +"/get_emprunt_dates", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id_ebook: this.book.id_ebook,
+          user_email: sessionStorage.getItem("user_email")
+        })
+      })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data.message);
+            if(data.status === "success"){
+              sessionStorage.setItem("book_detailed_emprunt_dates", JSON.stringify(data.donnees));
+            }
+          })
+          .catch(error => {
+            console.error('Erreur lors de la récupération des données utilisateur:', error);
+          })
     }
+
+  }
 }
 
 </script>
@@ -511,17 +523,42 @@ export default {
     text-align: center;
     font-size: 2vmin;
     margin-bottom: 2vmin !important;
+
+/*
+.btn-primary {
+  margin-left: 40px;
+  margin-top: 25px;
+  font-size: 15px;
+  padding: 10px 10px;
+  color: white;
+  background-color: #A8A787;
+  border-radius: 0%;
+}
+
+.btn-primary:hover {
+  background-color: #D79262;
+}
+
+.file-selector {
+  margin-bottom: 20px;
+}
+
+#bookTitle {
+  margin:auto;
+  font-size: 2vmin;
+  margin-bottom: 1vmin; */
+
 }
 
 .resume {
-    height: 200px;
+  height: 200px;
 }
 
 #bookFav {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #button-add-fav,
@@ -532,74 +569,68 @@ export default {
     background-color: #D0AB77;
     border-radius: 20px;
     border: none;
+
 }
 
 #button-add-fav:hover {
-    background-color: #D79262;
-    color: white;
-    transition: all 0.3s ease 0s;
+  background-color: #D79262;
+  color: white;
+  transition: all 0.3s ease 0s;
 }
 
 #button-save-info {
-    margin-top: 50px;
-    margin-left: 240px;
-    width: 200px;
-    height: 110px;
-    color: white;
-    background-color: #A8A787;
-    border-radius: 20px;
-    z-index: 1;
+  margin-top: 50px;
+  margin-left: 240px;
+  width: 200px;
+  height: 110px;
+  color: white;
+  background-color: #A8A787;
+  border-radius: 20px;
+  z-index: 1;
 }
 
 .bookAdminCompSelector {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    justify-content: left;
-    flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  justify-content: left;
+  flex: 1;
 }
 
-.bookAdminCompSelector>select {
-    padding: 1vmin;
-    margin: 0.2vmin;
+.bookAdminCompSelector > select {
+  padding: 1vmin;
+  margin: 0.2vmin;
 }
 
 #button-save-info:hover {
-    background-color: #D79262;
-    color: white;
-    transition: all 0.3s ease 0s;
+  background-color: #D79262;
+  color: white;
+  transition: all 0.3s ease 0s;
 }
 
 hr {
-    border: 0;
-    height: 1px;
-    background: black;
+  border: 0;
+  height: 1px;
+  background: black;
 }
 
-input[type="text"],
-input[type="date"],
-input[type="number"] {
-    width: 100%;
-    height: 30px;
-    border-radius: 5px;
-    border: 1px solid #000;
-    padding-left: 1vmin;
-}
-
-.file {
-    border: none;
-    margin-bottom: 1vmin;
+input {
+  width: 100%;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  padding-left: 1vmin;
 }
 
 #allPage {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    /* Aligner les éléments en haut */
-    align-items: flex-start;
-    height: max-content;
-    width: 100%;
-    margin-top: 0.6rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  /* Aligner les éléments en haut */
+  align-items: flex-start;
+  height: max-content;
+  width: 100%;
+  margin-top: 0.6rem;
 }
 
 #left-section {
@@ -611,33 +642,34 @@ input[type="number"] {
     width: 35%;
     flex: 1;
     padding: 0;
+
 }
 
 #left-left-section {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: left;
-    justify-content: left;
-    padding-left: 45px;
-    padding-right: 80px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: left;
+  justify-content: left;
+  padding-left: 45px;
+  padding-right: 80px;
 }
 
 #bookInfo {
-    flex: 1.5;
-    flex-direction: column;
-    justify-content: flex-start;
-    /* Aligner le contenu en haut */
-    align-items: flex-start;
-    /* Aligner le contenu à gauche */
-    justify-content: top;
+  flex: 1.5;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* Aligner le contenu en haut */
+  align-items: flex-start;
+  /* Aligner le contenu à gauche */
+  justify-content: top;
 }
 
 #bookInfo p {
-    margin: 0;
-    padding: 0;
-    font-size: 2vmin;
+  margin: 0;
+  padding: 0;
+  font-size: 2vmin;
 }
 
 #left-left-section p {
@@ -647,6 +679,7 @@ input[type="number"] {
 }
 
 #right-section {
+
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -658,29 +691,30 @@ input[type="number"] {
     padding-right: 20px;
     margin-left: 3vmin;
     flex: 0.95;
+
 }
 
 h2 {
-    text-align: left;
-    font-size: 1.5rem;
+  text-align: left;
+  font-size: 1.5rem;
 
 
 }
 
 #information {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 #book-resume {
-    flex: 1;
-    justify-content: space-between;
-    max-height: 50vh;
-    background-color: white;
-    margin-top: 10px;
-    padding: 20px;
-    border-radius: 20px;
-    font-size: 2vmin;
-    overflow: auto;
+  flex: 1;
+  justify-content: space-between;
+  max-height: 50vh;
+  background-color: white;
+  margin-top: 10px;
+  padding: 20px;
+  border-radius: 20px;
+  font-size: 2vmin;
+  overflow: auto;
 }
 
 #bookImg {
@@ -709,17 +743,19 @@ h2 {
 }
 
 #popupAddFav {
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-    cursor: pointer;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  cursor: pointer;
 }
+
 
 .borrow-book:hover {
     background-color: #D79262;
     color: white;
     transition: all 0.3s ease 0s;
+
 }
 
 .file {
@@ -729,15 +765,15 @@ h2 {
 }
 
 @media (max-width: 1000px) {
-    #allPage {
-        flex-direction: column;
-        justify-content: flex-start;
-        /* Aligner les éléments en haut */
-        align-items: flex-start;
-        height: max-content;
-        width: 100%;
-        margin-top: 0.6rem;
-    }
+  #allPage {
+    flex-direction: column;
+    justify-content: flex-start;
+    /* Aligner les éléments en haut */
+    align-items: flex-start;
+    height: max-content;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
 
     #left-section {
         display: flex;
@@ -768,6 +804,7 @@ h2 {
         display: block;
         max-width: 150px;
     }
+
 
 }
 </style>

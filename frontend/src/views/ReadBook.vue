@@ -1,32 +1,21 @@
 <script setup>
-import NavbarConnected from "@/components/NavbarConnected.vue";
-import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
-import BookReader from "@/components/BookReader.vue";
-import { port } from "../../../backend/controllers/Tools_controllers";
-var connected = sessionStorage.getItem('connected');
+    import NavbarConnected from "@/components/NavbarConnected.vue";
+    import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
+    import BookReader from "@/components/BookReader.vue";
+    var connected = sessionStorage.getItem('connected');
 
-if (connected == null) {
-    connected = false;
-}
-else if (connected == "true") {
-    connected = true;
-}
-else {
-    connected = false;
-}
+    if (connected == null) {
+        connected = false;
+    }
 
-if (!connected) {
-    this.$router.push({ name: 'LogIn' });
-    console.log("not connected")
-}
-
+    const source3 = "https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
 
 </script>
 
 <template>
     <NavbarConnected v-if="connected" />
     <NavbarNonConnected v-if="!connected" />
-    <BookReader :src="pdf"></BookReader>
+    <BookReader :src="source3"></BookReader>
 </template>
   
   
@@ -34,19 +23,9 @@ if (!connected) {
 <script>
 export default {
     name: 'ReadBook',
-    data() {
-        return {
-            pdf: null,
-        }
-    },
-    mounted() {
-        window.scrollTo(0, 0);
-        window.onload = () => {
-            window.scrollTo(0, 0);
-        };
-        this.fetchBookPDF();
-    },
+    data() { return {} },
     methods: {
+
         fetchBookPDF() {
             console.log(sessionStorage.getItem('id_ebook'))
             var datas = JSON.stringify({

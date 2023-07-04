@@ -1,9 +1,4 @@
 <script setup>
-import moment from 'moment';
-import functions_nav from "@/router/functions_nav";
-
-var admin = sessionStorage.getItem('admin');
-
 if (admin == null) {
     admin = false;
 }
@@ -14,15 +9,16 @@ else {
     admin = false;
 }
 
+
 </script>
 
 
 <template>
     <div id="searchBookList">
-        <div class="searchBook" v-for="book in books" :key="book.id_ebook">
-            <router-link class="bookLongCard-search" :to="{ path: '/BookDetails', query: { id: book.id_ebook } }">
+        <div class="searchBook" v-for="book in books" :key="book.id">
+            <router-link class="bookLongCard-search" :to="{ path: '/BookDetails', query: { id: book.id } }">
                 <div class="bookImg">
-                    <img :src="book.name_img" alt="{{book.name_img}}" />
+                    <img :src="book.src" alt="{{book.titre}}" />
                 </div>
                 <div class="bookInfo">
                     <div id="firstline">
@@ -32,6 +28,7 @@ else {
                             <button @click.native="display_book_detail(book)" class="bookButton" id="modifyButton">
                                 Modify
                             </button>
+
 
                         </div>
                     </div>
@@ -60,6 +57,7 @@ export default {
     methods: {
 
         test_function() {
+
             let isMouseHover = false
             let test = document.getElementById("deleteButton");
             test.addEventListener("mouseleave", function (event) {
@@ -197,6 +195,7 @@ export default {
     display: flex;
     flex-direction: row;
 }
+
 
 .bookInfo {
     flex: 1;

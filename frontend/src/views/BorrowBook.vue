@@ -8,6 +8,7 @@ const book = JSON.parse(sessionStorage.getItem('book'));
 const bookSrc = ref(book.src);
 const bookTitre = ref(book.titre);
 
+
 </script>
 <template>
     <NavbarConnected v-if="connected" />
@@ -104,6 +105,7 @@ export default {
             return true;
         }
     }
+
 }
 </script>
 <style scoped>
@@ -123,22 +125,24 @@ export default {
     padding: 20px;
     border: 1px solid #ccc;
     background-color: #FFFFFF;
+
 }
 
 .form-group {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 label {
-    display: block;
-    font-weight: bold;
+  display: block;
+  font-weight: bold;
 }
 
 input,
 select {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 </style>
+

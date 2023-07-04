@@ -95,9 +95,6 @@ export default {
                 .then(response => response.json())
                 .then(data => {
                     this.new_books = data;
-                    if (this.new_books.length == 0) {
-                        this.new_books = null;
-                    }
                 })
                 .catch(error => {
                     console.log(error);
@@ -132,10 +129,7 @@ export default {
             })
                 .then(response => response.json())
                 .then(data => {
-                    this.current_books = data;
-                    if (this.current_books.length == 0) {
-                        this.current_books = null;
-                    }
+                    sessionStorage.setItem('current_books', JSON.stringify(data));
                 })
                 .catch(error => {
                     console.log(error);

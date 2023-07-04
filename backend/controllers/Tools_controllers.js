@@ -24,8 +24,25 @@ function prepare_response(condition, reqBody, messageSuccess="", messageFail="")
     return response;
 }
 
+function afficherMessage(message, duree) {
+    alert(message);
+    setTimeout(function() {
+        alert("");
+    }, duree);
+}
+
+function verif_stock_date(date_debut, date_fin){
+    var date_debut_stock = new Date(date_debut)
+    var date_fin_stock = new Date(date_fin)
+    var date_now = new Date()
+    if (date_now > date_debut && date_now < date_fin){
+        return 1
+    }
+    return 0
+}
+
 const port = process.env.PORT || 8090;
 
 // =========================================================
 // EXPORTATIONS
-module.exports = { prepare_response, port};
+module.exports = { prepare_response, port, afficherMessage, verif_stock_date};

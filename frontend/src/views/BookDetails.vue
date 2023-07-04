@@ -15,18 +15,6 @@ if (connected == null) {
     connected = false;
 }
 
-var admin = sessionStorage.getItem('admin');
-
-if (admin == null) {
-    admin = false;
-}
-else if (admin == "true") {
-    admin = true;
-}
-else {
-    admin = false;
-}
-
 </script>
 
 <template>
@@ -41,6 +29,7 @@ else {
         <hr>
         <Comments :comments="this.comments" :nb_com="this.nb_com" :avg_score="this.avg_score"
             :can_modify="this.can_modify" />
+
     </body>
     <TheFooter />
 </template>
@@ -55,15 +44,19 @@ export default {
     data() {
         return {
             book: null,
+
             comments: null,
             avg_score: 0,
             nb_com: 0,
             similar_books: null,
             can_modify: null,
+            ifborrowed: null,
+
         }
     },
     mounted() {
         this.fetchBookDetails();
+
         this.fetchComments();
         var admin = sessionStorage.getItem('admin');
 
@@ -80,6 +73,9 @@ export default {
         if (admin) {
             this.canModify();
         }
+        /*
+        this.fetchSimilarBooks();
+        this.fetchIfBorrowed(); */
         window.scrollTo(0, 0);
         window.onload = () => {
             window.scrollTo(0, 0);
@@ -100,6 +96,7 @@ export default {
         Carousel
     },
     methods: {
+
         canModify() {
             var link = window.location.href;
             const id_ebook = parseInt(link.split("?id=").pop());
@@ -142,7 +139,9 @@ export default {
             })
                 .then(response => response.json())
                 .then(data => {
-                    this.book = data.donnees;
+                  console.log(data.message)
+                  this.book = data.donnees;
+                  console.log(this.book)
                 })
                 .then(() => {
                     sessionStorage.setItem('book', JSON.stringify(this.book));
@@ -168,48 +167,29 @@ export default {
                     console.error('Error:', error);
                 });
         },
-        fetchComments() {
-            var link = window.location.href;
-            // Get the id of the book from the url
+      fetchIfBorrowed() {
+        var link = window.location.href;
+        // Get the id of the book from the url
 
-            const id_ebook = parseInt(link.split("?id=").pop());
-            fetch("http://localhost:" + port + "/get_comments", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id_ebook: id_ebook })
+        const id_ebook = parseInt(link.split("?id=").pop());
+        fetch("http://localhost:" + port + "/if_borrowed_book", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_email: sessionStorage.getItem('user_email'),
+            id_ebook: id_ebook })
+        })
+            .then(response => response.json())
+            .then(data => {
+              this.ifborrowed = data.status === "success" ? true : false;
             })
-                .then(response => response.json())
-                .then(data => {
-                    sessionStorage.setItem('comments', JSON.stringify(data));
-                    this.comments = data.donnees;
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-
-            fetch("http://localhost:" + port + "/get_book_stat", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id_ebook: id_ebook })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    this.avg_score = data.donnees.avg_score;
-                    // Keep only 2 digits after the comma$
-                    if (this.avg_score == null) {
-                        this.avg_score = 0;
-                    }
-                    this.avg_score = parseFloat(this.avg_score).toFixed(1);
-                    this.nb_com = data.donnees.nb_comments;
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-        }
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+      }
     },
+
 }
 </script>

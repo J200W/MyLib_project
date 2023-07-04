@@ -32,6 +32,10 @@
             <router-link class="form-group" to="/">
                 Change password
             </router-link>
+            <div class="form-group number">
+                <label class="form-labelMyaccount">Number of borrowed books : </label>
+                <span class="form-labelMyaccount"> {{ books }}</span>
+            </div>
             <div id="myAccountButton">
                 <input type="submit" class="form-submitMyAccount" value="Save information" />
                 <button id="disconnect" class="form-submitMyAccount" @click="disconnect">Disconnect</button>
@@ -174,11 +178,9 @@ export default {
                     // Traiter la réponse du serveur
                     data = JSON.parse(data);
                     console.log(data);
-                    if (data.status == "success") {
-                        alert(data.message);
-                        sessionStorage.setItem('user_pseudo', this.pseudo);
-                    } else {
-                        alert("Erreur lors de la modification !");
+                    alert(data.message);
+                    if(data.status === "success"){
+                      sessionStorage.setItem('user_pseudo', data.donnees.pseudo);
                     }
                 }).catch(error => {
                     // Gérer les erreurs

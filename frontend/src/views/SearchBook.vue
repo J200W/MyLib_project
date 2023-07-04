@@ -5,11 +5,11 @@ import SearchBookSort from "@/components/SearchBookSort.vue";
 import SearchBookContent from "@/components/SearchBookContent.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import functions_nav from "@/router/functions_nav";
-import { port } from "../../../backend/controllers/Tools_controllers";
+import {port} from "../../../backend/controllers/Tools_controllers";
 import { ref, onMounted } from 'vue';
 const image = ref(null);
 const isLoading = ref(false);
-var research_data = sessionStorage.getItem('research');
+var research_data = ref(sessionStorage.getItem('research'));
 
 var connected = sessionStorage.getItem('connected');
 
@@ -26,17 +26,22 @@ if (connected == null) {
     <SearchBookSort :result="research_data" @category="updateCategory" @theme="updateTheme" />
     <SearchBookContent v-if="book_list" :books="book_list" :manage="false" />
     <TheFooter />
+<!--
+    <div v-if="isLoading" class="loading">
+        <p id="loading">Loading...</p>
+    </div>
+    <div v-else>
+        <NavbarConnected v-if="connected" />
+        <NavbarNonConnected v-if="!connected" />
+        <SearchBookSort :result="research_data" />
+        <SearchBookContent :books="book_list" />
+        <TheFooter />
+    </div> -->
+
 </template>
   
 
 <style>
-#title-MyEbook {
-    font-size: 5vmin;
-    text-align: left;
-    color: "#000000";
-    margin-left: 5%;
-}
-
 #loading {
     font-size: 30px;
     font-weight: bold;
@@ -57,24 +62,14 @@ export default {
     name: 'SearchBook',
     data() {
         return {
-            search: '',
+            researched_name: '',
             book_list: [],
         };
     },
     mounted() {
-        const category = sessionStorage.getItem('category');
-        const theme = sessionStorage.getItem('theme');
         this.fetchBooksUrl();
     },
     methods: {
-        updateCategory(category) {
-            sessionStorage.setItem('category', category);
-            window.location.reload();
-        },
-        updateTheme(theme) {
-            sessionStorage.setItem('theme', theme);
-            window.location.reload();
-        },
         fetchBooksUrl() {
             var link = window.location.href;
             var url = new URL(link);
@@ -96,6 +91,8 @@ export default {
             this.search = this.search.replace("%C5%93", 'oe');
             this.search = this.search.replace("%27", '\'');
 
+
+            //this.researched_name = research_data.value
             let datas = {
                 search: this.search,
                 category: category,
@@ -109,19 +106,23 @@ export default {
                     method: 'POST',
                     body: JSON.stringify(datas),
                     headers: {
-                        'Content-Type': 'application/json'
-                    }
+                        "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                        //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                    },
+                    body: JSON.stringify(datas)
                 })
-                .then(response => response.text())
-                .then(data => {
-                    // Traiter la réponse du serveur
-                    var books = JSON.parse(data)
-                    this.book_list = books.donnees;
-
-                }).catch(error => {
-                    // Gérer les erreurs
-                    console.error("Erreur lors de l'envoi du formulaire :", error);
-                });
+            .then(response => response.text())
+            .then(data => {
+                // Traiter la réponse du serveur
+                this.book_list = data.donnees //JSON.parse(data.donnees);
+                console.log("le booklist qui va etre enregistré", [this.book_list.donnees])
+                sessionStorage.setItem('book_list', data.donnees);
+            }).catch(error => {
+                // Gérer les erreurs
+                console.error("Erreur lors de l'envoi du formulaire :", error);
+            });
+        
+            
         }
     }
 }

@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-//const port = 8090
+//const port = 80;
 const { port } = require("./controllers/Tools_controllers.js");
 
 const firebase = require("./scripts/firebase_function.js");
@@ -10,16 +10,16 @@ const retrieveImage = firebase.retrieveImage;
 const retrievePDF = firebase.retrievePDF;
 
 const {
-  req_listEbooks,
-  req_my_books,
-  req_books_details,
-  req_get_pdf,
-  req_similar_books,
+  req_listEbooks, req_my_books, req_books_details, req_get_pdf, req_similar_books, get_biblio,
+  req_read_book, req_book_details_show, req_book_details_mod, req_emprunt_dates
+  , req_share_book, req_new_comment, get_comments_for_ebook
+
 } = require("./controllers/Post_ebooks.js");
 const {
   req_signIn,
   req_modifyMyAccount,
   req_signUp,
+
   req_borrowed,
   req_get_comments,
   req_get_book_stat,
@@ -29,6 +29,7 @@ const {
   req_check_favorite,
   req_get_favorites,
   req_return_book,
+  BorrowBook
 } = require("./controllers/Post_user.js");
 const {
   req_new_book,
@@ -37,6 +38,7 @@ const {
   req_delete_comment,
   req_update_book,
   req_can_modify_book,
+
 } = require("./controllers/Post_admin.js");
 const { prepare_response } = require("./controllers/Tools_controllers");
 const { books, get_particular_books } = require("./controllers/Get_ebooks");
@@ -71,10 +73,10 @@ app.use(bodyParser.json()); */
 //app.use('/views', express.static('@/frontend/src/views'));
 
 app.use(
-  cors({
-    methods: ["GET", "POST"], // Spécifiez uniquement les méthodes nécessaires
-    allowedHeaders: ["Authorization", "Content-Type"], // Ajoutez vos en-têtes personnalisés
-  })
+    cors({
+      methods: ["GET", "POST"], // Spécifiez uniquement les méthodes nécessaires
+      allowedHeaders: ["Authorization", "Content-Type"], // Ajoutez vos en-têtes personnalisés
+    })
 );
 
 const bodyParser = require("body-parser");
@@ -88,10 +90,10 @@ app.use(express.json()); // for parsing application/json
 app.post("*", async (req, res) => {
   const datas = req.body;
   var response_funct = prepare_response(
-    false,
-    datas,
-    undefined,
-    "Erreur de réponse du serveur"
+      false,
+      datas,
+      undefined,
+      "Error of answer from server"
   );
 
   switch (req.originalUrl) {
@@ -123,14 +125,22 @@ app.post("*", async (req, res) => {
       });
       break;
 
+    case "/send_login_forgotMdp": // COMPONENT: ForgottenPassword
+      // Retourne une réponse JSON
+      res.header("Content-Type", "application/json");
+      res.json(
+          prepare_response(
+              false,
+              datas,
+              undefined,
+              "Pas de forgotMdp géré pour le moment"
+          )
+      );
+      break;
+
     case "/list_books": // VIEW: ?
       // Retourne une réponse JSON
-      req_listEbooks(
-        datas.search,
-        datas.category,
-        datas.theme,
-        datas.sort_filter
-      ).then((result) => {
+      req_listEbooks(datas.researched_name, datas.category, datas.theme).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });
@@ -141,19 +151,19 @@ app.post("*", async (req, res) => {
       // Retourne une réponse JSON
       //res.header("Content-Type", "application/json");
       req_new_book(
-        datas.title,
-        datas.author,
-        datas.date,
-        datas.language,
-        datas.editor,
-        datas.page,
-        datas.category,
-        datas.theme,
-        datas.description,
-        datas.img,
-        datas.pdf,
-        datas.admin,
-        datas.stock
+          datas.title,
+          datas.author,
+          datas.date,
+          datas.language,
+          datas.editor,
+          datas.page,
+          datas.category,
+          datas.theme,
+          datas.description,
+          datas.img,
+          datas.pdf,
+          datas.admin,
+          datas.stock
       ).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
@@ -180,18 +190,25 @@ app.post("*", async (req, res) => {
           res.json(result);
         }
       );
+
       break;
 
-    case "/update_book_img": // COMPONENT: AddBookComp.vue
+    case "/send_share_book": // COMPONENT: ShareBook.vue
       // Retourne une réponse JSON
-      // For uploading images files only
-      req_upload_book_img(datas.img, datas.name, "upload").then((result) => {
+      req_share_book(datas).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
-      });
+      })
       break;
 
-    case "/update_book_img": // COMPONENT: BookDetailsComp.vue
+    case '/get_emprunt_dates': // COMPONENT: ShareBook
+      req_emprunt_dates(datas.user_email, datas.id_ebook).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      })
+      break;
+
+    case "/send_new_comment": // COMPONENT: Comment.vue
       // Retourne une réponse JSON
       // For uploading images files only
       req_upload_book_img(datas.img, datas.name, "update", datas.old_name).then(
@@ -206,9 +223,10 @@ app.post("*", async (req, res) => {
       // Retourne une réponse JSON
       req_my_books(datas.email).then((result) => {
         //req.body.mail_client
+      //req_new_comment(datas).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
-      });
+      })
       break;
     
     case "/can_modify_book":
@@ -222,9 +240,45 @@ app.post("*", async (req, res) => {
     case "/return_book":
       // Retourne une réponse JSON
       req_return_book(datas.email, datas.id_ebook).then((result) => {
+
+        /*
+   case "/delete_comment": // COMPONENT: Comment.vue
+      // Retourne une réponse JSON
+      req_delete_comment(datas).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
-      });
+      })
+      break; */
+
+    case "/recup_comments_for_ebook": // COMPONENT: Comment.vue
+      // Retourne une réponse JSON
+      get_comments_for_ebook(datas).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      })
+      break;
+
+
+    case "/my_books": // COMPONENT: ?
+      // Retourne une réponse JSON
+      console.log(req.body)
+      req_my_books(req.body.email).then((result) => { //req.body.mail_client
+        console.log(result)
+        res.header("Content-Type", "application/json");
+        res.json(result);
+
+      })
+      break;
+
+      case "/my_history": // COMPONENT: ?
+      // Retourne une réponse JSON
+      console.log(req.body)
+      req_history(req.body.email).then((result) => { //req.body.mail_client
+        console.log(result)
+        res.header("Content-Type", "application/json");
+        res.json(result);
+
+      })
       break;
 
     case "/new_books": // VIEW: MainPage
@@ -234,7 +288,6 @@ app.post("*", async (req, res) => {
         res.json(result.donnees);
       });
       break;
-
     case "/current_books": // VIEW: MainPage
       // Renvoie les images des livres en tant que réponse JSON venant de firebase
       get_particular_books("current", datas.email).then((result) => {
@@ -259,11 +312,13 @@ app.post("*", async (req, res) => {
       break;
 
     case "/similar_books": // VIEW: BookDetails
+
       req_similar_books(datas.auteur, datas.id_ebook).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result.donnees);
       });
       break;
+
 
     case "/book_details": // VIEW: BookDetails
       // Retourne une réponse JSON
@@ -273,38 +328,18 @@ app.post("*", async (req, res) => {
       });
       break;
 
-    case "/send_research_fromNavBar": //  VIEW: SearchBook, COMPONENT: SearchBookComponent
-      req_listEbooks(datas.search).then((result) => {
-        res.header("Content-Type", "application/json");
-        res.json(result);
-      });
-      break;
 
-    case "/get_pdf":
-      req_get_pdf(datas.id_ebook).then((result) => {
-        res.header("Content-Type", "application/json");
-        res.json(result);
-      });
-      break;
-
-    case "/send_login_forgotMdp": // COMPONENT: ForgottenPassword
+    case "/read_book": // COMPONENT: ?
       // Retourne une réponse JSON
-      res.header("Content-Type", "application/json");
-      res.json(
-        prepare_response(
-          false,
-          datas,
-          undefined,
-          "Pas de forgotMdp géré pour le moment"
-        )
-      );
-      break;
-
-    case "/borrowed":
-      res.header("Content-Type", "application/json");
-      req_borrowed(datas.email, datas.id_ebook).then((result) => {
+      req_read_book(datas.email, datas.id_ebook).then((result) => {
+        res.header("Content-Type", "application/json");
         res.json(result);
-      });
+
+        if(result.status == 'success'){
+          funct_to_read_PDF(result.donnees)
+        }
+      })
+
       break;
 
     case "/get_comments":
@@ -347,6 +382,7 @@ app.post("*", async (req, res) => {
       });
       break;
 
+
     case "/borrow":
       req_borrowBook(
         datas.book_id,
@@ -380,21 +416,31 @@ app.post("*", async (req, res) => {
       });
       break;
 
+    case "/if_borrowed_book":
+        req_read_book(datas.user_email, datas.book_id).then((result)=> {
+            res.header("Content-Type", "application/json");
+            res.json(result);
+        });
+        break; 
+
+
     default:
       response_funct.messageFail = "Erreur d'URL pour la requête POST";
       res.status(404).json(response_funct);
       break;
   }
+  //res.header("Content-Type", "application/json");
+  //res.json(response_funct);
 });
 
 // Vérifie si la requête est une requête GET
 app.get("*", async (req, res) => {
   var datas = req.body;
   var response_funct = prepare_response(
-    false,
-    datas,
-    undefined,
-    "Erreur de réponse du serveur pour GET"
+      false,
+      datas,
+      undefined,
+      "Erreur de réponse du serveur pour GET"
   );
 
   switch (req.originalUrl) {
@@ -403,7 +449,7 @@ app.get("*", async (req, res) => {
       execute_query("SELECT * FROM Ebook", [], "select").then((result) => {
         res.header("Content-Type", "application/json");
         res.json(
-          prepare_response(true, result, undefined, "Requête SQL réussie")
+            prepare_response(true, result, undefined, "Requête SQL réussie")
         );
       });
       break;
@@ -412,12 +458,12 @@ app.get("*", async (req, res) => {
       // Renvoie les éléments en tant que réponse JSON
       res.header("Content-Type", "application/json");
       res.json(
-        prepare_response(
-          datas,
-          datas,
-          "datas posted found",
-          "datas posted not found"
-        )
+          prepare_response(
+              datas,
+              datas,
+              "datas posted found",
+              "datas posted not found"
+          )
       );
       break;
 
@@ -427,7 +473,64 @@ app.get("*", async (req, res) => {
         res.header("Content-Type", "application/json");
         res.json(result.donnees);
       });
+      /*
+		res.header("Content-Type", "application/json");
+		console.log("books : ", books);
+		const imagePromises = books.map((book) => retrieveImage(book));
+		const imageUrls = await Promise.all(imagePromises);
+		res.json(imageUrls);*/
       break;
+
+    case "/get_pdf_url": // VIEW: MainPage
+      get_particular_books("undefined", "pdf").then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result.donnees);
+      });
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+      /*
+		res.header("Content-Type", "application/json");
+		console.log("books : ", books);
+		const pdfPromises = books.map((book) => retrieveImage(book));
+		const pdfUrls = await Promise.all(pdfPromises);
+		res.json(pdfUrls);*/
+      break;
+      /*
+    case "/get_new_books": // VIEW: MainPage
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+      get_particular_books(undefined, "image").then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result.donnees);
+      });
+
+      break;
+    case "/get_current_books": // VIEW: MainPage
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+      get_particular_books("current", "image").then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result.donnees);
+      });
+
+      break;
+    case "/get_discover_books": // VIEW: MainPage
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+      get_particular_books("discover", "image").then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result.donnees);
+      });
+
+      break;
+
+    case "/get_similar_books": // VIEW: BookDetails
+      // Renvoie les images des livres en tant que réponse JSON venant de firebase
+
+
+      res.header("Content-Type", "application/json");
+      console.log("books : ", books);
+      const similarImagePromises = books.map((book) => retrieveImage(book));
+      const similarImageUrls = await Promise.all(similarImagePromises);
+      res.json(similarImageUrls);
+      break;
+      */
 
     default:
       response_funct.messageFail = "Erreur d'URL pour la requête GET";
