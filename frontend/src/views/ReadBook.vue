@@ -68,7 +68,6 @@ export default {
             this.$router.push({ path: '/MainPage' })
         },
     },
-    data() { return {} },
 
 }
 </script>
