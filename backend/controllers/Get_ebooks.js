@@ -8,7 +8,7 @@ async function get_particular_books(particularity="current", email=""){
 
     try {
         if (particularity === "current"){
-            var query = "SELECT id_ebook FROM emprunter where mail_Clients = ?";
+            var query = "SELECT id_ebook FROM emprunter where mail_Clients = ? AND fin_emprunt > NOW() AND stock_emprunt = 1";
             var result = await execute_query(query, [email], "select");
             var ids = result[0].map((row) => row.id_ebook);
             if (ids.length === 0) {
@@ -48,6 +48,10 @@ async function get_particular_books(particularity="current", email=""){
             }
             var imageUrls = await Promise.all(imagePromises);
             return prepare_response(true, imageUrls, "Success to get books for firebase", "Error while retrieving books");
+        }
+        else if (particularity === "library") {
+            // Fetch books added by admin of the same library
+            var query = "SELECT * FROM Ebook WHERE id_Biblio IN (SELECT mail_admin FROM Admin_Biblio WHERE mail_admin = ?)";
         }
     }
     catch (error) {

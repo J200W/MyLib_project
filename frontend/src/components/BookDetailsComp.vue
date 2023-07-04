@@ -7,7 +7,6 @@ import { port } from "../../../backend/controllers/Tools_controllers";
 
 var admin = sessionStorage.getItem("admin");
 
-
 if (admin == null) {
     admin = false;
 }
@@ -17,142 +16,160 @@ else if (admin == "true") {
     admin = false;
 }
 
+var connected = sessionStorage.getItem("connected");
+
+if (connected == null) {
+    connected = false;
+}
+
+if (connected == "true") {
+    connected = true;
+} else {
+    connected = false;
+}
+
+
 var category = [
-    { value: "None", text: "None" },
-    { value: "adventure", text: "Adventure" },
-    { value: "romance", text: "Romance" },
-    { value: "mystery", text: "Mystery" },
-    { value: "fantasy", text: "Fantasy" },
-    { value: "horror", text: "Horror" },
-    { value: "thriller", text: "Thriller" },
-    { value: "historical-fiction", text: "Historical Fiction" },
-    { value: "self-help", text: "Self-Help" },
-    { value: "science", text: "Science" },
-    { value: "dystopian", text: "Dystopian" },
-    { value: "humor", text: "Humor" },
-    { value: "crime", text: "Crime" },
-    { value: "young-adult", text: "Young Adult" },
-    { value: "philosophy", text: "Philosophy" },
-    { value: "business", text: "Business" },
-    { value: "travel", text: "Travel" },
-    { value: "memoir", text: "Memoir" },
-    { value: "historical", text: "Historical" },
-    { value: "children", text: "Children" },
-    { value: "graphic-novel", text: "Graphic Novel" }
+    { "value": "None", "text": "None" },
+    { "value": "Adventure", "text": "Adventure" },
+    { "value": "Romance", "text": "Romance" },
+    { "value": "Mystery", "text": "Mystery" },
+    { "value": "Fantasy", "text": "Fantasy" },
+    { "value": "Horror", "text": "Horror" },
+    { "value": "Thriller", "text": "Thriller" },
+    { "value": "Historical-fiction", "text": "Historical Fiction" },
+    { "value": "Self-help", "text": "Self-Help" },
+    { "value": "Science", "text": "Science" },
+    { "value": "Dystopian", "text": "Dystopian" },
+    { "value": "Humor", "text": "Humor" },
+    { "value": "Crime", "text": "Crime" },
+    { "value": "Young-adult", "text": "Young Adult" },
+    { "value": "Philosophy", "text": "Philosophy" },
+    { "value": "Business", "text": "Business" },
+    { "value": "Travel", "text": "Travel" },
+    { "value": "Memoir", "text": "Memoir" },
+    { "value": "Historical", "text": "Historical" },
+    { "value": "Children", "text": "Children" },
+    { "value": "Graphic-novel", "text": "Graphic Novel" }
 ];
 
 var theme = [
     { "value": "None", "text": "None" },
-    { "value": "love", "text": "Love" },
-    { "value": "friendship", "text": "Friendship" },
-    { "value": "family", "text": "Family" },
-    { "value": "war", "text": "War" },
-    { "value": "survival", "text": "Survival" },
-    { "value": "identity", "text": "Identity" },
-    { "value": "betrayal", "text": "Betrayal" },
-    { "value": "forgiveness", "text": "Forgiveness" },
-    { "value": "courage", "text": "Courage" },
-    { "value": "loss", "text": "Loss" },
-    { "value": "resilience", "text": "Resilience" },
-    { "value": "redemption", "text": "Redemption" },
-    { "value": "discovery", "text": "Discovery" },
-    { "value": "hope", "text": "Hope" },
-    { "value": "adventure", "text": "Adventure" },
-    { "value": "transformation", "text": "Transformation" },
-    { "value": "coming-of-age", "text": "Coming of Age" },
-    { "value": "self-discovery", "text": "Self-Discovery" },
-    { "value": "sacrifice", "text": "Sacrifice" },
-    { "value": "justice", "text": "Justice" },
-    { "value": "manga", "text": "Manga" },
-    { "value": "comics", "text": "Comics" }
+    { "value": "Love", "text": "Love" },
+    { "value": "Friendship", "text": "Friendship" },
+    { "value": "Family", "text": "Family" },
+    { "value": "War", "text": "War" },
+    { "value": "Survival", "text": "Survival" },
+    { "value": "Identity", "text": "Identity" },
+    { "value": "Betrayal", "text": "Betrayal" },
+    { "value": "Forgiveness", "text": "Forgiveness" },
+    { "value": "Courage", "text": "Courage" },
+    { "value": "Loss", "text": "Loss" },
+    { "value": "Resilience", "text": "Resilience" },
+    { "value": "Redemption", "text": "Redemption" },
+    { "value": "Discovery", "text": "Discovery" },
+    { "value": "Hope", "text": "Hope" },
+    { "value": "Adventure", "text": "Adventure" },
+    { "value": "Transformation", "text": "Transformation" },
+    { "value": "Coming-of-age", "text": "Coming of Age" },
+    { "value": "Self-discovery", "text": "Self-Discovery" },
+    { "value": "Sacrifice", "text": "Sacrifice" },
+    { "value": "Justice", "text": "Justice" },
+    { "value": "Manga", "text": "Manga" },
+    { "value": "Comics", "text": "Comics" }
 ];
 
 </script>
 
 
 <template>
-    <form id="allPage" @submit.prevent="save_book_information()">
+    <div id="allPage">
         <div id="left-section">
             <div id="left-left-section">
-                <p v-if="admin" id="bookTitle">Title:
+                <p v-if="admin && can_modify" id="bookTitle">Title:
                     <!-- <span>{{ book.title }}</span> -->
-                    <span v-if="!admin">{{ book.titre }}</span>
-                    <input id="title" v-else v-model="book.titre" placeholder="Title" required />
+                    <span v-if="!admin || !can_modify">{{ book.titre }}</span>
+                    <input id="title" v-if="admin && can_modify" v-model="book.titre" placeholder="Title" required />
                 </p>
-                <p id="bookTitle" v-else>
+                <p id="bookTitle" v-if="!admin || !can_modify">
                     <span>{{ book.titre }}</span>
                 </p>
                 <img id="bookImg" :src="book.src" alt="{{ book.titre }}">
-                <div v-if="admin">
-                    <p>
-                        Book PDF :
+                <div v-if="admin && can_modify">
+                    <p><b>
+                            Book PDF:
+                        </b>
                     </p>
                     <input type="file" name="pdf" class="file" id="filePDF" accept=".pdf" required>
-                    <p>
-                        Image :
+                    <p><b>
+                            Image:
+                        </b>
                     </p>
                     <input type="file" name="img" id="fileIMG" class="file" @change="previewImg" accept="image/*" required>
                 </div>
-                <router-link v-if="!borrowed && !admin" to="/BorrowBook" id="borrow-book">Borrow Book</router-link>
-                <router-link v-if="borrowed && !admin" to="/ReadBook" id="borrow-book">Read Book</router-link>
+                <router-link v-if="!borrowed && !admin" to="/BorrowBook" class="borrow-book">Borrow eBook</router-link>
+                <router-link v-if="borrowed && !admin" to="/ReadBook" class="borrow-book">Read eBook</router-link>
+                <button @click="returnBook()" v-if="borrowed && !admin" class="borrow-book">Return my eBook</button>
                 <!-- add the popup -->
                 <!-- <PopUpAddFav v-if="!admin" :book="book" /> -->
-                <p>Library:
-                    <span v-if="!admin">{{ book.library }}</span>
-                    <input type="text" id="library" v-else v-model="book.library" readonly />
+                <p><b>Library: </b>
+                    <span v-if="!admin || !can_modify">{{ book.library }}</span>
+                    <input type="text" id="library" v-if="admin && can_modify" v-model="book.library" readonly />
                 </p>
-                <p>Stock:
-                    <span v-if="!admin">{{ book.stock }}</span>
-                    <input min="0" type="number" id="stock" v-else v-model="book.stock" />
+                <p><b>Stock: </b>
+                    <span v-if="!admin || !can_modify">{{ book.stock }}</span>
+                    <input min="0" type="number" id="stock" v-if="admin && can_modify" v-model="book.stock" />
                 </p>
-                <input v-if="admin" required id="borrow-book" type="submit" value="Save Information">
+                <input @click="save_book_information()" v-if="admin && can_modify" required class="borrow-book" type="submit"
+                    value="Save Information">
             </div>
             <div id="bookInfo">
                 <div id="bookFav">
                     <h2>Info</h2>
-                    <button v-if="!admin" @click="add_to_fav()" id="button-add-fav">Add to Favorites</button>
+                    <button @click.prevent="add_remove_to_fav()" v-if="!admin && !isFavorite" id="button-add-fav">Add to
+                        Favorites</button>
+                    <button @click.prevent="add_remove_to_fav()" v-if="!admin && isFavorite" id="button-remove-fav">Remove
+                        from Favorites</button>
                 </div>
-                <p>Author :
-                    <span v-if="!admin">{{ book.author }}</span>
-                    <input type="text" id="author" v-else  v-model="book.author"
-                        placeholder="Author" />
+                <p><b>Author: </b>
+                    <span v-if="!admin || !can_modify">{{ book.author }}</span>
+                    <input type="text" id="author" v-if="admin && can_modify" v-model="book.author" placeholder="Author" />
 
                 </p>
                 <hr>
-                <p>Edition :
+                <p><b>Edition: </b>
                     <!-- <span>{{book.edition}}</span> -->
-                    <span v-if="!admin">{{ book.edition }}</span>
-                    <input type="text" id="editor" v-else v-model="book.edition"
+                    <span v-if="!admin || !can_modify">{{ book.edition }}</span>
+                    <input type="text" id="editor" v-if="admin && can_modify" v-model="book.edition"
                         placeholder="Edition" />
                 </p>
                 <hr>
-                <p>Release date :
+                <p><b>Release date: </b>
                     <!-- <span>{{ book.date }}</span> -->
-                    <span v-if="!admin">{{ moment(book.date).format("YYYY-MM-DD") }}</span>
-                    <input v-else id="date" type="date" value="{{ book.date }}"
+                    <span v-if="!admin || !can_modify">{{ new Date(book.date).toDateString() }}</span>
+                    <input v-if="admin && can_modify" id="date" type="date" value="{{ book.date }}"
                         placeholder="{{ moment(book.date).format('YYYY-MM-DD') }}" />
                 </p>
                 <hr>
-                <p>Language :
-                    <span v-if="!admin">{{ book.language }}</span>
+                <p><b>Language: </b><span v-if="!admin">{{ book.language }}</span>
                     <!-- <span v-if="!admin" >{{book.language}}</span> -->
-                    <input type="text" id="language" v-else v-model="book.language" placeholder="Language" />
+                    <input type="text" id="language" v-if="admin && can_modify" v-model="book.language"
+                        placeholder="Language" />
                 </p>
                 <hr>
-                <p>Categories :
-                    <!-- <span>{{ book.category }}</span> -->
-                    <span v-if="!admin">{{ book.category[0] }}, {{ book.category[1] }}, {{ book.category[2] }}</span>
-                    <!-- <input v-else @click="console.log(book.category)" v-model="book.category" placeholder="Edition" /> -->
+                <p><b>Categories: </b>
+                    <span v-if="!admin || !can_modify">{{ book.category[0] }}, {{ book.category[1] }}, {{ book.category[2]
+                    }}</span>
                 <div class="bookAdminCompSelector">
-                    <select v-if="admin" id="category0">
+                    <select v-if="admin && can_modify" id="category0">
                         <option :key="book.category[0]">{{ book.category[0] }}</option>
                         <option v-for="c in category" :key="c">{{ c.text }}</option>
                     </select>
-                    <select v-if="admin" id="category1">
+                    <select v-if="admin && can_modify" id="category1">
                         <option :key="book.category[1]">{{ book.category[1] }}</option>
                         <option v-for="c in category" :key="c">{{ c.text }}</option>
                     </select>
-                    <select v-if="admin" id="category2">
+                    <select v-if="admin && can_modify" id="category2">
                         <option :key="book.category[2]">{{ book.category[2] }}</option>
                         <option v-for="c in category" :key="c">{{ c.text }}</option>
                     </select>
@@ -160,33 +177,28 @@ var theme = [
 
                 </p>
                 <hr>
-                <p>Themes :
-                    <!-- <span>{{ book.theme }}</span> -->
-                    <span v-if="!admin">{{ book.theme[0] }}, {{ book.theme[1] }}, {{ book.theme[2] }}</span>
-                    <!-- <input v-else @click="console.log(book.theme)" v-model="book.theme" placeholder="Edition" /> -->
+                <p><b>Themes: </b>
+                    <span v-if="!admin || !can_modify">{{ book.theme[0] }}, {{ book.theme[1] }}, {{ book.theme[2] }}</span>
                 <div class="bookAdminCompSelector">
-                    <select v-if="admin" id="theme0">
+                    <select v-if="admin && can_modify" id="theme0">
                         <option :key="book.theme[0]">{{ book.theme[0] }}</option>
                         <option v-for="t in theme" :key="t">{{ t.text }}</option>
-                        <!-- <option>Romance</option> -->
                     </select>
-                    <select v-if="admin" id="theme1">
+                    <select v-if="admin && can_modify" id="theme1">
                         <option :key="book.theme[1]">{{ book.theme[1] }}</option>
                         <option v-for="t in theme" :key="t">{{ t.text }}</option>
-                        <!-- <option>Romance</option> -->
                     </select>
-                    <select v-if="admin" id="theme2">
+                    <select v-if="admin && can_modify" id="theme2">
                         <option :key="book.theme[2]">{{ book.theme[2] }}</option>
                         <option v-for="t in theme" :key="t">{{ t.text }}</option>
-                        <!-- <option>Romance</option> -->
                     </select>
                 </div>
                 </p>
                 <hr>
-                <p>Pages :
+                <p><b>Pages: </b>
                     <!-- <span>{{ book.pages }}</span> -->
-                    <span v-if="!admin">{{ book.pages }}</span>
-                    <input id="page" type="number" min="0" v-else v-model="book.pages"
+                    <span v-if="!admin || !can_modify">{{ book.pages }}</span>
+                    <input id="page" type="number" min="0" v-if="admin && can_modify" v-model="book.pages"
                         placeholder="Page" />
                 </p>
             </div>
@@ -196,13 +208,14 @@ var theme = [
             <h2>Resume</h2>
             <div id="book-resume">
                 <div class="row">
-                    <p v-if="!admin">{{ book.description }}</p>
-                    <textarea id="resume" class="resume" v-else v-model="book.description" placeholder="resume"></textarea>
+                    <p v-if="!admin || !can_modify">{{ book.description }}</p>
+                    <textarea id="resume" class="resume" v-if="admin && can_modify" v-model="book.description"
+                        placeholder="resume"></textarea>
                 </div>
             </div>
 
         </div>
-    </form>
+    </div>
 </template>
 
 <script>
@@ -217,13 +230,72 @@ export default {
     data() {
         return {
             borrowed: null,
+            isFavorite: null,
+            can_modify: null,
         }
     },
-    props: ['book'],
+    props: ['book', 'can_modify'],
     mounted() {
-        this.fetchBorrowed()
+        this.fetchBorrowed(),
+            this.checkFavorite()
     },
     methods: {
+        checkFavorite() {
+            let link = window.location.href;
+            const id_ebook = parseInt(link.split("?id=").pop());
+            let datas = JSON.stringify({
+                id_ebook: id_ebook,
+                user_email: sessionStorage.getItem("user_email")
+            });
+            fetch("http://localhost:" + port + "/check_favorite", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: datas,
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.status === "success") {
+                        this.isFavorite = true
+                    }
+                    else {
+                        this.isFavorite = false
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+            return;
+        },
+        returnBook() {
+            if (confirm('Are you sure you want to return this book?')) {
+                let link = window.location.href;
+                const id_ebook = parseInt(link.split("?id=").pop());
+                let datas = JSON.stringify({
+                    id_ebook: id_ebook,
+                    email: sessionStorage.getItem("user_email")
+                });
+
+                fetch("http://localhost:" + port + "/return_book", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: datas,
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        alert(data.message)
+                        if (data.status === "success") {
+                            location.reload()
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    });
+            }
+        },
         previewImg() {
             var file = document.getElementById("fileIMG").files[0];
             var preview = document.getElementById("bookImg");
@@ -251,7 +323,8 @@ export default {
             }
         },
 
-        fetchBorrowed() {
+        async fetchBorrowed() {
+
             var link = window.location.href;
             const id_ebook = parseInt(link.split("?id=").pop());
             let datas = JSON.stringify({
@@ -397,10 +470,32 @@ export default {
                 console.log(error)
             }
         },
-        add_to_fav() {
-            console.log("add to fav to bd")
-
-            //
+        add_remove_to_fav() {
+            if (sessionStorage.getItem('connected') == "false" || sessionStorage.getItem('connected') == null) {
+                this.$router.push('/LogIn')
+                return;
+            }
+            fetch("http://localhost:" + port + "/add_remove_favorite",
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id_ebook: this.book.id_ebook,
+                        email: sessionStorage.getItem('user_email')
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        location.reload();
+                    }
+                    else {
+                        throw new Error(data.message)
+                    }
+                })
         }
 
     }
@@ -409,28 +504,13 @@ export default {
 </script>
 
 <style scoped>
-.btn-primary {
-    margin-left: 40px;
-    margin-top: 25px;
-    font-size: 15px;
-    padding: 10px 10px;
-    color: white;
-    background-color: #A8A787;
-    border-radius: 0%;
-}
-
-.btn-primary:hover {
-    background-color: #D79262;
-}
-
-.file-selector {
-    margin-bottom: 20px;
-}
-
 #bookTitle {
     margin: auto;
+    display: block;
+    width: 100%;
+    text-align: center;
     font-size: 2vmin;
-    margin-bottom: 1vmin;
+    margin-bottom: 2vmin !important;
 }
 
 .resume {
@@ -444,7 +524,8 @@ export default {
     align-items: center;
 }
 
-#button-add-fav {
+#button-add-fav,
+#button-remove-fav {
     padding: 1vmin;
     font-size: 2vmin;
     color: white;
@@ -529,6 +610,7 @@ input[type="number"] {
     justify-content: left;
     width: 35%;
     flex: 1;
+    padding: 0;
 }
 
 #left-left-section {
@@ -558,6 +640,12 @@ input[type="number"] {
     font-size: 2vmin;
 }
 
+#left-left-section p {
+    margin: 0;
+    padding: 0;
+    font-size: 2vmin;
+}
+
 #right-section {
     display: flex;
     flex-direction: column;
@@ -569,7 +657,7 @@ input[type="number"] {
     padding-left: 20px;
     padding-right: 20px;
     margin-left: 3vmin;
-    flex: 0.75;
+    flex: 0.95;
 }
 
 h2 {
@@ -599,9 +687,10 @@ h2 {
     margin: auto;
     display: block;
     max-width: 300px;
+    margin-bottom: 2vmin;
 }
 
-#borrow-book {
+.borrow-book {
     font-size: 1.5vmin;
     margin: auto;
     display: block;
@@ -616,7 +705,7 @@ h2 {
     width: 100%;
     text-align: center;
     margin-bottom: 2vmin;
-    
+
 }
 
 #popupAddFav {
@@ -627,10 +716,16 @@ h2 {
     cursor: pointer;
 }
 
-#borrow-book:hover {
+.borrow-book:hover {
     background-color: #D79262;
     color: white;
     transition: all 0.3s ease 0s;
+}
+
+.file {
+    border: none;
+    margin-bottom: 1vmin;
+    font-size: 2vmin;
 }
 
 @media (max-width: 1000px) {
@@ -651,8 +746,9 @@ h2 {
         align-items: flex-start;
         justify-content: left;
         width: 100%;
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 2vmin;
+        padding-right: 2vmin;
+        flex: 1;
     }
 
     #right-section {
@@ -663,15 +759,14 @@ h2 {
         color: black;
         width: 100%;
         max-height: 50vh;
-        padding-left: 20px;
-        padding-right: 20px;
+
         margin-top: 20px;
     }
 
     #bookImg {
         margin: auto;
         display: block;
-        max-width: 200px;
+        max-width: 150px;
     }
 
 }

@@ -27,10 +27,10 @@ else {
 </script>
 <template>
     <div id="clear">
-        <h1 id="title-comments">Average score : <span class="values"> {{ avg_score }} </span> /5</h1>
-        <div class="user-comment" v-if="!admin&&borrowed">
+        <h1 class="title-comments">Average score : <span class="values"> {{ avg_score }} </span> /5</h1>
+        <div class="user-comment" v-if="!admin">
             <div>
-                <h5>Based on : <span class="values">{{ nb_com }}</span> review(s)</h5>
+                <h5 class="title-comments">Based on : <span class="values">{{ nb_com }} </span> review(s)</h5>
                 <div class="rating-box">
                     <div class="stars">
                         <i class="fa-solid fa-star"></i>
@@ -45,19 +45,21 @@ else {
             <button @click="send_comment()" id="comment-button">Comment</button>
         </div>
 
-        <h1 id="title-comments" v-if="!admin && comments.length>0">Reader Comments</h1>
+        <h1 class="title-comments" v-if="!admin && comments">Reader Comments</h1>
         <div class="commentBox" v-for="comment in comments" :key="comments.mail_Clients">
             <div class="rightPanel">
-                <span><b>{{ comment.pseudo_Clients }} </b></span>
-                <h6>{{ moment(comment.date_comment).format("YYYY-MM-DD") }}</h6>
-                <div class="rating-number">
+                <div id="firstLineComment">
+                    <span class="theComment"><b>{{ comment.pseudo_Clients }} </b></span>
+                    <button v-if="comment.mail_Clients==this.email||can_modify" @click="deleteCom(comment.mail_Clients)" id="delete-button">Delete</button>
+                </div>
+                <h6 class="theComment">{{ moment(comment.date_comment).format("YYYY-MM-DD") }}</h6>
+                <div class="rating-number theComment">
                     <span id="rating-number" class="values">
                         {{ comment.note }}
                     </span> / 5
                 </div>
                 <hr>
                 <p class="theComment">{{ comment.commentaire }} </p>
-                <button v-if="admin" @click="deleteCom(comment.mail_Clients)" id="delete-button">Delete</button>
             </div>
 
         </div>
@@ -67,11 +69,12 @@ else {
 <script>
 export default {
     name: 'Comments',
-    props: ['comments', 'avg_score', 'nb_com'],
+    props: ['comments', 'avg_score', 'nb_com', 'can_modify'],
     data() {
         return {
             // Initialized to zero to begin
             current_index: 0,
+            email: sessionStorage.getItem('user_email'),
         }
     },
     mounted() {
@@ -102,6 +105,10 @@ export default {
     },
     methods: {
         send_comment() {
+            if (sessionStorage.getItem('connected') == "false" || sessionStorage.getItem('connected') == null) {
+                this.$router.push('/LogIn')
+                return;
+            }
             var link = window.location.href;
             // Get the id of the book from the url
 
@@ -175,6 +182,13 @@ export default {
     transition: all 0.3s ease 0s;
 }
 
+#firstLineComment {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
 button:hover {
     background-color: #f6e387;
 }
@@ -195,8 +209,7 @@ button:hover {
 .commentBox {
     display: flex;
     flex-direction: column;
-    gap: 1em;
-    padding: 3vmin;
+    padding: 2vmin;
     background-color: #fff;
     border-radius: 3vmin;
     margin: auto;
@@ -206,6 +219,13 @@ button:hover {
 
 .user-comment.active {
     background: #ffffff;
+}
+
+.theComment {
+    font-size: 2.2vmin;
+    color: #000;
+    margin: 0;
+    padding: 0;
 }
 
 #commentTextBox {
@@ -241,10 +261,11 @@ button:hover {
 #clear {
     clear: both;
     width: 90%;
-    margin: 0 auto;
+    margin: 0;
+    margin: auto;
 }
 
-#title-comments {
+.title-comments {
     padding-bottom: 1%;
     width: 100%;
     display: flex;
@@ -253,12 +274,15 @@ button:hover {
     margin-top: 20px !important;
     color: black;
     margin: 0 auto;
+    font-size: 3vmin;
+    gap: 1vmin;
 }
 
 #rating-number {
     color: #f27100;
     font-weight: bold;
     margin: 0 auto;
+    padding : 0;
 }
 
 .rating-box {
@@ -270,12 +294,12 @@ button:hover {
 .rating-box .stars {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 2vmin;
 }
 
 .stars i {
     color: #aeaeae;
-    font-size: 35px;
+    font-size: 3.5vmin;
     cursor: pointer;
     transition: color 0.2s ease;
 }

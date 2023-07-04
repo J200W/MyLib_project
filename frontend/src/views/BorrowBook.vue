@@ -1,99 +1,128 @@
 <script setup>
 import NavbarConnected from "@/components/NavbarConnected.vue";
 import NavbarNonConnected from "@/components/NavbarNonConnected.vue";
-import TheFooter from '@/components/TheFooter.vue'
-import MyEbooksContent from "@/components/MyEbooksContent.vue";
+import TheFooter from '@/components/TheFooter.vue';
+import { port } from "../../../backend/controllers/Tools_controllers";
+import { ref } from 'vue';
+const book = JSON.parse(sessionStorage.getItem('book'));
+const bookSrc = ref(book.src);
+const bookTitre = ref(book.titre);
 
-const book = [
-    {
-        id: 1,
-        title: "One Piece Tome 96",
-        src: require("@/assets/onepiece96.png"),
-        author: "Eiichiro Oda",
-        date: "04/11/2020",
-        library: "Bibliothèque de l'Université de Lille",
-        time: "34d 12h 32m",
-    },
-]
-
-function validateDate() {
-    var selectedDate = new Date(document.getElementById('dateInput').value);
-    var maxDate = new Date();
-    maxDate.setDate(maxDate.getDate() + 21); // Ajoute 21 jours à la date actuelle
-
-    if (selectedDate > maxDate) {
-        alert("La date saisie doit être postérieure de moins de 3 semaines à la date actuelle.");
-        return false;
-    }
-
-    return true;
-}
-var connected = true;
 </script>
-
 <template>
     <NavbarConnected v-if="connected" />
     <NavbarNonConnected v-if="!connected" />
 
     <body>
+        <img id="bookImg" :src="bookSrc" :alt="bookTitre">
         <div class="form-container">
-            <h2>Enter the loan end date</h2>
+            <div>
+                <h2 class="titre">Enter the loan end date</h2>
+            </div>
             <div class="form-group">
-                <form onsubmit="return validateDate()">
+                <form>
                     <input type="date" id="dateInput" required>
                 </form>
             </div>
-            <input type="submit" value="Borrow !" id="bouton">
+            <input type="submit" value="Confirm" class="bouton" @click="borrow">
         </div>
-        <MyEbooksContent :books="book" />
     </body>
     <TheFooter />
 </template>
-  
-  
-  
 <script>
-
+import { ref } from "vue";
 export default {
     name: 'BorrowBook',
-    data() { return {} },
+    data() {
+        return {
+            selectedDate: null
+        }
+    },
     mounted() {
         var connected = sessionStorage.getItem('connected');
+
 
         if (connected == null) {
             connected = false;
         }
-        else if (connected == "true") {
+
+        if (connected == "true") {
             connected = true;
         }
         else {
             connected = false;
         }
 
-        if (!connected) {
-            this.$router.push({ name: 'LogIn' });
+        if (connected == false) {
+            alert("You must be connected to borrow a book");
+            window.location.href = "/LogIn";
         }
+        return
     },
-    methods: {}
+    methods: {
+        borrow() {
+            this.selectedDate = document.getElementById('dateInput').value;
+            // Put maximum date to 3 weeks after today
+            let today = new Date();
+            let maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 21);
+            if (this.selectedDate > maxDate.toJSON().slice(0, 10)) {
+                alert("You can't borrow a book for more than 3 weeks");
+                return;
+            }
+            const book = JSON.parse(sessionStorage.getItem('book'));
+            let datas = {
+                user_mail: sessionStorage.getItem('user_email'),
+                book_id: book.id_ebook,
+                debut_emprunt: new Date().toJSON().slice(0, 10),
+                fin_emprunt: this.selectedDate
+            };
+            console.log(datas)
+            fetch("http://localhost:" + port + "/borrow", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+                    //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
+                },
+                body: JSON.stringify(datas)
+            })
+                .then(response => response.text())
+                .then(data => {
+                    // Récupérer les données au format JSON
+                    data = JSON.parse(data);
+                    if (data.status === "success") {
+                        alert("Book borrowed successfully");
+                        this.$router.push('/MyEbooks');
+                    }
+                    else {
+                        alert("Error");
+                    }
+                }).catch(error => {
+                    // Gérer les erreurs
+                    console.error("Erreur lors de l'envoi du formulaire :", error);
+                });
+            // Reste du code de votre méthode borrow...
+            return true;
+        }
+    }
 }
 </script>
-
 <style scoped>
-h2 {
-    font-size: 5vmin;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+#bookImg {
     margin: auto;
-    max-width: 90%;
+    display: block;
+    max-width: 250px;
 }
 
 .form-container {
-    margin-top: 3vmin;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #FFFFFF;
 }
 
 .form-group {
@@ -111,23 +140,5 @@ select {
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
-}
-
-#bouton {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #D0AB77;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease 0s;
-    margin: auto;
-}
-
-#bouton:hover {
-    background-color: #D79262;
-    transition: all 0.3s ease 0s;
 }
 </style>

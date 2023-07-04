@@ -49,6 +49,10 @@ export function link_ManageUsers(event){
     this.$router.push({path: '/ManageUsers'})
 }
 
+export function link_ManageBooks(event){
+    this.$router.push({path: '/ManageBooks'})
+}
+
 // Exportez les fonctions sous forme d'objet
 export default {
     link_MyAccount,
@@ -65,6 +69,6 @@ export default {
     link_ReadBook,
     link_SearchBook,
     link_ShareBook,
-    link_ManageUsers
-
+    link_ManageUsers,
+    link_ManageBooks
 }

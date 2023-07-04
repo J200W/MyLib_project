@@ -5,37 +5,7 @@
     import TheFooter from '@/components/TheFooter.vue'
     import MyEbooksSort from "@/components/MyEbooksSort.vue";
     import MyEbooksContent from "@/components/MyEbooksContent.vue";
-    
-    const books_fav = [
-      {
-        id: 1,
-        title: "One Piece Tome 96",
-        src: require("@/assets/onepiece96.png"),
-        author: "Eiichiro Oda",
-        date: "04/11/2020",
-        library: "Bibliothèque de l'Université de Lille",
-        time: "34d 12h 32m",
-      },
-
-      {
-        id: 2,
-        title: "One Piece Tome 97",
-        src: require("@/assets/onepiece97.png"),
-        author: "Eiichiro Oda",
-        date: "03/02/2021",
-        library: "Bibliothèque de l'Université de Paris 8",
-        time: "12d 23h 12m",
-      },
-      {
-        id: 3,
-        title: "One Piece Tome 98",
-        src: require("@/assets/onepiece98.png"),
-        author: "Eiichiro Oda",
-        date: "07/04/2021",
-        library: "Bibliothèque Municipale de Lyon",
-        time: "4d 12h 32m",
-      },
-    ]
+    import { port } from "../../../backend/controllers/Tools_controllers";
 
     var connected = sessionStorage.getItem('connected');
 
@@ -43,26 +13,59 @@
         connected = false;
     }
 
+    if (connected == "true") {
+        connected = true;
+    }
+    else {
+        connected = false;
+    }
+
+    const pseudo = sessionStorage.getItem('user_pseudo');
+
 </script>
 
 <template>
   <NavbarConnected v-if="connected" />
   <NavbarNonConnected v-if="!connected" />
-  <h1>Mes favoris</h1>
   <body>
-     <MyEbooksSort pseudo="Username" />
-     <MyEbooksContent :books="books_fav" />
+     <MyEbooksSort :pseudo="pseudo" />
+     <MyEbooksContent :books="books_fav" :fav="true" />
   </body>
     <TheFooter />
 </template>
 
-<style></style>
+<style scoped></style>
   
 <script>
     export default {
         name: 'MyFavorites',
-        data() { return {} },
+        data() { return {
+            books_fav : []
+        } },
+        mounted() {
+            this.fetchMyFavorites()
+        },
         methods: {
+          fetchMyFavorites() {
+            fetch("http://localhost:" + port + "/get_favorite", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: sessionStorage.getItem('user_email')
+                }),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                this.books_fav = data.donnees;
+                console.log(this.books_fav)
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+
+          }
         }
     }
 </script>

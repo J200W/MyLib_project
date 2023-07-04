@@ -154,7 +154,7 @@ export default
 
             submitForm(event) {
                 // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
-
+                if (this.search == "") this.search = " ";
                 if (this.search !== '') {
                     console.log('Formulaire soumis !', this.search);
                     event.preventDefault();

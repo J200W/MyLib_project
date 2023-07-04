@@ -48,8 +48,9 @@ export default {
     },
     methods: {
         fetchBookPDF() {
+            console.log(sessionStorage.getItem('id_ebook'))
             var datas = JSON.stringify({
-                id_ebook: sessionStorage.getItem('id_book')
+                id_ebook: sessionStorage.getItem('id_ebook')
             });
 
             fetch("http://localhost:" + port + "/get_pdf",
@@ -70,6 +71,5 @@ export default {
                 });
         }
     },
-
 }
 </script>

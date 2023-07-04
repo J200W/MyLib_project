@@ -15,6 +15,7 @@ import ShareBook from '../views/ShareBook.vue'
 import MainPage from '../views/MainPage.vue'
 import ManageUsers from '../views/ManageUsers.vue'
 import AddBook from '../views/AddBook.vue'
+import ManageBooks from '../views/ManageBooks.vue'
 
 
 const routes = [
@@ -92,6 +93,11 @@ const routes = [
     path: '/ManageUsers',
     name: 'ManageUsers',
     component: ManageUsers
+  },
+  {
+    path: '/ManageBooks',
+    name: 'ManageBooks',
+    component: ManageBooks
   },
   {
     path: '/AddBook',

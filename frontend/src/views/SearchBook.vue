@@ -20,17 +20,12 @@ if (connected == null) {
 </script>
 
 <template>
-    <div v-if="isLoading" class="loading">
-        <p id="loading">Loading...</p>
-    </div>
-    <div v-else>
-        <NavbarConnected v-if="connected" />
-        <NavbarNonConnected v-if="!connected" />
-        <h1 id="title-MyEbook">Results for "{{ this.search }}"</h1>
-        <SearchBookSort :result="research_data" @category="updateCategory" @theme="updateTheme" />
-        <SearchBookContent v-if="book_list" :books="book_list" />
-        <TheFooter />
-    </div>
+    <NavbarConnected v-if="connected" />
+    <NavbarNonConnected v-if="!connected" />
+    <h1 id="title-MyEbook">Results for "{{ this.search }}"</h1>
+    <SearchBookSort :result="research_data" @category="updateCategory" @theme="updateTheme" />
+    <SearchBookContent v-if="book_list" :books="book_list" :manage="false" />
+    <TheFooter />
 </template>
   
 
@@ -94,7 +89,7 @@ export default {
             sessionStorage.setItem('search', this.search);
             var category = url.searchParams.get("category");
             var theme = url.searchParams.get("theme");
-            var sort =  url.searchParams.get("sort_filter");
+            var sort = url.searchParams.get("sort_filter");
 
             // replace + by space
             this.search = this.search.replace(/\+/g, ' ');
@@ -104,7 +99,7 @@ export default {
             let datas = {
                 search: this.search,
                 category: category,
-                theme: theme, 
+                theme: theme,
                 sort_filter: sort
             };
 

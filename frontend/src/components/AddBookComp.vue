@@ -164,7 +164,6 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                             <option value="Justice">Justice</option>
                             <option value="Manga">Manga</option>
                             <option value="Comics">Comics</option>
-
                         </select>
                     </div>
                     <div class="form-subline-3">
