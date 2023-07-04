@@ -76,15 +76,7 @@ async function req_read_book(id_client, id_book){
     }
 }
 
-function verif_stock_date(date_debut, date_fin){
-    var date_debut_stock = new Date(date_debut)
-    var date_fin_stock = new Date(date_fin)
-    var date_now = new Date()
-    if (date_now > date_debut && date_now < date_fin){
-        return 1
-    }
-    return 0
-}
+
 
 async function req_emprunt_dates(id_client, id_book){
     try {
@@ -281,5 +273,4 @@ async function get_biblio(id_Biblio) {
 // =========================================================
 // EXPORTATIONS
 module.exports = { req_listEbooks, req_my_books, req_read_book, req_book_details_show, req_book_details_mod, req_emprunt_dates
-, req_share_book, req_new_comment, req_delete_comment, get_comments_for_ebook, req_similarEbooks, req_books_details,
-    verif_stock_date};
+, req_share_book, req_new_comment, req_delete_comment, get_comments_for_ebook, req_similarEbooks, req_books_details};
