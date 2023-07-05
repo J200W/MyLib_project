@@ -2,178 +2,173 @@
 import NavbarSimple from "@/components/NavbarSimple.vue";
 import TheFooter from "@/components/TheFooter.vue";
 import {port} from "../../../backend/controllers/Tools_controllers";
-import {link_LogIn } from "@/router/functions_nav";
+import {link_MainPage} from "@/router/functions_nav";
 </script>
 
 
 <template>
-    <NavbarSimple />
+  <NavbarSimple />
 
-    <body>
-        <div id="tab-selector">
-            <router-link class="tabs" to="/LogIn">Log In</router-link>
-            <router-link class="tabs selected" to="/SignUp">Sign Up</router-link>
-        </div>
+  <body>
+  <div id="tab-selector">
+    <router-link class="tabs" to="/LogIn">Log In</router-link>
+    <router-link class="tabs selected" to="/SignUp">Sign Up</router-link>
+  </div>
 
-        <form id="form-signup" @submit="submitForm">
-            <label class="form-label" for="pseudo">Pseudo</label>
-            <input class="form-input" type="text" id="pseudo" name="pseudo" v-model="pseudo" required>
-            <label class="form-label" for="email">Email Address</label>
-            <input class="form-input" type="email" id="email" name="email" v-model="email" required>
-            <label class="form-label" for="password">Password</label>
-            <input class="form-input" type="password" id="password" name="password" v-model="password" required><br><br>
-            <input class="form-submit" type="submit" value="Submit">
-        </form>
+  <form id="form-signup" @submit="submitForm">
+    <label class="form-label" for="pseudo">Pseudo</label>
+    <input class="form-input" type="text" id="pseudo" name="pseudo" v-model="pseudo" required>
+    <label class="form-label" for="email">Email Address</label>
+    <input class="form-input" type="email" id="email" name="email" v-model="email" required>
+    <label class="form-label" for="password">Password</label>
+    <input class="form-input" type="password" id="password" name="password" v-model="password" required><br><br>
+    <input class="form-submit" type="submit" value="Submit">
+  </form>
 
-    </body>
-    <TheFooter />
+  </body>
+  <TheFooter />
 </template>
 
 <style>
 * {
-    box-sizing: border-box;
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .links {
-    text-decoration: none;
-    color: white;
-    background-color: #0C0A0B;
-    font-size: 2.5vmin;
-    border: #f5f5f5 2px solid;
-    border-radius: 40px;
-    padding: 0.8rem;
-    margin-left: 1rem;
+  text-decoration: none;
+  color: white;
+  background-color: #0C0A0B;
+  font-size: 2.5vmin;
+  border: #f5f5f5 2px solid;
+  border-radius: 40px;
+  padding: 0.8rem;
+  margin-left: 1rem;
 }
 
 .links:hover {
-    color: black;
-    background-color: #FFF !important;
-    transition: all 0.1s ease-in-out;
+  color: black;
+  background-color: #FFF !important;
+  transition: all 0.1s ease-in-out;
 }
 
 #form-signup {
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    padding: 40px 40px 40px 40px;
-    width: 50%;
-    background-color: #FFF;
-    top: 50%;
-    left: 50%;
-    margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: left;
+  padding: 40px 40px 40px 40px;
+  width: 50%;
+  background-color: #FFF;
+  top: 50%;
+  left: 50%;
+  margin: auto;
 }
 
 .form-label {
-    font-size: 2.5vmin;
-    margin-bottom: 0.5rem;
+  font-size: 2.5vmin;
+  margin-bottom: 0.5rem;
 }
 
 .form-input {
-    font-size: 2.5vmin;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border-radius: 10px;
-    border: #A09C9C 2px solid;
-    background-color: #A09C9C;
-    color: #FFF;
+  font-size: 2.5vmin;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  border: #A09C9C 2px solid;
+  background-color: #A09C9C;
+  color: #FFF;
 }
 
 .form-submit {
-    font-size: 2.5vmin;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border-radius: 10px;
-    border: #A8A787 2px solid;
-    background-color: #D0AB77;
-    color: #FFF;
-    width: 50%;
-    margin: auto;
+  font-size: 2.5vmin;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  border: #A8A787 2px solid;
+  background-color: #D0AB77;
+  color: #FFF;
+  width: 50%;
+  margin: auto;
 }
 
 
 .form-submit:hover {
-    background-color: #D79262;
-    border: #545444 2px solid;
-    color: white;
-    transition: all 0.3s ease 0s;
+  background-color: #D79262;
+  border: #545444 2px solid;
+  color: white;
+  transition: all 0.3s ease 0s;
 }
 
 @media (max-width: 1100px) {
-    #section {
-        width: 50%;
-    }
+  #section {
+    width: 50%;
+  }
 
-    #section router-link {
-        font-size: 2vmin;
-        padding: 0.6rem;
-    }
+  #section router-link {
+    font-size: 2vmin;
+    padding: 0.6rem;
+  }
 
-    #logo {
-        height: 3rem;
-    }
+  #logo {
+    height: 3rem;
+  }
 }
 </style>
-  
+
 <script>
-import {link_LogIn} from "@/router/functions_nav";
-
 export default {
-    name: 'SignUp',
-    data() {
-        return {
-            pseudo: '',
-            email: '',
-            password: ''
-        };
+  name: 'SignUp',
+  data() {
+    return {
+      pseudo: '',
+      email: '',
+      password: ''
+    };
+  },
+  mounted() {
+    this.fetchUserData();
+  },
+  methods: {
+    fetchUserData() {
     },
-    mounted() {
-        this.fetchUserData();
-    },
-    methods: {
-        fetchUserData() {
+    submitForm(event) {
+      // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
+      console.log('Formulaire soumis !', this.email, this.password, this.pseudo);
+      event.preventDefault();
+
+      var datas = {
+        email: this.email,
+        password: this.password,
+        pseudo: this.pseudo,
+      };
+
+      fetch("http://localhost:"+port+"/send_signUp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
+          //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
         },
-        submitForm(event) {
-            // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
-            console.log('Formulaire soumis !', this.email, this.password, this.pseudo);
-            event.preventDefault();
+        body: JSON.stringify(datas)
+      })
+          .then(response => response.text())
+          .then(data => {
+            // Traiter la réponse du serveur
+            data = JSON.parse(data);
+            if (data.status == "success") {
+              alert(data.message);
+              this.$router.push('/LogIn');
+            } else {
+              alert(data.message);
+            }
 
-            var datas = {
-                email: this.email,
-                password: this.password,
-                pseudo: this.pseudo,
-            };
+          }).catch(error => {
+        // Gérer les erreurs
+        console.error("Erreur lors de l'envoi du formulaire :", error);
+      });
 
-          fetch("http://localhost:"+ port +"/send_signUp", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
-              //"Content-Encoding": "gzip" // Ajouter l'en-tête Content-Encoding avec la valeur gzip
-            },
-            body: JSON.stringify(datas)
-          })
-              .then(response => response.text())
-              .then(data => {
-                // Traiter la réponse du serveur
-                data = JSON.parse(data);
-                const message = data.message;
-                console.log(data)
-                alert(message);
-                if (data.status === "success") {
-                  sessionStorage.setItem('user_email', data.donnees.email);
-                  sessionStorage.setItem('connected', true);
-                  link_LogIn.call(this)
-                  //this.$router.push('/LogIn');
-                }
-
-              }).catch(error => {
-            // Gérer les erreurs
-            console.error("Erreur lors de l'envoi du formulaire :", error);
-          });
-
-        }
     }
+  }
 }
 </script>
