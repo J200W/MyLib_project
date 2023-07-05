@@ -187,5 +187,5 @@ async function req_can_modify_book(email, id_ebook) {
 // =========================================================
 
 module.exports = { req_new_book, req_upload_book_pdf, 
-    req_upload_book_img, req_delete_comment, req_update_book, req_can_modify_book };
+    req_upload_book_img, req_delete_comment, req_update_book, req_can_modify_book};
 

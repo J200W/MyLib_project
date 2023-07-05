@@ -21,9 +21,7 @@ const {
   req_signUp,
 
   req_borrowed,
-  req_get_comments,
-  req_get_book_stat,
-  req_add_comment,
+
   req_borrowBook,
   req_add_remove_favorite,
   req_check_favorite,
@@ -240,6 +238,10 @@ app.post("*", async (req, res) => {
     case "/return_book":
       // Retourne une réponse JSON
       req_return_book(datas.email, datas.id_ebook).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break
 
         /*
    case "/delete_comment": // COMPONENT: Comment.vue

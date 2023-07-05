@@ -52,7 +52,6 @@
             <option value="Manga">Manga</option>
             <option value="Comics">Comics</option>
         </select>
-    </div>
 </template>
 
 <style>

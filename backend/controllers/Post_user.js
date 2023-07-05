@@ -217,7 +217,10 @@ async function req_return_book(mail_Clients, id_ebook) {
 
 // =========================================================
 // EXPORTATIONS
-module.exports = { req_modifyMyAccount, req_signIn, req_signUp, req_borrowed, 
-    req_get_comments, req_get_book_stat, req_add_comment, req_borrowBook, req_add_remove_favorite, 
+module.exports = { req_modifyMyAccount, req_signIn, req_signUp, req_borrowBook, req_add_remove_favorite,
     req_check_favorite, req_get_favorites,req_return_book, BorrowBook,};
+/*
+, req_borrowed,
+    req_get_comments, req_get_book_stat, req_add_comment,
+ */
 

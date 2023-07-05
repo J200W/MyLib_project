@@ -40,7 +40,7 @@ import {port, afficherMessage} from "../../../backend/controllers/Tools_controll
                 <p class="theComment">{{ comment.commentaire }} </p>
             </div>
 
-
+   <!--
     <div v-for="(comment, index) in comments" :key="index"  class="commentBox">
       <div class="leftPanelImg">
         <div class="rightPanel">
@@ -73,8 +73,9 @@ import {port, afficherMessage} from "../../../backend/controllers/Tools_controll
         <button type="reset" id="button_newComment_reset">Reset</button>
         <button type="submit" id="button_newComment_submit">{{ isNewComment ? 'Submit' : 'Save Changes' }}</button>
       </div>
-    </form>
+    </form>-->
   </div>
+    </div>
 </template>
 
 <script>
@@ -150,26 +151,6 @@ export default {
                 })
 
         },
-        body: JSON.stringify({ id_ebook: this.book.id_ebook }),
-      })
-          .then(response => response.json())
-          .then(data => {
-            console.log(data.message)
-            if(data.status === "success")
-              data.donnees.forEach(comment => {
-                this.comments.push({email_client: comment.mail_Clients,
-                  pseudo_client: comment.pseudo_Clients,
-                  date_comment: comment.date_comment,
-                  note: comment.note,
-                  commentaire: comment.commentaire
-                })
-              })
-              //this.comments.push(data.donnees);
-          })
-          .catch(error => {
-            console.error("Erreur lors de la récupération des commentaires :", error);
-          });
-    },
 
 
     submitForm(event) {

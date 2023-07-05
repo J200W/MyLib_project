@@ -236,281 +236,275 @@ let save = false
 const test_array = [1, 2, 3, 4]
 
 export default {
-    name: 'BookDetailComp',
-    data() {
-        return {
-            borrowed: null,
-            isFavorite: null,
-            can_modify: null,
-        }
-    },
-    props: ['book', 'can_modify'],
-    mounted() {
-        this.fetchBorrowed(),
-            this.checkFavorite()
-    },
-    methods: {
-        checkFavorite() {
-            let link = window.location.href;
-            const id_ebook = parseInt(link.split("?id=").pop());
-            let datas = JSON.stringify({
-                id_ebook: id_ebook,
-                user_email: sessionStorage.getItem("user_email")
-            });
-            fetch("http://localhost:" + port + "/check_favorite", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: datas,
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.status === "success") {
-                        this.isFavorite = true
-                    }
-                    else {
-                        this.isFavorite = false
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                });
-            return;
-        },
-        returnBook() {
-            if (confirm('Are you sure you want to return this book?')) {
-                let link = window.location.href;
-                const id_ebook = parseInt(link.split("?id=").pop());
-                let datas = JSON.stringify({
-                    id_ebook: id_ebook,
-                    email: sessionStorage.getItem("user_email")
-                });
-
-                fetch("http://localhost:" + port + "/return_book", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: datas,
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        alert(data.message)
-                        if (data.status === "success") {
-                            location.reload()
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error);
-                    });
-            }
-        },
-        previewImg() {
-            var file = document.getElementById("fileIMG").files[0];
-            var preview = document.getElementById("bookImg");
-            const reader = new FileReader();
-
-            reader.addEventListener("load", function () {
-                // convert image file to base64 string
-                preview.src = reader.result;
-            }, false);
-
-            if (file) {
-                reader.readAsDataURL(file);
-            }
-        },
-        confirm_action() {
-            let test = confirm("Are you sure you want to erase the previous informations with the new ones ? ");
-
-    save_book_information() {
-      // this.confirm_action()
-      if (save === false) {
-        console.log("new informations saved")
-        save = true
-
-
-        async fetchBorrowed() {
-
-            var link = window.location.href;
-            const id_ebook = parseInt(link.split("?id=").pop());
-            let datas = JSON.stringify({
-                email: sessionStorage.getItem('user_email'),
-                id_ebook: id_ebook
-            })
-            fetch("http://localhost:" + port + "/borrowed",
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: datas
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status !== 'success') {
-                        this.borrowed = false
-                    }
-                    else {
-                        this.borrowed = true
-                    }
-                    sessionStorage.setItem('borrowed', this.borrowed)
-                })
-            var date = document.getElementById("date");
-            if (date) date.value = moment(this.book.date).format('YYYY-MM-DD');
-        },
-
-    },
-    add_to_fav() {
-      console.log("add to fav to bd")
-      console.log((sessionStorage.getItem("admin") !== "true") && (sessionStorage.getItem('user_email') != null))
-      //
-    },
-
-
-            console.log(datas)
-            try {
-                // Convert book file to base64
-                const readerPDF = new FileReader();
-                readerPDF.readAsArrayBuffer(filePDF);
-                readerPDF.onloadend = function () {
-                    var arrayBuffer = readerPDF.result;
-                    var bytes = new Uint8Array(arrayBuffer);
-                    var book = JSON.parse(sessionStorage.getItem("book"))
-                    var old_name = book.name_pdf
-                    var data_pdf = {
-                        pdf: bytes,
-                        name: filePDF.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
-                        old_name: old_name
-                    }
-                    fetch("http://localhost:" + port + "/update_book_pdf",
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(data_pdf)
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status !== 'success') {
-                                throw new Error(data.message)
-                            }
-                        })
-                }
-                // Convert image file to base64
-                var readerIMG = new FileReader();
-                readerIMG.readAsArrayBuffer(fileIMG);
-                readerIMG.onloadend = function () {
-                    var arrayBuffer = readerIMG.result;
-                    var bytes = new Uint8Array(arrayBuffer);
-                    var book = JSON.parse(sessionStorage.getItem("book"))
-                    var old_img = book.name_img
-                    var data_img = {
-                        img: bytes,
-                        name: fileIMG.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
-                        old_name: old_img
-                    }
-                    fetch("http://localhost:" + port + "/update_book_img",
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(data_img)
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status !== 'success') {
-                                throw new Error(data.message)
-                            }
-                        })
-                }
-                fetch("http://localhost:" + port + "/update_book",
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(datas)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            alert(data.message);
-                            location.reload();
-                        }
-                        else {
-                            throw new Error(data.message)
-                        }
-                    })
-            }
-            catch (error) {
-                console.log(error)
-            }
-        },
-        add_remove_to_fav() {
-            if (sessionStorage.getItem('connected') == "false" || sessionStorage.getItem('connected') == null) {
-                this.$router.push('/LogIn')
-                return;
-            }
-            fetch("http://localhost:" + port + "/add_remove_favorite",
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id_ebook: this.book.id_ebook,
-                        email: sessionStorage.getItem('user_email')
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        alert(data.message);
-                        location.reload();
-                    }
-                    else {
-                        throw new Error(data.message)
-                    }
-                })
-        }
-
-
-    verif_ifClient(){
-      return (sessionStorage.getItem("admin") !== "true") && (sessionStorage.getItem('user_email') != null)
-    },
-
-    storeBookInSessionStorage() {
-      sessionStorage.setItem('Book', JSON.stringify(this.book));
-    },
-
-    storeBookBorrowedInSessionStorage() {
-      this.storeBookInSessionStorage()
-      fetch("http://localhost:" + port +"/get_emprunt_dates", {
-        method: 'POST',
+  name: 'BookDetailComp',
+  data() {
+    return {
+      borrowed: null,
+      isFavorite: null,
+      can_modify: null,
+    }
+  },
+  props: ['book', 'can_modify'],
+  mounted() {
+    this.fetchBorrowed(),
+        this.checkFavorite()
+  },
+  methods: {
+    checkFavorite() {
+      let link = window.location.href;
+      const id_ebook = parseInt(link.split("?id=").pop());
+      let datas = JSON.stringify({
+        id_ebook: id_ebook,
+        user_email: sessionStorage.getItem("user_email")
+      });
+      fetch("http://localhost:" + port + "/check_favorite", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          id_ebook: this.book.id_ebook,
-          user_email: sessionStorage.getItem("user_email")
-        })
+        body: datas,
       })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              this.isFavorite = true
+            } else {
+              this.isFavorite = false
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      return;
+    },
+    returnBook() {
+      if (confirm('Are you sure you want to return this book?')) {
+        let link = window.location.href;
+        const id_ebook = parseInt(link.split("?id=").pop());
+        let datas = JSON.stringify({
+          id_ebook: id_ebook,
+          email: sessionStorage.getItem("user_email")
+        });
+
+        fetch("http://localhost:" + port + "/return_book", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: datas,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+              alert(data.message)
+              if (data.status === "success") {
+                location.reload()
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+      }
+    },
+    previewImg() {
+      var file = document.getElementById("fileIMG").files[0];
+      var preview = document.getElementById("bookImg");
+      const reader = new FileReader();
+
+      reader.addEventListener("load", function () {
+        // convert image file to base64 string
+        preview.src = reader.result;
+      }, false);
+
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    },
+    confirm_action() {
+      let test = confirm("Are you sure you want to erase the previous informations with the new ones ? ");
+    },
+
+
+    async fetchBorrowed() {
+
+      var link = window.location.href;
+      const id_ebook = parseInt(link.split("?id=").pop());
+      let datas = JSON.stringify({
+        email: sessionStorage.getItem('user_email'),
+        id_ebook: id_ebook
+      })
+      fetch("http://localhost:" + port + "/borrowed",
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: datas
+          })
           .then(response => response.json())
           .then(data => {
-            console.log(data.message);
-            if(data.status === "success"){
-              sessionStorage.setItem("book_detailed_emprunt_dates", JSON.stringify(data.donnees));
+            if (data.status !== 'success') {
+              this.borrowed = false
+            } else {
+              this.borrowed = true
             }
+            sessionStorage.setItem('borrowed', this.borrowed)
           })
-          .catch(error => {
-            console.error('Erreur lors de la récupération des données utilisateur:', error);
-          })
-    }
+      var date = document.getElementById("date");
+      if (date) date.value = moment(this.book.date).format('YYYY-MM-DD');
+    },
 
+  },
+  add_to_fav() {
+    console.log("add to fav to bd")
+    console.log((sessionStorage.getItem("admin") !== "true") && (sessionStorage.getItem('user_email') != null))
+    //
+  },
+
+  save_book_information() {
+    // this.confirm_action()
+    if (save === false) {
+      console.log("new informations saved")
+      save = true
+      console.log(datas)
+      try {
+        // Convert book file to base64
+        const readerPDF = new FileReader();
+        readerPDF.readAsArrayBuffer(filePDF);
+        readerPDF.onloadend = function () {
+          var arrayBuffer = readerPDF.result;
+          var bytes = new Uint8Array(arrayBuffer);
+          var book = JSON.parse(sessionStorage.getItem("book"))
+          var old_name = book.name_pdf
+          var data_pdf = {
+            pdf: bytes,
+            name: filePDF.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
+            old_name: old_name
+          }
+          fetch("http://localhost:" + port + "/update_book_pdf",
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data_pdf)
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.status !== 'success') {
+                  throw new Error(data.message)
+                }
+              })
+        }
+        // Convert image file to base64
+        var readerIMG = new FileReader();
+        readerIMG.readAsArrayBuffer(fileIMG);
+        readerIMG.onloadend = function () {
+          var arrayBuffer = readerIMG.result;
+          var bytes = new Uint8Array(arrayBuffer);
+          var book = JSON.parse(sessionStorage.getItem("book"))
+          var old_img = book.name_img
+          var data_img = {
+            img: bytes,
+            name: fileIMG.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
+            old_name: old_img
+          }
+          fetch("http://localhost:" + port + "/update_book_img",
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data_img)
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.status !== 'success') {
+                  throw new Error(data.message)
+                }
+              })
+        }
+        fetch("http://localhost:" + port + "/update_book",
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(datas)
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.status === 'success') {
+                alert(data.message);
+                location.reload();
+              } else {
+                throw new Error(data.message)
+              }
+            })
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  },
+  add_remove_to_fav() {
+    if (sessionStorage.getItem('connected') == "false" || sessionStorage.getItem('connected') == null) {
+      this.$router.push('/LogIn')
+      return;
+    }
+    fetch("http://localhost:" + port + "/add_remove_favorite",
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id_ebook: this.book.id_ebook,
+            email: sessionStorage.getItem('user_email')
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            alert(data.message);
+            location.reload();
+          } else {
+            throw new Error(data.message)
+          }
+        })
+  },
+
+
+  verif_ifClient() {
+    return (sessionStorage.getItem("admin") !== "true") && (sessionStorage.getItem('user_email') != null)
+  },
+
+  storeBookInSessionStorage() {
+    sessionStorage.setItem('Book', JSON.stringify(this.book));
+  },
+
+  storeBookBorrowedInSessionStorage() {
+    this.storeBookInSessionStorage()
+    fetch("http://localhost:" + port + "/get_emprunt_dates", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id_ebook: this.book.id_ebook,
+        user_email: sessionStorage.getItem("user_email")
+      })
+    })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.message);
+          if (data.status === "success") {
+            sessionStorage.setItem("book_detailed_emprunt_dates", JSON.stringify(data.donnees));
+          }
+        })
+        .catch(error => {
+          console.error('Erreur lors de la récupération des données utilisateur:', error);
+        })
   }
+
 }
 
 </script>

@@ -69,8 +69,6 @@ async function req_my_books(id_client) {
     }
 }
 
-
-=======
 async function req_history(id_client) {
     try {
 
