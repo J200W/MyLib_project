@@ -16,12 +16,14 @@ if (connected == "true") {
 if (connected == "false") {
   connected = false;
 }
+
+const pseudo = sessionStorage.getItem("user_pseudo");
 </script>
 
 <template>
   <NavbarConnected v-if="connected" />
   <NavbarNonConnected v-if="!connected" />
-  <h1 id="title">My History</h1>
+  <h1 id="title">History of {{ pseudo }}</h1>
 
   <body>
     <MyEbooksContent :books=books_done />

@@ -107,7 +107,7 @@ var theme = [
                     </p>
                     <input type="file" name="img" id="fileIMG" class="file" @change="previewImg" accept="image/*" required>
                 </div>
-                <router-link v-if="!borrowed && !admin" to="/BorrowBook" class="borrow-book">Borrow eBook</router-link>
+                <button v-if="!borrowed && !admin" @click="borrowBook()" class="borrow-book">Borrow eBook</button>
                 <router-link v-if="borrowed && !admin" to="/ReadBook" class="borrow-book">Read eBook</router-link>
                 <div id="options">
                     <button @click="returnBook()" v-if="borrowed && !admin" class="borrow-book">Return my eBook</button>
@@ -243,6 +243,18 @@ export default {
         this.checkFavorite()
     },
     methods: {
+        borrowBook(){
+            var connected = sessionStorage.getItem("connected")
+            if (connected == null) {
+                this.$router.push("/LogIn")
+            }
+            else if (connected == false) {
+                this.$router.push("/LogIn")
+            }
+            else {
+                this.$router.push("/BorrowBook?")
+            }
+        },
         checkFavorite() {
             let link = window.location.href;
             const id_ebook = parseInt(link.split("?id=").pop());

@@ -40,7 +40,11 @@ const bookTitre = ref(book.titre);
 
 
 
-<style></style>
+<style scoped>
+body {
+  height: 87vh;
+}
+</style>
 
 <script>
 
@@ -75,8 +79,8 @@ export default {
         })
         .then((response) => response.json())
         .then((data) => {   
-            this.debut_emprunt = moment(data.donnees[0].debut_emprunt).format('DD-MM-YYYY');
-            this.fin_emprunt = moment(data.donnees[0].fin_emprunt).format('DD-MM-YYYY');
+            this.debut_emprunt = moment(data.donnees[0].debut_emprunt).format('YYYY-MM-DD');
+            this.fin_emprunt = moment(data.donnees[0].fin_emprunt).format('YYYY-MM-DD');
             this.time = new Date(data.donnees[0].fin_emprunt) - new Date(data.donnees[0].debut_emprunt);
             // Convert this.time to days, hours, minutes, seconds
             this.time = moment.duration(this.time).humanize();

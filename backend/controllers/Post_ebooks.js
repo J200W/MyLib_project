@@ -44,23 +44,41 @@ async function req_listEbooks(title, category="", theme="", sort_filter=""){
 
 async function req_my_books(id_client) {
     try {
-        const query = "SELECT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=? AND fin_emprunt > NOW()";
+        var query = "SELECT * FROM emprunter JOIN Ebook on Ebook.id_ebook=emprunter.id_ebook WHERE mail_Clients=? AND fin_emprunt > NOW()";
         const [rows] = await execute_query(query, [id_client], "select");
         // get also the books in partager
-        const query2 = "SELECT * FROM partager JOIN Ebook on Ebook.id_ebook=partager.id_ebook WHERE mail_Clients=? AND fin_emprunt > NOW()";
+        const query2 = "SELECT * FROM partager JOIN Ebook on Ebook.id_ebook=partager.id_ebook WHERE mail_Clients_dest=? AND fin_partage > NOW()";
         const [rows2] = await execute_query(query2, [id_client], "select");
         rows.push(...rows2);
         for (let i = 0; i < rows.length; i++) {
             rows[i].name_img = await retrieveImage(rows[i]);
             var id_Biblio = await get_biblio(rows[i].id_Biblio);
             rows[i].id_Biblio = id_Biblio.donnees;
-            if (((new Date(rows[i].fin_emprunt).getTime()) 
-            - (new Date(rows[i].debut_emprunt).getTime()))/ (1000 * 3600 * 24) == 0) {
-                rows[i].on_loan = false;
+            if (rows[i].fin_emprunt != null) {
+                if (((new Date(rows[i].fin_emprunt).getTime()) - (new Date(rows[i].debut_emprunt).getTime()))/ (1000 * 3600 * 24) <= 0) {
+                    rows[i].on_loan = false;
+                    rows[i].days_left = 0;
+                }
+                else {
+                    rows[i].on_loan = true;
+                    rows[i].days_left = ((new Date(rows[i].fin_emprunt).getTime()) - (new Date(rows[i].debut_emprunt).getTime()))/ (1000 * 3600 * 24)
+                }
             }
             else {
-                rows[i].on_loan = true;
+                if (new Date(rows[i].fin_partage).getTime() > new Date().getTime()) {
+                    rows[i].on_loan = true;
+                    rows[i].days_left = parseInt(((new Date(rows[i].fin_partage).getTime()) 
+                    - (new Date().getTime()))/ (1000 * 3600 * 24));
+                    query = "SELECT pseudo_Clients FROM Clients WHERE mail_Clients=?";
+                    var [rows3] = await execute_query(query, [rows[i].mail_Clients], "select");
+                    rows[i].sender = rows3[0].pseudo_Clients;
+                }
+                else {
+                    rows[i].on_loan = false;
+                    rows[i].days_left = 0;
+                }
             }
+
         }
         return prepare_response(rows.length > 0, rows, 'Livres empruntés trouvés', 'Pas de livres empruntés trouvés');
     } catch (error) {
@@ -192,11 +210,9 @@ async function req_history(id_client) {
 }
 
 async function req_get_book_borrowed(email, id_ebook) {
-    console.log(email, id_ebook)
     try {
         const query = "SELECT * FROM emprunter WHERE mail_Clients=? AND id_ebook=? AND fin_emprunt > NOW()";
         const [rows] = await execute_query(query, [email, id_ebook], "select");
-        console.log(rows)
         return prepare_response(rows.length > 0, rows, 'Book found', 'Book not found');
     } catch (error) {
         console.error("Error listing books:", error);
@@ -207,4 +223,5 @@ async function req_get_book_borrowed(email, id_ebook) {
 
 // =========================================================
 // EXPORTATIONS
-module.exports = { req_get_book_borrowed, req_history, req_listEbooks, req_my_books, req_books_details, req_get_pdf, req_similar_books, get_biblio, get_category_theme }
+module.exports = { req_get_book_borrowed, req_history, req_listEbooks, req_my_books, req_books_details, 
+    req_get_pdf, req_similar_books, get_biblio, get_category_theme }

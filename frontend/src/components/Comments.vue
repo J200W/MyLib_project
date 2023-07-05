@@ -109,6 +109,14 @@ export default {
                 this.$router.push('/LogIn')
                 return;
             }
+            if (document.getElementById("commentTextBox").value == "") {
+                alert("Please enter a comment")
+                return;
+            }
+            if (this.current_index == 0) {
+                alert("Please enter a rating")
+                return;
+            }
             var link = window.location.href;
             // Get the id of the book from the url
 

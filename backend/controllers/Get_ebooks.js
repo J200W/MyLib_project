@@ -15,8 +15,17 @@ async function get_particular_books(particularity="current", email=""){
                 if (ids.length === 0) {
                     return prepare_response(false, [], "No books borrowed", "No books borrowed");
                 }
-                var query = "SELECT * FROM Ebook where id_ebook in (?) LIMIT 4";
-                var result = await execute_query(query, [ids], "select");
+
+
+                query = "SELECT id_ebook FROM partager where mail_Clients_dest = ?";
+                result = await execute_query(query, [email], "select");
+                var ids2 = result[0].map((row) => row.id_ebook);
+
+                var ids3 = ids.concat(ids2);
+
+                query = "SELECT * FROM Ebook WHERE id_ebook IN (?)";
+                result = await execute_query(query, [ids3], "select");
+
                 // Get images from firebase
                 var imagePromises = [];
                 for (var i = 0; i < result[0].length; i++) {

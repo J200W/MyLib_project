@@ -272,7 +272,7 @@ export default {
       // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires
       event.preventDefault();
 
-      if (confirm("Voulez-vous vraiment partager ce livre ?")) {
+      if (confirm("Do you want to share this book ?")) {
         var pseudo = document.getElementById("pseudo").value;
 
         var datas = {
@@ -280,7 +280,6 @@ export default {
           email_dest: pseudo,
           id_ebook: JSON.parse(sessionStorage.getItem('book')).id_ebook,
           book_shared: sessionStorage.getItem('book'),
-          debut_emprunt: this.debut_emprunt,
           fin: this.fin_emprunt,
         };
 
@@ -295,8 +294,12 @@ export default {
           .then(response => response.text())
           .then(data => {
             var message = JSON.parse(data);
-            alert(message.message);
-            this.$router.push('/MainPage');
+            if (message.status == "error")
+              alert(message.message);
+            else {
+              alert(message.message);
+              this.$router.push('/MainPage');
+            }
           })
           .catch(error => {
             // Gérer les erreurs

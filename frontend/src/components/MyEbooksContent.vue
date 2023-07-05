@@ -10,9 +10,10 @@
                   <div class="to_line"><p class="titre">Release date :</p><p>{{ new Date(book.date_parution).toDateString() }}</p></div>
                 </div>
                 <div class = "datas2" v-if="!fav">
-                  <div v-if="book.on_loan" class="to_line"><p class="titre">Remaining loan time : </p><p>{{ ((new Date(book.fin_emprunt).getTime()) - (new Date(book.debut_emprunt).getTime()))/ (1000 * 3600 * 24) }} days</p></div>
+                  <div v-if="book.on_loan" class="to_line"><p class="titre">Remaining loan time : </p><p>{{ book.days_left }} days</p></div>
                   <div v-if="book.on_loan" class="to_line"><p class="titre">On loan :</p><p class="y">Yes</p></div>
                   <div v-else class="to_line"><p class="titre">On loan :</p><p class="n">No</p></div>
+                  <div v-if="book.sender" class="to_line"><p class="titre">Shared by :</p><p class="y">{{ book.sender }}</p></div>
                 </div>
               </router-link>
       </div>
@@ -118,6 +119,8 @@
 </style>
 
 <script>
+import { now } from 'moment';
+
 export default {
     name: 'MyEbooksContent',
     props: ['books', 'fav'],

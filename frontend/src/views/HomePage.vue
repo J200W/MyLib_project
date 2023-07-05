@@ -6,15 +6,14 @@ import { port } from "../../../backend/controllers/Tools_controllers";
 </script>
 
 <template>
+        <body>
     <div class="container">
-        <img src="../assets/logo.png" width="140" height="140">
+        <img src="../assets/logo2.png" width="180" height="180">
         <h1 class="main"> Welcome to MyLib </h1>
         <p> Our goal is to digitize library books to give as many people as possible in the world to have access to any kinds of books and writings, vector of culture and knowledge.</p>
-        <p> Like a real library, borrow, read, share, enjoy, then start again, all completely <b>free</b>. </p>
+        <p> Like a real library: borrow, read, share, enjoy, then start again, all completely <b>free</b>. </p>
         <router-link class="link" to="/MainPage">Explore Now</router-link>
     </div>
-
-    <body>
     </body>
 
     <TheFooter />
@@ -32,7 +31,7 @@ h1.main {
     font-weight: 600;
     color: black;
     font-weight: bold;
-    font-size: 5rem;
+    font-size: 4rem;
 
 }
 
@@ -68,7 +67,7 @@ button:hover {
 
 
 .container {
-    margin-top: 120px;
+    margin-top: 85px;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;

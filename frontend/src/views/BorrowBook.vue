@@ -94,7 +94,7 @@ export default {
                         this.$router.push('/MyEbooks');
                     }
                     else {
-                        alert("Error");
+                        alert(data.message);
                     }
                 }).catch(error => {
                     // Gérer les erreurs

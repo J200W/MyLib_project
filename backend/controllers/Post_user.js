@@ -59,8 +59,12 @@ async function req_signIn(email, password, admin) {
 
 async function req_borrowed(email, id_ebook) { // Récupère les livres empruntés par un utilisateur
     try {
-        const query = "SELECT * FROM emprunter WHERE mail_Clients = ? AND id_ebook = ? AND fin_emprunt > CURRENT_TIMESTAMP()";
-        const [rows] = await execute_query(query, [email, id_ebook], "select")
+        var query = "SELECT * FROM emprunter WHERE mail_Clients = ? AND id_ebook = ? AND fin_emprunt > CURRENT_TIMESTAMP()";
+        var [rows] = await execute_query(query, [email, id_ebook], "select");
+        if (rows.length < 1) {
+            query = "SELECT * FROM partager WHERE mail_Clients_dest = ? AND id_ebook = ? AND fin_partage > CURRENT_TIMESTAMP()";
+            [rows] = await execute_query(query, [email, id_ebook], "select");
+        }
         return prepare_response(rows.length > 0, rows, 'Borrowed books', 'No borrowed books');
     }
     catch (error) {
@@ -157,6 +161,18 @@ async function req_borrowBook(id_ebook, mail_Clients, debut_emprunt, fin_emprunt
     // Vérifier si des données ont été envoyées
     try {
         var query ;
+        query = "SELECT * FROM emprunter WHERE mail_Clients = ? AND fin_emprunt > CURRENT_TIMESTAMP()";
+        const [rows] = await execute_query(query, [mail_Clients], "select");
+        if (rows.length >= 10) {
+            return prepare_response(false, mail_Clients, undefined, `You have already borrowed 10 books`);
+        }
+        query = "SELECT * FROM partager WHERE id_ebook = ? AND mail_Clients = ? AND fin_partage > CURRENT_TIMESTAMP()";
+        const [rows2] = await execute_query(query, [id_ebook, mail_Clients], "select");
+        if (rows2.length > 0) {
+            query = "SELECT pseudo_Clients FROM Clients WHERE mail_Clients = ?"
+            const [pseudo] = await execute_query(query, [rows2[0].mail_Clients_dest], "select");
+            return prepare_response(false, mail_Clients, undefined, `You have already shared this book to ${pseudo[0].pseudo_Clients}. \nYou must wait the end of the sharing.`);
+        }
         query = "DELETE FROM emprunter WHERE mail_Clients = ? AND id_ebook = ?";
         const result3 = await execute_query(query, [mail_Clients, id_ebook], "delete");
         query = "INSERT INTO emprunter (id_ebook, mail_Clients, debut_emprunt, fin_emprunt) values (?,?,?,?)";
@@ -251,12 +267,10 @@ async function req_get_favorites(mail_Clients) {
 }
 
 async function req_return_book(mail_Clients, id_ebook) {
-    console.log(mail_Clients, id_ebook)
     // Vérifier si des données ont été envoyées
     try {
         let query = "UPDATE emprunter SET fin_emprunt = NOW() WHERE mail_Clients = ? AND id_ebook = ?";
         const result = await execute_query(query, [mail_Clients, id_ebook], "update");
-        console.log(result)
         if (!result) {
             return prepare_response(false, mail_Clients,  `Fail returning book for ${mail_Clients}.`,
             `Fail returning book for ${mail_Clients}.`);
@@ -275,15 +289,33 @@ async function req_return_book(mail_Clients, id_ebook) {
 async function req_share_book(mail_Clients, id_ebook, email_dest, fin) {
     // Vérifier si des données ont été envoyées
     try {
-        let query = "SELECT * FROM Clients WHERE mail_Clients = ?";
-        const [rows] = await execute_query(query, [email_dest], "select");
+        // change format of date
+        if (fin == null) {
+            return prepare_response(false, mail_Clients,  `You can't share a book that has been shared to you.`,
+            `You can't share a book that has been shared to you.`);
+        }
+        let query;
+        query = "SELECT * FROM emprunter WHERE mail_Clients = ? AND fin_emprunt > NOW()";
+        var [rows] = await execute_query(query, [email_dest], "select");
+        if (rows.length >= 10) {
+            return prepare_response(false, mail_Clients,  `Too many books borrowed for ${mail_Clients}.`,
+            `Fail sharing book for ${mail_Clients}.`);
+        }
+        query = "SELECT * FROM emprunter WHERE mail_Clients = ? AND id_ebook = ? AND fin_emprunt > NOW()";
+        [rows] = await execute_query(query, [email_dest, id_ebook], "select");
+        if (rows.length > 0) {
+            return prepare_response(false, mail_Clients,  `Book already borrowed for ${mail_Clients}.`,
+            `Fail sharing book for ${mail_Clients}.`);
+        }
+        query = "SELECT * FROM Clients WHERE mail_Clients = ?";
+        [rows] = await execute_query(query, [email_dest], "select");
         if (rows.length == 0) {
             return prepare_response(false, mail_Clients,  `No user with this email.`,
             `Fail sharing book for ${mail_Clients}.`);
         }
         query = "UPDATE emprunter SET fin_emprunt = NOW() WHERE mail_Clients = ? AND id_ebook = ? AND fin_emprunt > NOW()";
         const result1 = await execute_query(query, [mail_Clients, id_ebook], "update");
-        query = "INSERT INTO partager (mail_Clients, id_ebook, mail_Clients_dest) values (?,?,?,?)";
+        query = "INSERT INTO partager (mail_Clients, id_ebook, mail_Clients_dest, fin_partage) values (?,?,?,?)";
         const result2 = await execute_query(query, [mail_Clients, id_ebook, email_dest, fin], "insert");
         return prepare_response(result1&&result2, mail_Clients,  `Book has been shared with ${email_dest}.`,
             `Fail sharing book for ${mail_Clients}.`);
