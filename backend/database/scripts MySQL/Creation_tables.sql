@@ -74,7 +74,7 @@ create table emprunter
     id_ebook      bigint       default 0  not null,
     debut_emprunt date                    not null,
     fin_emprunt   date                    not null,
-    marquepage    varchar(50)             null,
+    stock_emprunt int                     not null,
     primary key (mail_Clients, id_ebook),
     constraint emprunter_ibfk_1
         foreign key (mail_Clients) references Clients (mail_Clients),
