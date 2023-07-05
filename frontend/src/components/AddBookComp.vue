@@ -65,20 +65,20 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                             <option value="Fantasy">Fantasy</option>
                             <option value="Horror">Horror</option>
                             <option value="Thriller">Thriller</option>
-                            <option value="Historical-Fiction">Historical Fiction</option>
+                            <option value="Historical Fiction">Historical Fiction</option>
                             <option value="Self-Help">Self-Help</option>
                             <option value="Science">Science</option>
                             <option value="Dystopian">Dystopian</option>
                             <option value="Humor">Humor</option>
                             <option value="Crime">Crime</option>
-                            <option value="Young-Adult">Young Adult</option>
+                            <option value="Young Adult">Young Adult</option>
                             <option value="Philosophy">Philosophy</option>
                             <option value="Business">Business</option>
                             <option value="Travel">Travel</option>
                             <option value="Memoir">Memoir</option>
                             <option value="Historical">Historical</option>
                             <option value="Children">Children</option>
-                            <option value="Graphic-Novel">Graphic Novel</option>
+                            <option value="Graphic Novel">Graphic Novel</option>
                         </select>
                     </div>
 
@@ -92,20 +92,20 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                             <option value="Fantasy">Fantasy</option>
                             <option value="Horror">Horror</option>
                             <option value="Thriller">Thriller</option>
-                            <option value="Historical-Fiction">Historical Fiction</option>
+                            <option value="Historical Fiction">Historical Fiction</option>
                             <option value="Self-Help">Self-Help</option>
                             <option value="Science">Science</option>
                             <option value="Dystopian">Dystopian</option>
                             <option value="Humor">Humor</option>
                             <option value="Crime">Crime</option>
-                            <option value="Young-Adult">Young Adult</option>
+                            <option value="Young Adult">Young Adult</option>
                             <option value="Philosophy">Philosophy</option>
                             <option value="Business">Business</option>
                             <option value="Travel">Travel</option>
                             <option value="Memoir">Memoir</option>
                             <option value="Historical">Historical</option>
                             <option value="Children">Children</option>
-                            <option value="Graphic-Novel">Graphic Novel</option>
+                            <option value="Graphic Novel">Graphic Novel</option>
                         </select>
                     </div>
 
@@ -119,20 +119,20 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                             <option value="Fantasy">Fantasy</option>
                             <option value="Horror">Horror</option>
                             <option value="Thriller">Thriller</option>
-                            <option value="Historical-Fiction">Historical Fiction</option>
+                            <option value="Historical Fiction">Historical Fiction</option>
                             <option value="Self-Help">Self-Help</option>
                             <option value="Science">Science</option>
                             <option value="Dystopian">Dystopian</option>
                             <option value="Humor">Humor</option>
                             <option value="Crime">Crime</option>
-                            <option value="Young-Adult">Young Adult</option>
+                            <option value="Young Adult">Young Adult</option>
                             <option value="Philosophy">Philosophy</option>
                             <option value="Business">Business</option>
                             <option value="Travel">Travel</option>
                             <option value="Memoir">Memoir</option>
                             <option value="Historical">Historical</option>
                             <option value="Children">Children</option>
-                            <option value="Graphic-Novel">Graphic Novel</option>
+                            <option value="Graphic Novel">Graphic Novel</option>
                         </select>
                     </div>
                 </div>
@@ -158,7 +158,7 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                             <option value="Hope">Hope</option>
                             <option value="Adventure">Adventure</option>
                             <option value="Transformation">Transformation</option>
-                            <option value="Coming-of-Age">Coming of Age</option>
+                            <option value="Coming of Age">Coming of Age</option>
                             <option value="Self-Discovery">Self-Discovery</option>
                             <option value="Sacrifice">Sacrifice</option>
                             <option value="Justice">Justice</option>
@@ -186,7 +186,7 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                             <option value="Hope">Hope</option>
                             <option value="Adventure">Adventure</option>
                             <option value="Transformation">Transformation</option>
-                            <option value="Coming-of-Age">Coming of Age</option>
+                            <option value="Coming of Age">Coming of Age</option>
                             <option value="Self-Discovery">Self-Discovery</option>
                             <option value="Sacrifice">Sacrifice</option>
                             <option value="Justice">Justice</option>
@@ -215,13 +215,12 @@ import { port } from "../../../backend/controllers/Tools_controllers";
                             <option value="Hope">Hope</option>
                             <option value="Adventure">Adventure</option>
                             <option value="Transformation">Transformation</option>
-                            <option value="Coming-of-Age">Coming of Age</option>
+                            <option value="Coming of Age">Coming of Age</option>
                             <option value="Self-Discovery">Self-Discovery</option>
                             <option value="Sacrifice">Sacrifice</option>
                             <option value="Justice">Justice</option>
                             <option value="Manga">Manga</option>
                             <option value="Comics">Comics</option>
-
                         </select>
                     </div>
                 </div>

@@ -19,25 +19,29 @@ async function req_new_book(title, author, date, language, editor, page, categor
         if (result.length < 1) {
             return prepare_response(false, title, undefined, 'Fail to add book')
         }
-        query = "REPLACE INTO est_un (id_ebook, name_category) VALUES (?, ?)";
+        query = "DELETE FROM est_un WHERE id_ebook = ?";
+        result = await execute_query(query, [resultIdBook], "delete");
+        query = "INSERT INTO est_un (id_ebook, name_category) VALUES (?, ?)";
         var final_result = true;
         for (var i = 0; i < category.length; i++) {
             if (category[i] != "None") {
                 result = await execute_query(query, [
                     resultIdBook,
                     category[i], 
-                    'replace'
+                    'insert'
                 ])
                 final_result = final_result && result;
             }
         }
-        query = "REPLACE INTO parle_de (id_ebook, name_theme) VALUES (?, ?)";
+        query = "DELETE FROM parle_de WHERE id_ebook = ?";
+        result = await execute_query(query, [resultIdBook], "delete");
+        query = "INSERT INTO parle_de (id_ebook, name_theme) VALUES (?, ?)";
         for (var i = 0; i < theme.length; i++) {
             if (theme[i] != "None") {
                 result = await execute_query(query, [
                     resultIdBook,
                     theme[i]
-                ],'replace')
+                ],'insert')
                 final_result = final_result && result;
             }
         }

@@ -160,7 +160,7 @@ app.post("*", async (req, res) => {
       );
       break;
 
-    case "/update_book_img": // COMPONENT: AddBookComp.vue
+    case "/upload_book_img": // COMPONENT: AddBookComp.vue
       // Retourne une réponse JSON
       // For uploading images files only
       req_upload_book_img(datas.img, datas.name, "upload").then((result) => {
