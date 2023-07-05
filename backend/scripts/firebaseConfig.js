@@ -3,7 +3,7 @@ const firebase = require("firebase/app")
 const { initializeApp } = require("firebase/app")
 const { getAuth } = require("firebase/auth")
 const { getStorage } = require("firebase/storage")
-const { ref, getDownloadURL, uploadBytes, deleteObject } = require("firebase/storage")
+const { ref, getDownloadURL, uploadBytes } = require("firebase/storage")
 
 // require getDownloadURL
 
@@ -30,5 +30,5 @@ const storageRef = ref(storage)
 const storageImages = ref(storage, 'image')
 const storagePDF = ref(storage, 'pdf')
 
-module.exports = { auth, storageRef, storage, app, storageImages, storagePDF, ref, getDownloadURL, uploadBytes, deleteObject }
+module.exports = { auth, storageRef, storage, app, storageImages, storagePDF, ref, getDownloadURL, uploadBytes }
 

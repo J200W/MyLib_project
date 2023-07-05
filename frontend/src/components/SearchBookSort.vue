@@ -1,11 +1,5 @@
 <template>
-    <form class="sort-collection-search">
-        <h3 class="label-selector-search">Sort</h3>
-        <select class="sort-collection-select-search" v-model="sort_filter" name="sort_filter">
-            <option value="titre">Title</option>
-            <option value="auteur">Author</option>
-            <option value="date_parution">Date</option>
-        </select>
+    <h1 id="title-MyEbook">Results for "{{ result }}"</h1>
 
         <h3 class="label-selector-search">Category</h3>
         <select class="sort-collection-select-search" name="category" v-model="category">
@@ -58,28 +52,25 @@
             <option value="Manga">Manga</option>
             <option value="Comics">Comics</option>
         </select>
-        <input type="submit" value="Filter" @submit="updateFilter" class="sort-collection-submit">
-    </form>
 </template>
 
 <style>
-.sort-collection-search {
-    margin-left: 5%;
-    margin-bottom: 1%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    max-width: 300px;
-    width: 50%;
-}
+    #title-MyEbook {
+        font-size: 5vmin;
+        text-align: left;
+        color: "#000000";
+        margin-left: 5%;
+    }
 
-.label-selector-search {
-    margin-right: 1%;
-    font-size: 2vmin;
-    flex: 0.5;
-    height: auto;
-    margin-left: 4vmin;
-}
+    .sort-collection-search {
+        margin-left: 5%;
+        margin-bottom: 1%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        max-width: 300px;
+        width: 50%;
+    }
 
 .sort-collection-select-search {
     width: 200px;
@@ -105,42 +96,32 @@
     margin-left: 2vmin;
 }
 
-.sort-collection-submit:hover {
-    background-color: #D79262;
-    border: 1px solid #000;
-    transition: 0.3s ease all;
-}
 
-.sort-collection-search h3 {
-    font-size: 2vmin;
-    flex: 0.25;
-    margin-bottom: 0;
-    align-items: center;
-    justify-content: center;
-    height: auto;
-}
+    .sort-collection-select-search {
+        width: 200px;
+        height: 5%;
+        flex: 1;
+        font-size: 2vmin;
+        background-color: #FFF;
+        padding: 5px;
+        border-radius: 20px;
+    }
+
+    .sort-collection-search h3 {
+        font-size: 2vmin;
+        flex: 0.25;
+        margin-bottom: 0;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+    }
+    
 </style>
 
 <script>
 export default {
     name: 'SearchBookSort',
     props: ['result'],
-    methods: {
-        updateFilter(e) {
-            e.preventDefault();
-            console.log(this.category);
-            console.log(this.theme);
-            console.log(this.sort_filter);
-        }
-    },
-    data() {
-        return {
-            category: new URLSearchParams(window.location.search).get('category') ? new URLSearchParams(window.location.search).get('category') : "None",
-            theme: new URLSearchParams(window.location.search).get('theme') ? new URLSearchParams(window.location.search).get('theme') : "None",
-            search: sessionStorage.getItem('search'),
-            sort_filter: new URLSearchParams(window.location.search).get('sort_filter') ? new URLSearchParams(window.location.search).get('sort_filter') : "titre",
-        }
-    },
 }
 
 </script>

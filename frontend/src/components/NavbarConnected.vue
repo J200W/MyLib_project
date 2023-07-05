@@ -23,7 +23,8 @@ else {
                 <img id="logo" src="@/assets/logo.png" alt="logo">
             </router-link>
             <form id="search-bar" @submit="submitForm">
-                <input placeholder="I am looking for..." type="text" name="search-bar" id="search-input" v-model="search">
+                <input placeholder="I am looking for..." type="text" name="search-bar" id="search-input"
+                    v-model="researched_name">
                 <input type="submit" value="Search" id="search-submit" onsubmit="submitForm()">
             </form>
         </div>
@@ -212,7 +213,7 @@ export default
         name: 'NavbarConnected',
         data() {
             return {
-                search: ''
+                researched_name: ''
             };
         },
         mounted() {
@@ -225,13 +226,16 @@ export default
                 if (this.search == "") this.search = " ";
                 if (this.search !== '') {
                     console.log('Formulaire soumis !', this.search);
+
                     event.preventDefault();
 
                     let datas = {
-                        search: this.search
+                        researched_name: this.researched_name,
+                        category: [],
+                        theme: []
                     };
 
-                    fetch("http://localhost:" + port + "/send_research_fromNavBar", {
+                    fetch("http://localhost:"+ port +"/send_research_fromNavBar", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json", // Indiquer le type de données dans le corps de la requête
@@ -242,23 +246,13 @@ export default
                         .then(response => response.text())
                         .then(data => {
                             // Traiter la réponse du serveur
-                            sessionStorage.setItem('research', this.search);
-                            this.$router.push(
-                                {
-                                    path: '/SearchBook',
-                                    query: { search: this.search }
-                                }
-                            )
-                            // Check if we are already on the page
-                            // Get the current path
-                            var link = window.location.href;
-
-                            var currentPath = link.substring(link.lastIndexOf('/') + 1).split('?')[0];
-                            if (currentPath == 'SearchBook') {
-                                // wait and reload
-                                setTimeout(function () {
-                                    window.location.reload();
-                                }, 100);
+                            console.log("recieved data, reload page")
+                            sessionStorage.setItem('research', this.researched_name);
+                            if (this.$route.path !== '/SearchBook') {
+                                this.$router.push('/SearchBook');
+                            }
+                            else {
+                                location.reload();
                             }
                         }).catch(error => {
                             // Gérer les erreurs
