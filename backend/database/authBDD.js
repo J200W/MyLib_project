@@ -19,10 +19,10 @@ async function verify_signIn(email, password) {
 
   try {
     const connection = await mysql.createConnection({
-      host: 'sql7.freesqldatabase.com',
-      user: 'sql7624887',
-      password: '5YcetTXFDf',
-      database: 'sql7624887'
+      host: 'sql11.freesqldatabase.com',
+      user: 'sql11645716',
+      password: 'UC8FBXK74t',
+      database: 'sql11645716'
     });
 
     const query = 'SELECT * FROM clients WHERE mail_client = ? AND mdp_client = ?';
