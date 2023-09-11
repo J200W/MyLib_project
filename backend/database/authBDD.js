@@ -25,7 +25,7 @@ async function verify_signIn(email, password) {
       database: 'sql11645716'
     });
 
-    const query = 'SELECT * FROM clients WHERE mail_client = ? AND mdp_client = ?';
+    const query = 'SELECT * FROM Clients WHERE mail_client = ? AND mdp_client = ?';
     const [rows] = await connection.query(query, [email, password]);
     connection.end();
 
