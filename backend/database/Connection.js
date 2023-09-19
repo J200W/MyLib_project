@@ -6,7 +6,7 @@ async function connectToDatabase() {
       host: '78.192.134.140', //'192.168.0.35',
       user: 'efrei2023',
       password: 'EFREI.ethan2023',
-      database: 'efrei2023',
+      database: 'efreiS6_MyLib',
       port: 55306
     });
     if (connection.state === "disconnected") {
