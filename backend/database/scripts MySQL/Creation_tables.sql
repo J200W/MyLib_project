@@ -74,7 +74,7 @@ create table emprunter
     id_ebook      bigint       default 0  not null,
     debut_emprunt date                    not null,
     fin_emprunt   date                    not null,
-    stock_emprunt int                     not null,
+    stock_emprunt int          default 1  not null,
     primary key (mail_Clients, id_ebook),
     constraint emprunter_ibfk_1
         foreign key (mail_Clients) references Clients (mail_Clients),
@@ -132,6 +132,7 @@ create table partager
     mail_Clients      varchar(250) default '' not null,
     mail_Clients_dest varchar(250) default '' not null,
     id_ebook          bigint       default 0  not null,
+    fin_partage       date                    not null,
     primary key (mail_Clients, mail_Clients_dest, id_ebook),
     constraint partager_ibfk_1
         foreign key (mail_Clients) references Clients (mail_Clients),

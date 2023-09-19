@@ -42,12 +42,12 @@ async function req_signIn(email, password, admin) {
         if (admin) {
             const query = "SELECT * FROM Admin_biblio WHERE mail_admin = ? AND mdp_admin = ?";
             const [rows] = await execute_query(query, [email, password], "select")
-            return prepare_response(rows.length > 0,{email: email, pseudo : rows[0].pseudo_admin}, 'SignIn successful', 'SignIn fail');
+            return prepare_response(rows.length > 0,{email: email, pseudo : rows[0] ? rows[0].pseudo_admin: rows[0]}, 'SignIn successful', 'SignIn fail');
         }
         else {
             const query = "SELECT * FROM Clients WHERE mail_Clients = ? AND mdp_Clients = ?";
             const [rows] = await execute_query(query, [email, password], "select")
-            return prepare_response(rows.length > 0,{email: email, pseudo : rows[0].pseudo_Clients}, 'LogIn successful', 'LogIn failed');
+            return prepare_response(rows.length > 0,{email: email, pseudo : rows[0] ? rows[0].pseudo_Clients: rows[0]}, 'LogIn successful', 'LogIn failed');
         }
     } 
     catch (error) {

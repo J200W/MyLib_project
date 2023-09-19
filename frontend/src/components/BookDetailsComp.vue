@@ -100,12 +100,12 @@ var theme = [
                             Book PDF:
                         </b>
                     </p>
-                    <input type="file" name="pdf" class="file" id="filePDF" accept=".pdf" required>
+                    <input type="file" name="pdf" class="file" id="filePDF" accept=".pdf"> <!--  required -->
                     <p><b>
                             Image:
                         </b>
                     </p>
-                    <input type="file" name="img" id="fileIMG" class="file" @change="previewImg" accept="image/*" required>
+                    <input type="file" name="img" id="fileIMG" class="file" @change="previewImg" accept="image/*">  <!--  required -->
                 </div>
                 <button v-if="!borrowed && !admin" @click="borrowBook()" class="borrow-book">Borrow eBook</button>
                 <router-link v-if="borrowed && !admin" to="/ReadBook" class="borrow-book">Read eBook</router-link>
@@ -239,7 +239,7 @@ export default {
     },
     props: ['book', 'can_modify'],
     mounted() {
-        this.fetchBorrowed(),
+        this.fetchBorrowed()
         this.checkFavorite()
     },
     methods: {
@@ -327,8 +327,10 @@ export default {
             }, false);
 
             if (file) {
+                console.log("fileIMG loaded for preview")
                 reader.readAsDataURL(file);
             }
+          else console.log("fileIMG not loaded for preview")
         },
         confirm_action() {
             let test = confirm("Are you sure you want to erase the previous informations with the new ones ? ");
@@ -361,12 +363,7 @@ export default {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.status !== 'success') {
-                        this.borrowed = false
-                    }
-                    else {
-                        this.borrowed = true
-                    }
+                    this.borrowed = data.status === 'success';
                     sessionStorage.setItem('borrowed', this.borrowed)
                 })
             var date = document.getElementById("date");
@@ -375,8 +372,8 @@ export default {
 
         save_book_information() {
             // Get informations from the form
-            const fileIMG = document.getElementById("fileIMG").files[0];
-            const filePDF = document.getElementById('filePDF').files[0];
+            const fileIMG = document.getElementById("fileIMG").files[0] //? document.getElementById("fileIMG").files[0] : this.book;
+            const filePDF = document.getElementById('filePDF').files[0] //? document.getElementById("filePDF").files[0] : this.book;
             const title = document.getElementById("title").value
             const author = document.getElementById("author").value
             const editor = document.getElementById("editor").value
@@ -391,7 +388,7 @@ export default {
             const theme0 = document.getElementById("theme0").value
             const theme1 = document.getElementById("theme1").value
             const theme2 = document.getElementById("theme2").value
-
+            //console.log(fileIMG, document.getElementById("fileIMG").files, document.getElementById("fileIMG"))
             let datas = {
                 id_ebook: this.book.id_ebook,
                 titre: title,
