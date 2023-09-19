@@ -2,7 +2,7 @@
 
 MyLib est un site web permettant aux utilisateurs d'emprunter des e-books gratuitement pour une durée limitée. Le site offre une plateforme conviviale et intuitive pour découvrir, rechercher et emprunter une vaste collection d'e-books dans différents genres et catégories.  
 
-  
+  ![test mylib3](https://github.com/J200W/MyLib_project/assets/81105099/f95077c3-141e-44b7-8d71-85697d7b777d)
 
 ## Fonctionnalités :
 
@@ -10,9 +10,13 @@ MyLib est un site web permettant aux utilisateurs d'emprunter des e-books gratui
 
 **Modifier informations :** Les utilisateurs ont la possibilité de modifier les informations de leurs compte lorsqu’ils le désirent.
 
-**Catalogue d'e-books :** MyLib propose un catalogue d'e-books organisé par thèmes et catégories. Les utilisateurs peuvent parcourir les différentes sections, afficher les détails des livres et lire des descriptions pour découvrir les e-books disponibles.  
+**Catalogue d'e-books :** MyLib propose un catalogue d'e-books organisé par thèmes et catégories. Les utilisateurs peuvent parcourir les différentes sections, afficher les détails des livres et lire des descriptions pour découvrir les e-books disponibles. 
+
+  ![test mylib4](https://github.com/J200W/MyLib_project/assets/81105099/98cbc90a-3e38-456d-b346-eb5ca3da70ac)
 
 **Recherche avancée :** Le site propose une fonction de recherche avancée permettant aux utilisateurs de trouver rapidement des e-books spécifiques en utilisant des mots-clés, des auteurs ou des titres.  
+
+  ![test mylib](https://github.com/J200W/MyLib_project/assets/81105099/8ec0c43c-d101-4322-be11-3f1b50dfbefa)
 
 **Emprunt d'e-books :** Les utilisateurs peuvent emprunter des e-books en fonction de leur disponibilité. Chaque e-book a une durée d'emprunt limitée, après quoi il sera automatiquement rendu. Les utilisateurs peuvent consulter leur liste d'e-books empruntés et gérer leur retour.  
 
