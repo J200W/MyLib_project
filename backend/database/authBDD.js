@@ -17,7 +17,7 @@ app.post('/login', async (req, res) => {
   const { login, password } = req.body; */
 async function verify_signIn(email, password) {
 
-  try {
+  try { // A ENLEVER
     const connection = await mysql.createConnection({
       host: 'sql11.freesqldatabase.com',
       user: 'sql11645716',
