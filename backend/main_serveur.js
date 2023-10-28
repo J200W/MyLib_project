@@ -45,7 +45,7 @@ const {
 const { prepare_response } = require("./controllers/Tools_controllers");
 const { books, get_particular_books } = require("./controllers/Get_ebooks");
 const { get_user_datas } = require("./controllers/Get_user");
-
+const { get_friends} = require("../../MyLibV2/backend/controllers/GetFriend");
 const { execute_query } = require("./database/Connection");
 
 app.use(
@@ -82,6 +82,13 @@ app.post("*", async (req, res) => {
 
     case "/req_datas_user": // VIEW: MyAccount
       get_user_datas(datas.email).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/req_datas_friends":
+      get_friends(datas.email).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });

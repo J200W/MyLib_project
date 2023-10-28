@@ -11,9 +11,6 @@ else {
   admin = false;
 }
 
-
-
-
 </script>
 
 <template>
@@ -26,6 +23,14 @@ else {
         <input placeholder="I am looking for..." type="text" name="search-bar" id="search-input" v-model="search">
         <input type="submit" value="Search" id="search-submit" onsubmit="submitForm()">
       </form>
+      <div>
+        <button id="NOOSPHERE" class="btn">NOOSPHERE</button>
+        <ul class="options">
+          <li><button @click="optionClicked('MyFriends')" class="btn">MyFriends</button></li>
+          <li><button @click="optionClicked('MyGroups')" class="btn">MyGroups</button></li>
+          <li><button @click="optionClicked('MyPosts')" class="btn">MyPosts</button></li>
+          <button @click="optionClicked('World')" class="btn">World</button>
+        </ul></div>
     </div>
     <div id="navbar-right">
       <div class="dropdown">
@@ -73,6 +78,20 @@ else {
   border: black 2px solid;
   border-radius: 40px;
   transition: all 0.3s ease-in-out;
+  color:white;
+}
+
+.options {
+  display: none;
+  position: absolute;
+  list-style: none;
+  background-color: #D0AB77;
+  padding: 5px;
+  text-align: center;
+}
+
+.options btn{
+  display: block;
 }
 
 #empty {
@@ -212,13 +231,31 @@ export default
   name: 'NavbarConnected',
   data() {
     return {
-      search: ''
+      search: '',
+      options_visible:false
     };
   },
   mounted() {
     this.fetchUserData();
+    document.getElementById("NOOSPHERE").addEventListener("click", this.HANDLE_HERETIC_NOOSPHERE_CLICK);
   },
   methods: {
+
+    HANDLE_HERETIC_NOOSPHERE_CLICK(){
+
+      const noosphere = document.getElementById("NOOSPHERE");
+      const optionsList = document.querySelector(".options");
+      this.optionsVisible = !this.optionsVisible;
+
+      if (this.optionsVisible) {
+        // Si visible, masquez-la
+        optionsList.style.display = "block";
+      } else {
+        // Si masquée, affichez-la
+        optionsList.style.display = "none";
+
+      }
+  },
     fetchUserData() { },
     submitForm(event) {
       // Envoyer les données du formulaire au serveur ou effectuer des actions supplémentaires

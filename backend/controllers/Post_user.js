@@ -24,8 +24,8 @@ async function req_signUp(email, pseudo, password){
         "INSERT INTO Clients (mail_Clients, pseudo_Clients, mdp_Clients) VALUES (?, ?, ?)";
     try {
         // Check if the user is an admin
-        query = "SELECT * FROM Admin_biblio WHERE mail_admin = ?";
-        const [rows] = await execute_query(query, [email], "select");
+        var queryAdmin = "SELECT * FROM Admin_biblio WHERE mail_admin = ?";
+        const [rows] = await execute_query(queryAdmin, [email], "select");
         if (rows.length > 0) {
             return prepare_response(false, [email, pseudo, password], undefined, 'This email is already used' );
         }
