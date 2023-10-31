@@ -24,7 +24,7 @@ else {
         <input type="submit" value="Search" id="search-submit" onsubmit="submitForm()">
       </form>
       <div>
-        <button id="NOOSPHERE" class="btn">NOOSPHERE</button>
+        <button id="NOOSPHERE" class="btn">NETWORK</button>
         <ul class="options">
           <router-link to="/MyFriends">
             <li><button class="btn">MyFriends</button></li>

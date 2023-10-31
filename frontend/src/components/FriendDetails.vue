@@ -8,15 +8,15 @@ import Chat from "@/components/Chat";
   <div class="Friend">
   <h2 class="ToLeft">{{name}}</h2>
   <div class="ToLeft">
-    <Button v-if="is_Friend==='OUI'" id="PARLER" @click="PARLER()" class="btn">PARLER</Button>
-    <Button v-if="is_Friend==='OUI'" id="QUITTER" @click="QUITTER()" class="btn">NE PLUS ETRE AMI</Button>
+    <Button v-if="is_Friend==='OUI'" id="PARLER" @click="PARLER()" class="btn">CHAT WITH</Button>
+    <Button v-if="is_Friend==='OUI'" id="QUITTER" @click="QUITTER()" class="btn">QUIT</Button>
   </div>
   <div class="Centered">
     <Chat v-if="ChatOpen" :friend_email="this.friend_email" :Us_email="this.Us_email"></Chat>
   </div>
   <div class="ToLeft">
-    <Button v-if="is_Friend==='Pending'" id="ACCEPTER" @click="ACCEPTER()" class="btn">ACCEPTER</Button>
-    <Button v-if="is_Friend==='Pending'" id="REFUSER" @click="REFUSER()" class="btn">REFUSER</Button>
+    <Button v-if="is_Friend==='Pending'" id="ACCEPTER" @click="ACCEPTER()" class="btn">ACCEPT</Button>
+    <Button v-if="is_Friend==='Pending'" id="REFUSER" @click="REFUSER()" class="btn">REFUSE</Button>
   </div>
   </div>
 
