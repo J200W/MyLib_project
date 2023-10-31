@@ -11,6 +11,11 @@ export function link_HomePage(event){
 export function link_MainPage(event){
     this.$router.push({path: '/MainPage'})
 }
+
+export function link_MyFriends(event){
+    this.$router.push({path: '/MyFriends'})
+}
+
 export function link_LogIn(event){
     this.$router.push({path: '/LogIn'})
 }
@@ -70,5 +75,6 @@ export default {
     link_SearchBook,
     link_ShareBook,
     link_ManageUsers,
-    link_ManageBooks
+    link_ManageBooks,
+    link_MyFriends
 }

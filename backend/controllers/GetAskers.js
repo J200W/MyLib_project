@@ -3,11 +3,11 @@ const { prepare_response } = require('./Tools_controllers');
 const {execute_query} = require("../database/Connection");
 const {retrieveImageCarousel, retrieveImage} = require("../scripts/firebase_function");
 
-async function get_friends(email){
+async function get_askers(email){
     try {
         const query =
-            "SELECT c.* FROM Clients c WHERE c.mail_Clients = (SELECT f.mail_Clients FROM friends_with f WHERE c.mail_Clients = f.mail_Clients and f.mail_Clients_1=?) OR c.mail_Clients = (SELECT f.mail_Clients_1 FROM friends_with f WHERE c.mail_Clients = f.mail_Clients_1 and f.mail_Clients=?)";
-        const [rows] = await execute_query(query, [email,email], "select");
+            "SELECT friend.*,Status FROM Clients as currentuser JOIN Ask_Friend on Ask_Friend.mail_Clients_1=currentuser.mail_Clients JOIN Clients as friend on Ask_Friend.mail_Clients=friend.mail_Clients where currentuser.mail_Clients=? and Status='Pending';";
+        const [rows] = await execute_query(query, [email], "select");
         return prepare_response(rows.length > 0, rows, 'Friends retrieved', 'No Friends');
     }
     catch (error) {
@@ -15,4 +15,4 @@ async function get_friends(email){
         return prepare_response(false, email, undefined, 'Error of server to retrieve Friends');
     }
 }
-module.exports = { get_friends };
+module.exports = { get_askers };

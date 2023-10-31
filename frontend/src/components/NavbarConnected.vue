@@ -26,7 +26,9 @@ else {
       <div>
         <button id="NOOSPHERE" class="btn">NOOSPHERE</button>
         <ul class="options">
-          <li><button @click="optionClicked('MyFriends')" class="btn">MyFriends</button></li>
+          <router-link to="/MyFriends">
+            <li><button class="btn">MyFriends</button></li>
+          </router-link>
           <li><button @click="optionClicked('MyGroups')" class="btn">MyGroups</button></li>
           <li><button @click="optionClicked('MyPosts')" class="btn">MyPosts</button></li>
           <button @click="optionClicked('World')" class="btn">World</button>

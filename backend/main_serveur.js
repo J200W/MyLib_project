@@ -46,11 +46,21 @@ const { prepare_response } = require("./controllers/Tools_controllers");
 const { books, get_particular_books } = require("./controllers/Get_ebooks");
 const { get_user_datas } = require("./controllers/Get_user");
 const { get_friends} = require("../../MyLibV2/backend/controllers/GetFriend");
+const { get_askers} = require("../../MyLibV2/backend/controllers/GetAskers");
 const { execute_query } = require("./database/Connection");
+const { refuser} = require("../../MyLibV2/backend/controllers/REFUSER");
+const { get_chat} = require("../../MyLibV2/backend/controllers/GetChat");
+const { SendMessage2} = require("../../MyLibV2/backend/controllers/SendMessage");
+const { SendMessage} = require("../../MyLibV2/backend/controllers/SendMessage");
+const { SendMessage3} = require("../../MyLibV2/backend/controllers/SendMessage");
+const { AskFriendship,AskFriendship2} = require("../../MyLibV2/backend/controllers/AskFriendship");
+const { AcceptFriendShip1,AcceptFriendShip2} = require("../../MyLibV2/backend/controllers/AcceptFriend");
+const {delete_friend} = require("../../MyLibV2/backend/controllers/DELETE_FRIEND");
+
 
 app.use(
   cors({
-    methods: ["GET", "POST"], // Spécifiez uniquement les méthodes nécessaires
+    methods: ["GET", "POST", "DELETE"], // Spécifiez uniquement les méthodes nécessaires
     allowedHeaders: ["Authorization", "Content-Type"], // Ajoutez vos en-têtes personnalisés
   })
 );
@@ -87,8 +97,87 @@ app.post("*", async (req, res) => {
       });
       break;
 
-    case "/req_datas_friends":
+    case "/req_delete_friend": // VIEW: MyAccount
+      delete_friend(datas.email,datas.friend_email).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/req_send_message": // VIEW: MyAccount
+      SendMessage(datas.message).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/req_send_message2": // VIEW: MyAccount
+      SendMessage2().then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/req_send_message3": // VIEW: MyAccount
+      SendMessage3(datas.user_email,datas.friend_email,datas.Id_Post).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/req_ask_friendship1": // VIEW: MyAccount
+      AskFriendship(datas.friend_pseudo).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/req_ask_friendship2": // VIEW: MyAccount
+        console.log(datas.email);
+        console.log(datas.friend_email);
+      AskFriendship2(datas.email,datas.friend_email).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/req_accept1": // VIEW: MyFriends : Component : FriendDetails
+      AcceptFriendShip1(datas.friend_email,datas.email).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/req_accept2": // VIEW: MyFriends : Component : FriendDetails
+      AcceptFriendShip2(datas.friend_email,datas.email).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/req_datas_friends": //VIEW : MyFriends
       get_friends(datas.email).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/req_datas_askers": //VIEW : MyFriends
+      get_askers(datas.email).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/refuser": //VIEW : MyFriends : COMPONENT : FriendDetails
+      refuser(datas.friend_email,datas.user_email).then((result) => {
+        res.header("Content-Type", "application/json");
+        res.json(result);
+      });
+      break;
+
+    case "/get_chat": //VIEW : MyFriends : COMPONENT : FriendDetails
+      get_chat(datas.friend_email,datas.user_email,datas.friend_email,datas.user_email).then((result) => {
         res.header("Content-Type", "application/json");
         res.json(result);
       });

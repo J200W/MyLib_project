@@ -1,1 +1,1 @@
-SELECT Cm.*, pseudo_Clients from commenter as Cm JOIN Clients AS Cl on Cl.mail_Clients=Cm.mail_Clients WHERE id_ebook=?
+insert into Ask_Friend (mail_Clients,mail_Clients_1,Status) values('client3@email.com','client1@email.com','Pending');

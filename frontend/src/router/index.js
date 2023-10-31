@@ -16,6 +16,7 @@ import MainPage from '../views/MainPage.vue'
 import ManageUsers from '../views/ManageUsers.vue'
 import AddBook from '../views/AddBook.vue'
 import ManageBooks from '../views/ManageBooks.vue'
+import MyFriends from "../views/MyFriends.vue";
 
 
 const routes = [
@@ -23,6 +24,11 @@ const routes = [
     path: '/',
     name: 'HomePage',
     component: HomePage
+  },
+  {
+    path: '/MyFriends',
+    name: 'MyFriends',
+    component: MyFriends
   },
   {
     path: '/LogIn',
@@ -104,7 +110,6 @@ const routes = [
     name: 'AddBook',
     component: AddBook
   }
-  
 
 ]
 
