@@ -1,14 +1,19 @@
+//Création d'une instance d'express
 const express = require("express");
 const app = express();
 const cors = require("cors");
+
 //const port = 8090
 const { port } = require("./controllers/Tools_controllers.js");
 
+//Création d'une instance de firebase
 const firebase = require("./scripts/firebase_function.js");
+
 // const new_user = require("./database/newUser.js");
 const retrieveImage = firebase.retrieveImage;
 const retrievePDF = firebase.retrievePDF;
 
+//Récupération des fonctions appelées par les potentielles requêtes de l'utilisateur
 const {
   req_listEbooks,
   req_my_books,
@@ -57,21 +62,30 @@ const { AskFriendship,AskFriendship2} = require("../../MyLibV2/backend/controlle
 const { AcceptFriendShip1,AcceptFriendShip2} = require("../../MyLibV2/backend/controllers/AcceptFriend");
 const {delete_friend} = require("../../MyLibV2/backend/controllers/DELETE_FRIEND");
 
+//Construction de notre API RESTful par :
+// -la définition des endpoints
+// -des méthodes HTTP
+// -l'implémentation de la logique métier pour chaque endpoint.
 
+//Configuration du cors (mécanisme de contrôle de requêtes entre différentes origines)
 app.use(
   cors({
-    methods: ["GET", "POST", "DELETE"], // Spécifiez uniquement les méthodes nécessaires
-    allowedHeaders: ["Authorization", "Content-Type"], // Ajoutez vos en-têtes personnalisés
+    methods: ["GET", "POST", "DELETE"], // Méthodes permises
+    allowedHeaders: ["Authorization", "Content-Type"], // En-têtes permises
   })
 );
 
-const bodyParser = require("body-parser");
+//Configuration de la lecture des données reçues :
 
+const bodyParser = require("body-parser");
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 // Vérifie à chaque requête si le dossier public contient le fichier demandé
 app.use(express.json()); // for parsing application/json
 // for parsing files
+
+
+//Définition des routes et gestion des requêtes POST
 
 app.post("*", async (req, res) => {
   const datas = req.body;
@@ -81,6 +95,8 @@ app.post("*", async (req, res) => {
     undefined,
     "Erreur de réponse du serveur"
   );
+
+  //Définition des end points et de leurs effets
 
   switch (req.originalUrl) {
     case "/modify_myAccount": // COMPONENT MyAccount.vue
@@ -498,6 +514,8 @@ app.get("*", async (req, res) => {
     undefined,
     "Erreur de réponse du serveur pour GET"
   );
+
+  //Définition des end points et de leurs effets
 
   switch (req.originalUrl) {
     case "/test_sql": // VIEW: Nothing
