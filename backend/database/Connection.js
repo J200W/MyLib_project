@@ -9,7 +9,7 @@ async function connectToDatabase() {
       database: 'efreiS6_MyLib_V2',
       port: 55306
     });
-    if (connection.state === "disconnected") {
+    if (connection.state === "disconnected" || connection.state === undefined) {
       await connection.connect();
     }
     console.log('Connected to the database!');

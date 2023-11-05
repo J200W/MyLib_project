@@ -50,17 +50,17 @@ const {
 const { prepare_response } = require("./controllers/Tools_controllers");
 const { books, get_particular_books } = require("./controllers/Get_ebooks");
 const { get_user_datas } = require("./controllers/Get_user");
-const { get_friends} = require("../../MyLibV2/backend/controllers/GetFriend");
-const { get_askers} = require("../../MyLibV2/backend/controllers/GetAskers");
+const { get_friends} = require("./controllers/GetFriend");
+const { get_askers} = require("./controllers/GetAskers");
 const { execute_query } = require("./database/Connection");
-const { refuser} = require("../../MyLibV2/backend/controllers/REFUSER");
-const { get_chat} = require("../../MyLibV2/backend/controllers/GetChat");
-const { SendMessage2} = require("../../MyLibV2/backend/controllers/SendMessage");
-const { SendMessage} = require("../../MyLibV2/backend/controllers/SendMessage");
-const { SendMessage3} = require("../../MyLibV2/backend/controllers/SendMessage");
-const { AskFriendship,AskFriendship2} = require("../../MyLibV2/backend/controllers/AskFriendship");
-const { AcceptFriendShip1,AcceptFriendShip2} = require("../../MyLibV2/backend/controllers/AcceptFriend");
-const {delete_friend} = require("../../MyLibV2/backend/controllers/DELETE_FRIEND");
+const { refuser} = require("./controllers/REFUSER");
+const { get_chat} = require("./controllers/GetChat");
+const { SendMessage2} = require("./controllers/SendMessage");
+const { SendMessage} = require("./controllers/SendMessage");
+const { SendMessage3} = require("./controllers/SendMessage");
+const { AskFriendship,AskFriendship2} = require("./controllers/AskFriendship");
+const { AcceptFriendShip1,AcceptFriendShip2} = require("./controllers/AcceptFriend");
+const {delete_friend} = require("./controllers/DELETE_FRIEND");
 
 //Construction de notre API RESTful par :
 // -la définition des endpoints

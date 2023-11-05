@@ -372,7 +372,7 @@ export default {
 
         save_book_information() {
             // Get informations from the form
-            const fileIMG = document.getElementById("fileIMG").files[0] //? document.getElementById("fileIMG").files[0] : this.book;
+            const fileIMG = document.getElementById("fileIMG").files[0] // ? document.getElementById("fileIMG").files[0] : null;
             const filePDF = document.getElementById('filePDF').files[0] //? document.getElementById("filePDF").files[0] : this.book;
             const title = document.getElementById("title").value
             const author = document.getElementById("author").value
@@ -388,7 +388,8 @@ export default {
             const theme0 = document.getElementById("theme0").value
             const theme1 = document.getElementById("theme1").value
             const theme2 = document.getElementById("theme2").value
-            //console.log(fileIMG, document.getElementById("fileIMG").files, document.getElementById("fileIMG"))
+            console.log(fileIMG, document.getElementById("fileIMG").files, document.getElementById("fileIMG"))
+            var book = JSON.parse(sessionStorage.getItem("book"))
             let datas = {
                 id_ebook: this.book.id_ebook,
                 titre: title,
@@ -401,87 +402,91 @@ export default {
                 description: resume,
                 categories: [category0, category1, category2],
                 themes: [theme0, theme1, theme2],
-                img: fileIMG.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
-                pdf: filePDF.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
-                admin: sessionStorage.getItem('user_email'),
+                img: fileIMG ? fileIMG.name.normalize('NFD').replace(/[\u0300-\u036f]/g, "") : this.book.name_img ,
+                pdf: filePDF ? filePDF.name.normalize('NFD').replace(/[\u0300-\u036f]/g, "") : this.book.name_pdf ,
+                admin: sessionStorage.getItem('user_email')
             }
 
             console.log(datas)
             try {
+              if(filePDF !== undefined){
                 // Convert book file to base64
                 const readerPDF = new FileReader();
                 readerPDF.readAsArrayBuffer(filePDF);
                 readerPDF.onloadend = function () {
-                    var arrayBuffer = readerPDF.result;
-                    var bytes = new Uint8Array(arrayBuffer);
-                    var book = JSON.parse(sessionStorage.getItem("book"))
-                    var old_name = book.name_pdf
-                    var data_pdf = {
-                        pdf: bytes,
-                        name: filePDF.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
-                        old_name: old_name
-                    }
-                    fetch("http://localhost:" + port + "/update_book_pdf",
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(data_pdf)
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status !== 'success') {
-                                throw new Error(data.message)
-                            }
-                        })
+                  var arrayBuffer = readerPDF.result;
+                  var bytes = new Uint8Array(arrayBuffer);
+                  var book = JSON.parse(sessionStorage.getItem("book"))
+                  var old_name = book.name_pdf
+                  var data_pdf = {
+                    pdf: bytes,
+                    name: filePDF.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
+                    old_name: old_name
+                  }
+                  fetch("http://localhost:" + port + "/update_book_pdf",
+                      {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data_pdf)
+                      })
+                      .then(response => response.json())
+                      .then(data => {
+                        if (data.status !== 'success') {
+                          throw new Error(data.message)
+                        }
+                      })
                 }
+              }
+              if(fileIMG !== undefined) {
                 // Convert image file to base64
                 var readerIMG = new FileReader();
                 readerIMG.readAsArrayBuffer(fileIMG);
                 readerIMG.onloadend = function () {
-                    var arrayBuffer = readerIMG.result;
-                    var bytes = new Uint8Array(arrayBuffer);
-                    var book = JSON.parse(sessionStorage.getItem("book"))
-                    var old_img = book.name_img
-                    var data_img = {
-                        img: bytes,
-                        name: fileIMG.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
-                        old_name: old_img
-                    }
-                    fetch("http://localhost:" + port + "/update_book_img",
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(data_img)
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status !== 'success') {
-                                throw new Error(data.message)
-                            }
-                        })
-                }
-                fetch("http://localhost:" + port + "/update_book",
-                    {
+                  var arrayBuffer = readerIMG.result;
+                  var bytes = new Uint8Array(arrayBuffer);
+                  var book = JSON.parse(sessionStorage.getItem("book"))
+                  var old_img = book.name_img
+                  var data_img = {
+                    img: bytes,
+                    name: fileIMG.name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
+                    old_name: old_img
+                  }
+                  fetch("http://localhost:" + port + "/update_book_img",
+                      {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json'
+                          'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(datas)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            alert(data.message);
-                            location.reload();
+                        body: JSON.stringify(data_img)
+                      })
+                      .then(response => response.json())
+                      .then(data => {
+                        if (data.status !== 'success') {
+                          throw new Error(data.message)
                         }
-                        else {
-                            throw new Error(data.message)
-                        }
-                    })
+                      })
+                }
+              }
+              fetch("http://localhost:" + port + "/update_book",
+                  {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify(datas)
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                      if (data.status === 'success') {
+                          alert(data.message);
+                          location.reload();
+                      }
+                      else {
+                          throw new Error(data.message)
+                      }
+                  })
             }
             catch (error) {
                 console.log(error)

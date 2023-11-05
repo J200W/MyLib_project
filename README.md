@@ -28,6 +28,10 @@ MyLib est un site web permettant aux utilisateurs d'emprunter des e-books gratui
 
 **Commentaires et notes :** Les utilisateurs ont la possibilité de noter et de commenter un e-book à condition qu’ils l’aient emprunté.
 
+## Caractéristiques techniques :
+### API utilisées
+* Firebase
+* Express (restful API)
 
 ## Guide technique pour l’exécution
 

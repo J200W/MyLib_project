@@ -1,3 +1,5 @@
+use efreiS6_MyLib_V2;
+
 drop table if exists answer_com;
 drop table if exists est_un;
 drop table if exists parle_de;
@@ -52,9 +54,9 @@ CREATE TABLE Ebook (
                        name_PDF VARCHAR(50),
                        name_img VARCHAR(50),
                        description VARCHAR(50),
-                       mail_admin VARCHAR(250) NOT NULL,
+                       id_Biblio VARCHAR(250) NOT NULL,
                        PRIMARY KEY (id_ebook),
-                       FOREIGN KEY (mail_admin) REFERENCES Admin_biblio(mail_admin)
+                       FOREIGN KEY (id_Biblio) REFERENCES Admin_biblio(mail_admin)
 );
 
 CREATE TABLE Theme (
@@ -108,14 +110,14 @@ CREATE TABLE emprunter (
 
 CREATE TABLE partager (
                           mail_Clients VARCHAR(250),
-                          mail_Clients_1 VARCHAR(250),
+                          mail_Clients_dest VARCHAR(250),
                           id_ebook INT,
                           debut_partage VARCHAR(50),
                           fin_partage DATE,
                           message_txt_partage VARCHAR(500),
-                          PRIMARY KEY (mail_Clients, mail_Clients_1, id_ebook),
+                          PRIMARY KEY (mail_Clients, mail_Clients_dest, id_ebook),
                           FOREIGN KEY (mail_Clients) REFERENCES Clients(mail_Clients),
-                          FOREIGN KEY (mail_Clients_1) REFERENCES Clients(mail_Clients),
+                          FOREIGN KEY (mail_Clients_dest) REFERENCES Clients(mail_Clients),
                           FOREIGN KEY (id_ebook) REFERENCES Ebook(id_ebook)
 );
 

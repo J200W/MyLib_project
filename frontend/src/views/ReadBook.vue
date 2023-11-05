@@ -45,6 +45,7 @@ export default {
       window.scrollTo(0, 0);
     };
     this.fetchBookPDF();
+    this.disablePrintShortcut();
   },
   methods: {
     fetchBookPDF() {
@@ -69,7 +70,25 @@ export default {
           .catch(error => {
             console.log(error);
           });
+    },
+    
+    // FONCTION POUR EMPECHER CTRL+P
+    disablePrintShortcut() {
+      // Ajout d'un écouteur pour intercepter les événements clavier
+      document.addEventListener('keydown', this.preventPrint);
+    },
+    preventPrint(event) {
+      // Vérifier si Ctrl+P est pressé (car le code de touche pour P est 80)
+      if (event.ctrlKey && (event.key === 'p' || event.keyCode === 80)) {
+        event.preventDefault(); // Empêcher le comportement par défaut
+        alert('La fonction d\'impression a été désactivée.');
+        // Vous pouvez afficher un message ou effectuer d'autres actions ici
+      }
     }
   },
+  beforeDestroy() {
+    // Assurez-vous de supprimer l'écouteur d'événement lors de la destruction du composant
+    document.removeEventListener('keydown', this.preventPrint);
+  }
 }
 </script>

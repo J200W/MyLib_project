@@ -69,7 +69,7 @@ VALUES
 
 # ====================
 # 1ers EBOOKS
-INSERT INTO Ebook (titre, description, stock, name_PDF, mail_admin, date_parution, auteur, nb_pages, langue, editeur, name_img)
+INSERT INTO Ebook (titre, description, stock, name_PDF, id_Biblio, date_parution, auteur, nb_pages, langue, editeur, name_img)
 VALUES
     ('Bel-ami', 'Description de Bel-ami', 10, 'Bel-ami.pdf', 'admin1@email.com', '2023-01-15', 'Guy de Maupassant', 250, 'Français', 'Éditions XYZ', 'Bel-ami.jpeg'),
     ('La-fille-aux-yeux-d''or', 'Description de La-fille-aux-yeux-d''or', 15, 'La-fille-aux-yeux-d-or.pdf', 'admin2@email.com', '2022-11-20', 'Honoré de Balzac', 220, 'Français', 'Éditions ABC', 'La-Fille-aux-yeux-d-or.jpeg'),
@@ -105,7 +105,7 @@ INSERT INTO favoris (mail_Clients, id_ebook) VALUES
                                                 ('client3@email.com', 3);
 
 -- Ajouter des tuples dans la table partager
-INSERT INTO partager (mail_Clients, mail_Clients_1, id_ebook, debut_partage, fin_partage, message_txt_partage) VALUES
+INSERT INTO partager (mail_Clients, mail_Clients_dest, id_ebook, debut_partage, fin_partage, message_txt_partage) VALUES
                                                                                                                  ('client1@email.com', 'client2@email.com', 1, '2023-05-01', '2023-05-15', 'Partage de livre'),
                                                                                                                  ('client2@email.com', 'client3@email.com', 2, '2023-05-02', '2023-05-16', 'Partage de livre'),
                                                                                                                  ('client3@email.com', 'client1@email.com', 3, '2023-05-03', '2023-05-17', 'Partage de livre');

@@ -67,19 +67,23 @@ async function req_upload_book_pdf(pdfFile, name, action="", old_name="") {
             return prepare_response(true, pdfFile, 'Book PDF uploaded successfully', 'Fail to upload book PDF');
         }
         else if (action === "update") {
-            const metadata = {
-                contentType: "application/pdf",
-            };
-            const deleteTaskPDF = await deletePDF(old_name);
-            if (deleteTaskPDF === null) {
-                return prepare_response(false, pdfFile, undefined, 'Fail to upload book PDF');
-            }
+            //if(pdfFile === null && old_name === name) {
+                const metadata = {
+                    contentType: "application/pdf",
+                };
+                const deleteTaskPDF = await deletePDF(old_name);
+                if (deleteTaskPDF === null) {
+                    return prepare_response(false, pdfFile, undefined, 'Fail to upload book PDF');
+                }
 
-            const uploadTaskPDF = await upload_book_pdf(pdfFile, name, metadata);
-            if (uploadTaskPDF === null) {
-                return prepare_response(false, pdfFile, undefined, 'Fail to upload book PDF');
-            }
-            return prepare_response(true, pdfFile, 'Book PDF updated successfully', 'Fail to update book PDF');
+                const uploadTaskPDF = await upload_book_pdf(pdfFile, name, metadata);
+                if (uploadTaskPDF === null) {
+                    return prepare_response(false, pdfFile, undefined, 'Fail to upload book PDF');
+                }
+                return prepare_response(true, pdfFile, 'Book PDF updated successfully', 'Fail to update book PDF');
+            //}
+            return prepare_response(true, name, 'Book PDF stay the same', 'Fail to keep book PDF')
+            
         }
     }
     catch (error) {
