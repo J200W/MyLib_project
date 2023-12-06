@@ -30,6 +30,7 @@ async function req_signUp(email, pseudo, password){
             return prepare_response(false, [email, pseudo, password], undefined, 'This email is already used' );
         }
         const result = await execute_query(query, [email, pseudo, password], "insert");
+        console.log(result)
         return prepare_response(result, [email, pseudo, password], 'SignUp successful', 'Failed SignUp');
     } catch (error) {
         console.error("Error during registration:", error);

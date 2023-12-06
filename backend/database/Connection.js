@@ -3,10 +3,11 @@ const mysql = require('mysql2/promise');
 async function connectToDatabase() {
   try {
     const connection = await mysql.createConnection({
-      host: 'sql7.freesqldatabase.com',
-      user: 'sql7624887',
-      password: '5YcetTXFDf',
-      database: 'sql7624887',
+      host: '78.192.134.140', //'192.168.0.35',
+      user: 'efrei2023',
+      password: 'EFREI.ethan2023',
+      database: 'efreiS6_MyLib',
+      port: 55306
     });
     if (connection.state === "disconnected") {
       await connection.connect();
